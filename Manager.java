@@ -1,4 +1,4 @@
-public class Manager {
+public class Manager{
     public void btoProjectListings(int mode){ //1 - Create, 2 - Edit, 3 - Delete
         
     }
