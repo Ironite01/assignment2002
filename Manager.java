@@ -1,4 +1,9 @@
-public class Manager{
+public class Manager extends User{
+    
+    public Manager(String name, String NRIC, int age, String maritalStatus, String password){
+        super(name, NRIC, age, maritalStatus, password);
+    }
+    
     public void btoProjectListings(int mode){ //1 - Create, 2 - Edit, 3 - Delete
         
     }
