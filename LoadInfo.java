@@ -2,7 +2,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
 import java.util.ArrayList;
-import java.util.Properties;
 
 
 
@@ -17,7 +16,7 @@ public class LoadInfo{
         
 
         for(String file : fileLocations){
-            System.out.println(file); //Troubleshooting delete later
+            // System.out.println(file); //Troubleshooting delete later
             try{ 
                 File genericFile = new File(file);
                 Scanner genericReader = new Scanner(genericFile);
@@ -25,7 +24,7 @@ public class LoadInfo{
 
                 while(genericReader.hasNextLine()){
                     String line = genericReader.nextLine();
-                    System.out.println(line); //Troubleshooting delete later
+                    // System.out.println(line); //Troubleshooting delete later
                     String[] info = line.split("\t");
 
                     if (file.equals(applicantLoc)){
@@ -66,10 +65,16 @@ public class LoadInfo{
                 String line = propertyReader.nextLine();
                 String[] info = line.split("\t");
                 
-                // System.out.println(info[12]);
                 String[] officerList = info[12].split(",");
                 ArrayList<Officer> officerRef = new ArrayList<>();
+                ArrayList<Manager> managerRef = new ArrayList<>();
                 
+                for(User u: users){
+                    if(info[10].equals(u.getName()) && u instanceof Manager){
+                        managerRef.add((Manager)u);
+                    }
+                }
+
                 
                 for(String name: officerList){
                     for(User userList: users){
@@ -82,7 +87,7 @@ public class LoadInfo{
                 
 
                 btoList.add(new BTOProperties(info[0], info[1], info[2], Integer.parseInt(info[3]), Integer.parseInt(info[4]),
-                info[5],Integer.parseInt(info[6]),Integer.parseInt(info[7]), info[8], info[9], info[10],
+                info[5],Integer.parseInt(info[6]),Integer.parseInt(info[7]), info[8], info[9], managerRef,
                  Integer.parseInt(info[11]), officerRef));
                 
                 

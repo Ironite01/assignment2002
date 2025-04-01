@@ -11,14 +11,14 @@ public class BTOProperties {
     int secondVariantPrice;
     String openDate;
     String closeDate; //Maybe import module for dates?
-    String managerIC;
+    ArrayList<Manager> managerIC;
     int officerSlot;
     ArrayList<Officer> officers;
     
 
     public BTOProperties(String projName, String neighbourhood, String firstVariant,
     int firstVariantAmt, int firstVariantPrice, String secondVariant, int secondVariantAmt,
-    int secondVariantPrice, String openDate, String closeDate, String managerIC, int officerSlot, ArrayList<Officer> officerList){
+    int secondVariantPrice, String openDate, String closeDate, ArrayList<Manager> managerICRef, int officerSlot, ArrayList<Officer> officerList){
         
         this.projectName = projName;
         this.neighbourhood = neighbourhood;
@@ -30,7 +30,7 @@ public class BTOProperties {
         this.secondVariantPrice = secondVariantPrice;
         this.openDate = openDate;
         this.closeDate = closeDate;
-        this.managerIC = managerIC;
+        managerIC = managerICRef;
         this.officerSlot = officerSlot;
         officers = officerList; //Holds Object references to the officers
 
@@ -46,6 +46,11 @@ public class BTOProperties {
         + "secondVar: %s secondVarAmt: %d secondVarPrice: %d\n"
         + "openDate: %s closeDate: %s Officer Slot: %d\n"
         ,projectName,neighbourhood,firstVariant,firstVariantAmt,firstVariantPrice,secondVariant,secondVariantAmt,secondVariantPrice,openDate,closeDate,officerSlot);
+
+        System.out.println("Managers Involved:");
+        for(Manager m: managerIC){
+            System.out.println(m.getName());
+        }
 
         System.out.println("Officers Involved:");
         for(Officer o : officers){
