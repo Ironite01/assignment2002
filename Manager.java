@@ -14,7 +14,7 @@ public class Manager extends User{
 
         Scanner sc = new Scanner(System.in);
 
-        String fileLoc = "Information/SIGMABALLS.txt";
+        String fileLoc = "Information/ProjectList.txt";
 
         System.out.println("1: Add BTO Project");
         System.out.println("2: Edit BTO Project");
