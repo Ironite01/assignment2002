@@ -3,12 +3,12 @@ import java.util.ArrayList;
 public class BTOProperties {
     String projectName;
     String neighbourhood;
-    String firstVariant; //2 Room / 3 Room
-    int firstVariantAmt;
-    int firstVariantPrice; //Float Double?
-    String secondVariant; 
-    int secondVariantAmt;
-    int secondVariantPrice;
+    String twoRoom; 
+    int twoRoomAmt;
+    int twoRoomPrice; //Float Double?
+    String threeRoom; 
+    int threeRoomAmt;
+    int threeRoomPrice;
     String openDate;
     String closeDate; //Maybe import module for dates?
     ArrayList<Manager> managerIC;
@@ -16,18 +16,18 @@ public class BTOProperties {
     ArrayList<Officer> officers;
     
 
-    public BTOProperties(String projName, String neighbourhood, String firstVariant,
-    int firstVariantAmt, int firstVariantPrice, String secondVariant, int secondVariantAmt,
-    int secondVariantPrice, String openDate, String closeDate, ArrayList<Manager> managerICRef, int officerSlot, ArrayList<Officer> officerList){
+    public BTOProperties(String projName, String neighbourhood, String twoRoom,
+    int twoRoomAmt, int twoRoomPrice, String threeRoom, int threeRoomAmt,
+    int threeRoomPrice, String openDate, String closeDate, ArrayList<Manager> managerICRef, int officerSlot, ArrayList<Officer> officerList){
         
         this.projectName = projName;
         this.neighbourhood = neighbourhood;
-        this.firstVariant = firstVariant;
-        this.firstVariantAmt = firstVariantAmt;
-        this.firstVariantPrice = firstVariantPrice;
-        this.secondVariant = secondVariant;
-        this.secondVariantAmt = secondVariantAmt;
-        this.secondVariantPrice = secondVariantPrice;
+        this.twoRoom = twoRoom;
+        this.twoRoomAmt = twoRoomAmt;
+        this.twoRoomPrice = twoRoomPrice;
+        this.threeRoom = threeRoom;
+        this.threeRoomAmt = threeRoomAmt;
+        this.threeRoomPrice = threeRoomPrice;
         this.openDate = openDate;
         this.closeDate = closeDate;
         managerIC = managerICRef;
@@ -42,10 +42,10 @@ public class BTOProperties {
 
     public void allInfo(){ //Troubleshooting
         System.out.printf("Project Name: %s Neighbourhood: %s\n"
-        + "firstVar: %s firstVarAmt: %d firstVarPrice: %d\n"
-        + "secondVar: %s secondVarAmt: %d secondVarPrice: %d\n"
+        + "twoRoom: %s twoRoomAmt: %d twoRoomPrice: %d\n"
+        + "threeRoom: %s threeRoomAmt: %d threeRoomPrice: %d\n"
         + "openDate: %s closeDate: %s Officer Slot: %d\n"
-        ,projectName,neighbourhood,firstVariant,firstVariantAmt,firstVariantPrice,secondVariant,secondVariantAmt,secondVariantPrice,openDate,closeDate,officerSlot);
+        ,projectName,neighbourhood,twoRoom,twoRoomAmt,twoRoomPrice,threeRoom,threeRoomAmt,threeRoomPrice,openDate,closeDate,officerSlot);
 
         System.out.println("Managers Involved:");
         for(Manager m: managerIC){
