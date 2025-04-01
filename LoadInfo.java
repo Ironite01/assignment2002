@@ -2,6 +2,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
 import java.util.ArrayList;
+import java.util.Properties;
 
 
 
@@ -52,5 +53,48 @@ public class LoadInfo{
     }
 
     //add another static function loadProperties() or something similar here.
+    public static ArrayList<BTOProperties> loadProperties(ArrayList<User> users){
+        ArrayList<BTOProperties> btoList = new ArrayList<>();
+        String propertyLoc = "Information/ProjectList.txt";
+
+        try {
+            File propertyFile = new File(propertyLoc);
+            Scanner propertyReader = new Scanner(propertyFile);
+            propertyReader.nextLine(); //Skip header
+
+            while (propertyReader.hasNextLine()) {
+                String line = propertyReader.nextLine();
+                String[] info = line.split("\t");
+                
+                // System.out.println(info[12]);
+                String[] officerList = info[12].split(",");
+                ArrayList<Officer> officerRef = new ArrayList<>();
+                
+                
+                for(String name: officerList){
+                    for(User userList: users){
+                        if(userList.getName().equals(name) && userList instanceof Officer){
+                            officerRef.add((Officer) userList);
+                            break;
+                        }
+                    }
+                }
+                
+
+                btoList.add(new BTOProperties(info[0], info[1], info[2], Integer.parseInt(info[3]), Integer.parseInt(info[4]),
+                info[5],Integer.parseInt(info[6]),Integer.parseInt(info[7]), info[8], info[9], info[10],
+                 Integer.parseInt(info[11]), officerRef));
+                
+                
+            }
+            propertyReader.close();
+
+        } catch (FileNotFoundException e) {
+            System.out.println("Error has occurred: " + e);
+            e.printStackTrace();
+        }
+
+        return btoList;
+    }
     
 }
