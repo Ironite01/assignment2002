@@ -17,11 +17,11 @@ public class Applicant extends User{
         this.flatType = " ";
     }
 
-    public void viewProjects(ArrayList<BTOProperties> allBTOs){
+    public void viewProjects(ArrayList<BTOProperty> allBTOs){
         System.out.println("Some available projects: ");
         boolean found = false;
 
-        for (BTOProperties project : allBTOs) {
+        for (BTOProperty project : allBTOs) {
             if (!project.isVisible()) continue;
 
             boolean eligibleFor2Rooms = isEligible(project, "2-Room");
@@ -46,7 +46,7 @@ public class Applicant extends User{
         }
     }
 
-    public boolean isEligible(BTOProperties project, String flatType) { //needed flattype to check if the applicant can apply 2 room or 3 room or both
+    public boolean isEligible(BTOProperty project, String flatType) { //needed flattype to check if the applicant can apply 2 room or 3 room or both
 
         if (!project.isVisible()) {
             return false;
@@ -68,7 +68,7 @@ public class Applicant extends User{
         return false;
     }
 
-    public boolean apply(BTOProperties project, String flatType){
+    public boolean apply(BTOProperty project, String flatType){
         if (hasApplied) {
             System.out.println("Cannot apply more than 1 project bozo.");
             return false;
