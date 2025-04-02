@@ -1,5 +1,7 @@
 package assignment2002;
 
+import java.util.ArrayList;
+
 public class Applicant extends User{
 
     private boolean hasApplied;//I adding this cos apparently each user can only apply a hdb once
@@ -13,6 +15,35 @@ public class Applicant extends User{
         this.appliedProjects = " ";
         this.applicationStatus = " ";
         this.flatType = " ";
+    }
+
+    public void viewProjects(ArrayList<BTOProperties> allBTOs){
+        System.out.println("Some available projects: ");
+        boolean found = false;
+
+        for (BTOProperties project : allBTOs) {
+            if (!project.isVisible()) continue;
+
+            boolean eligibleFor2Rooms = isEligible(project, "2-Room");
+            boolean eligibleFor3Rooms = isEligible(project, "3-Room");
+
+            if (eligibleFor2Rooms || eligibleFor3Rooms){
+                found = true;
+                System.out.printf("Project: %s\nNeighbourhood: %s\n", project.projectName, project.neighbourhood);
+                if (eligibleFor2Rooms) {
+                    System.out.printf(" - 2-Room: %d units available, Price: $%d\n", project.twoRoomAmt, project.twoRoomPrice);
+                }
+                if (eligibleFor3Rooms) {
+                    System.out.printf(" - 3-Room: %d units available, Price: $%d\n", project.threeRoomAmt, project.threeRoomPrice);
+                }
+                System.out.println("-------------------------");
+            }
+        }
+
+        
+        if (!found) {
+            System.out.println("U not eligible for anything lol.");
+        }
     }
 
     public boolean isEligible(BTOProperties project, String flatType) { //needed flattype to check if the applicant can apply 2 room or 3 room or both
@@ -83,11 +114,11 @@ public class Applicant extends User{
 
     public void viewMenu() {
         System.out.println("==== APPLICANT MENU ====");
-        System.out.println("1: View Available Projects");
-        System.out.println("2: Apply for a Project");
-        System.out.println("3: View Application Status");
-        System.out.println("4: Withdraw Application");
-        System.out.println("5: Submit Enquiry");
+        System.out.println("1: View Available Projects"); 
+        System.out.println("2: Apply for a Project"); //done?
+        System.out.println("3: View Application Status"); //getapplicationstatus()
+        System.out.println("4: Withdraw Application"); //done?
+        System.out.println("5: Submit Enquiry"); 
         System.out.println("6: View/Edit/Delete Enquiries");
     }
 
