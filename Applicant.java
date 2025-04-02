@@ -4,17 +4,24 @@ import java.util.ArrayList;
 
 public class Applicant extends User{
 
-    private boolean hasApplied;//I adding this cos apparently each user can only apply a hdb once
     private String appliedProjects;
-    private String applicationStatus;// idk what name(e.g. Successful, unsuccessful, pending or whatever)
     private String flatType;
+
+    private APPLICATION_STATUS applicationStatus;
+
+    private enum APPLICATION_STATUS {
+        SUCCESSFUL,
+        UNSUCCESSFUL,
+        PENDING,
+        BOOKED,
+        NOT_APPLIED
+    }
 
     public Applicant(String name, String NRIC, int age, String maritalStatus, String password){
         super(name, NRIC, age, maritalStatus, password);
-        this.hasApplied = false;
         this.appliedProjects = " ";
-        this.applicationStatus = " ";
         this.flatType = " ";
+        this.applicationStatus = APPLICATION_STATUS.NOT_APPLIED;
     }
 
     public void viewProjects(ArrayList<BTOProperty> allBTOs){
@@ -42,7 +49,7 @@ public class Applicant extends User{
 
         
         if (!found) {
-            System.out.println("U not eligible for anything lol.");
+            System.out.println("No available projects matching your eligibility.");
         }
     }
 
@@ -68,40 +75,44 @@ public class Applicant extends User{
         return false;
     }
 
-    public boolean apply(BTOProperty project, String flatType){
-        if (hasApplied) {
-            System.out.println("Cannot apply more than 1 project bozo.");
+    public boolean apply(BTOProperty project, String flatType) {
+        if (applicationStatus != APPLICATION_STATUS.NOT_APPLIED) {
+            System.out.println("You have already applied for a flat. ");
             return false;
         }
 
-        if (!isEligible(project, flatType)){
-            System.out.println("Ur not eligable :(");
+        if (!isEligible(project, flatType)) {
+            System.out.println("You are not eligible to apply for this flat type.");
             return false;
         }
 
-        this.hasApplied = true;
         this.appliedProjects = project.projectName;
         this.flatType = flatType;
-        this.applicationStatus = "Pending";
+        this.applicationStatus = APPLICATION_STATUS.PENDING;
 
+        System.out.println("Application submitted successfully!");
         return true;
     }
 
-    public void withdrawApplication(){
-        if(hasApplied){
-            this.applicationStatus = "Withdrawn";
-            System.out.println("Application withdrawn successfully.");
-        } else {
-            System.out.println("Nothing to withdraw bro...");
+    public void withdrawApplication() {
+        if (applicationStatus == APPLICATION_STATUS.NOT_APPLIED) {
+            System.out.println("No active application to withdraw.");
+            return;
         }
+
+        this.applicationStatus = APPLICATION_STATUS.NOT_APPLIED;
+        this.appliedProjects = " ";
+        this.flatType = " ";
+        System.out.println("Application withdrawn successfully.");
     }
 
     public void updateApplicationStatus(String newStatus) {
-        this.applicationStatus = newStatus;
+        this.applicationStatus = APPLICATION_STATUS.valueOf(newStatus.toUpperCase()); // do i need to account for error checking?
+        
     }
 
     public String getApplicationStatus() {
-        return applicationStatus;
+        return applicationStatus.toString();
     }
 
     public String getAppliedProject() {
