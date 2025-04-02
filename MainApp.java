@@ -12,7 +12,7 @@ public class MainApp {
     	
     	// TODO: Menu based application
     	ArrayList<User> userList = LoadInfo.loadUsers();
-        ArrayList<BTOProperties> btoList = LoadInfo.loadProperties(userList);
+        ArrayList<BTOProperty> btoList = LoadInfo.loadProperties(userList);
 
         System.out.println(btoList);
 
