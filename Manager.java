@@ -16,7 +16,7 @@ public class Manager extends User{
         super(name, NRIC, age, maritalStatus, password);
     }
     
-    public void manageBTOProjects(Manager u, ArrayList<BTOProperty> btoList){
+    public void manageBTOProjects(ArrayList<BTOProperty> btoList){
 
         Scanner sc = new Scanner(System.in);
 
@@ -32,7 +32,7 @@ public class Manager extends User{
         switch(mode){
             //Create
             case 1:
-            createBTOListing(u, btoList, sc, fileLoc);
+            createBTOListing(btoList, sc, fileLoc);
             break;
 
 
@@ -48,7 +48,8 @@ public class Manager extends User{
         
     }
 
-    private void createBTOListing(Manager u, ArrayList<BTOProperty> btoList, Scanner sc, String fileLoc){
+    //TODO: Test this function
+    private void createBTOListing(ArrayList<BTOProperty> btoList, Scanner sc, String fileLoc){
         String twoRoom = "2-Room", threeRoom = "3-Room";
         int twoRoomAmt = 0, twoRoomPrice = 0;
         int threeRoomAmt = 0, threeRoomPrice = 0;
@@ -140,10 +141,10 @@ public class Manager extends User{
 
         }
 
-        String managerIC = u.getName();
+        String managerIC = this.getName();
         ArrayList<Manager> managerICRef = new ArrayList<>();
         ArrayList<Officer> officerRef = new ArrayList<>();
-        managerICRef.add(u);
+        managerICRef.add(this);
 
         sc.nextLine();
         
@@ -236,12 +237,24 @@ public class Manager extends User{
     // View & Reply Enquires
     // View Project Details
 
-    public void viewMenu(Scanner sc){
+    public void viewMenu(ArrayList<User> userList, ArrayList<BTOProperty> btoList, Scanner sc){
+        boolean run = true;
 
-        System.out.println("==== MANAGER MENU ====");
-        System.out.println("1: Manage BTO Properties");
+        do {
+            System.out.println("==== MANAGER MENU ====");
+            System.out.println("1: Manage BTO Properties");
+
+            int choice = sc.nextInt();
+
+            switch (choice) {
+                case 1-> manageBTOProjects(btoList);
+                case 100-> run = false;
+                default -> System.out.println("Retry");
+            
+        } 
 
 
+    }while (run);
         
     }
 

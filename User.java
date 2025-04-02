@@ -1,5 +1,8 @@
 package assignment2002;
 
+import java.util.ArrayList;
+import java.util.Scanner;
+
 public class User {
     private String name;
     private String NRIC;
@@ -13,6 +16,10 @@ public class User {
         this.age = age;
         this.maritalStatus = maritalStatus;
         this.password = password;
+    }
+
+    public void viewMenu(ArrayList<User> userList, ArrayList<BTOProperty> btoList, Scanner sc){
+        
     }
     
     public void allInfo(){//Troubleshooting;

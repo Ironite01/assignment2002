@@ -8,11 +8,11 @@ public class MainApp {
     	Scanner s = new Scanner(System.in);
     	String nric;
     	String password;
-    	User user;
+    	User user = null;
     	
     	// TODO: Menu based application
     	ArrayList<User> userList = LoadInfo.loadUsers();
-        ArrayList<BTOProperties> btoList = LoadInfo.loadProperties(userList);
+        ArrayList<BTOProperty> btoList = LoadInfo.loadProperties(userList);
 
         System.out.println(btoList);
 
@@ -36,6 +36,9 @@ public class MainApp {
         	System.out.println(e.getMessage());
         	System.exit(0);
         }
+            user.viewMenu(userList, btoList, s);
+        
+
     }
     
 

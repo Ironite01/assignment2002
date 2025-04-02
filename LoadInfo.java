@@ -54,7 +54,7 @@ public class LoadInfo{
     //add another static function loadProperties() or something similar here.
     public static ArrayList<BTOProperty> loadProperties(ArrayList<User> users){
         ArrayList<BTOProperty> btoList = new ArrayList<>();
-        String propertyLoc = "assignment2002/Information/ProjectList.txt";
+        String propertyLoc = "Information/ProjectList.txt";
 
         try {
             File propertyFile = new File(propertyLoc);
