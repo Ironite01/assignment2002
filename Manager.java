@@ -16,7 +16,7 @@ public class Manager extends User{
         super(name, NRIC, age, maritalStatus, password);
     }
     
-    public void manageBTOProjects(Manager u, ArrayList<BTOProperties> btoList){
+    public void manageBTOProjects(Manager u, ArrayList<BTOProperty> btoList){
 
         Scanner sc = new Scanner(System.in);
 
@@ -48,7 +48,7 @@ public class Manager extends User{
         
     }
 
-    private void createBTOListing(Manager u, ArrayList<BTOProperties> btoList, Scanner sc, String fileLoc){
+    private void createBTOListing(Manager u, ArrayList<BTOProperty> btoList, Scanner sc, String fileLoc){
         String twoRoom = "2-Room", threeRoom = "3-Room";
         int twoRoomAmt = 0, twoRoomPrice = 0;
         int threeRoomAmt = 0, threeRoomPrice = 0;
@@ -101,24 +101,33 @@ public class Manager extends User{
         }
 
         //NEEDS TO BE ADJUSTED FIXED TO ACTUAL DATES TO MAKE SURE OPEN IS NOT AFTER CLOSING ETC
-        sc.nextLine();
-
-        do {
-            System.out.print("Opening Date for HDB (MM/DD/YYYY): "); //Idk could be better
-            openDate = sc.nextLine(); 
-            
-        } while (!dateValidator(openDate));
-                   
-
-        do {
-            System.out.print("Closing Date for HDB (MM/DD/YYYY): "); //Idk could be better
-            closeDate = sc.nextLine();
-            
-        } while (!dateValidator(closeDate));
-
         //Need to add validator to compare that closeDate is after startDate
 
+        sc.nextLine();
+        while(true){ //Ensures that closeDate must come after openDate
+            do {
+                System.out.print("Opening Date for HDB (MM/DD/YYYY): "); //Idk could be better
+                openDate = sc.nextLine(); 
+                
+            } while (!dateValidator(openDate));
+                       
+    
+            do {
+                System.out.print("Closing Date for HDB (MM/DD/YYYY): "); //Idk could be better
+                closeDate = sc.nextLine();
+                
+            } while (!dateValidator(closeDate));
 
+            if(dateComparator(openDate, closeDate)){
+                break;
+            } else{
+                System.out.println("Error with Date Ranges");
+                System.out.println("Try Again\n");
+            }
+
+        }
+
+        
         while(true){
             System.out.println("Max Number of Officers (1 ~ 10): ");
             officerSlot = sc.nextInt();
@@ -138,7 +147,7 @@ public class Manager extends User{
 
         sc.nextLine();
         
-        btoList.add(new BTOProperties(projName, neighbourhood, twoRoom, twoRoomAmt, twoRoomPrice, threeRoom, threeRoomAmt, threeRoomPrice, openDate, closeDate, managerICRef, roomVal, officerRef));
+        btoList.add(new BTOProperty(projName, neighbourhood, twoRoom, twoRoomAmt, twoRoomPrice, threeRoom, threeRoomAmt, threeRoomPrice, openDate, closeDate, managerICRef, roomVal, officerRef));
 
         String formattedString = String.join("\t", 
                 projName, neighbourhood,twoRoom, String.valueOf(twoRoomAmt), String.valueOf(twoRoomPrice),
@@ -178,6 +187,22 @@ public class Manager extends User{
 
     }
 
+    private boolean dateComparator(String openDate, String closeDate){
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
+
+            
+        LocalDate opDate = LocalDate.parse(openDate, formatter);
+        LocalDate clDate = LocalDate.parse(closeDate, formatter);
+
+        if(clDate.isAfter(opDate)){
+            return true;
+        } 
+
+        return false;
+
+
+    }
+
 
     public void toggleProjectVisiblity(){
 
@@ -207,14 +232,17 @@ public class Manager extends User{
 
     }
 
-    //ADD 2 Methods Here
+    //TODO: 2 Methods Here
     // View & Reply Enquires
     // View Project Details
 
-    public void viewMenu(){
+    public void viewMenu(Scanner sc){
 
         System.out.println("==== MANAGER MENU ====");
         System.out.println("1: Manage BTO Properties");
+
+
+        
     }
 
 }

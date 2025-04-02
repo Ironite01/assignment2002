@@ -52,9 +52,9 @@ public class LoadInfo{
     }
 
     //add another static function loadProperties() or something similar here.
-    public static ArrayList<BTOProperties> loadProperties(ArrayList<User> users){
-        ArrayList<BTOProperties> btoList = new ArrayList<>();
-        String propertyLoc = "Information/ProjectList.txt";
+    public static ArrayList<BTOProperty> loadProperties(ArrayList<User> users){
+        ArrayList<BTOProperty> btoList = new ArrayList<>();
+        String propertyLoc = "assignment2002/Information/ProjectList.txt";
 
         try {
             File propertyFile = new File(propertyLoc);
@@ -86,7 +86,7 @@ public class LoadInfo{
                 }
                 
 
-                btoList.add(new BTOProperties(info[0], info[1], info[2], Integer.parseInt(info[3]), Integer.parseInt(info[4]),
+                btoList.add(new BTOProperty(info[0], info[1], info[2], Integer.parseInt(info[3]), Integer.parseInt(info[4]),
                 info[5],Integer.parseInt(info[6]),Integer.parseInt(info[7]), info[8], info[9], managerRef,
                  Integer.parseInt(info[11]), officerRef));
                 
