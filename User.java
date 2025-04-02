@@ -1,3 +1,5 @@
+package assignment2002;
+
 public class User {
     private String name;
     private String NRIC;

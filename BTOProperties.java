@@ -1,3 +1,5 @@
+package assignment2002;
+
 import java.util.ArrayList;
 
 public class BTOProperties {
