@@ -1,10 +1,17 @@
 package assignment2002;
 
 import java.util.ArrayList;
+import java.util.Scanner;
 
 public class MainApp {
     public static void main(String[] args) {
-        ArrayList<User> userList = LoadInfo.loadUsers();  
+    	Scanner s = new Scanner(System.in);
+    	String nric;
+    	String password;
+    	AuthenticatedUser user;
+    	
+    	// TODO: Menu based application
+    	ArrayList<User> userList = LoadInfo.loadUsers();
         ArrayList<BTOProperties> btoList = LoadInfo.loadProperties(userList);
 
         System.out.println(btoList);
@@ -12,16 +19,25 @@ public class MainApp {
         //Showing that the load properties works
         btoList.get(0).allInfo();
 
-
-        //ArrayList object memory
-        System.out.println(userList);
-
+        
 
         //If you want to see how the ArrayList works
         // for(User u: userList){
         //     u.allInfo();
         // }
         
+        // FOR TESTING PURPOSES ONLY
+        try {
+        	System.out.println("System login...\nEnter your NRIC: ");
+        	nric = s.nextLine();
+            System.out.println("Enter your password: ");
+            password = s.nextLine();
+            user = new AuthenticatedUser(nric, password);
+            user.allInfo();
+        } catch (Exception e) {
+        	System.out.println(e.getMessage());
+        	System.exit(0);
+        }
     }
     
 
