@@ -1,6 +1,7 @@
 package assignment2002;
 
 import java.util.ArrayList;
+import java.util.Scanner;
 
 public class Applicant extends User{
 
@@ -14,14 +15,14 @@ public class Applicant extends User{
         UNSUCCESSFUL,
         PENDING,
         BOOKED,
-        NOT_APPLIED
+        NOTAPPLIED
     }
 
     public Applicant(String name, String NRIC, int age, String maritalStatus, String password){
         super(name, NRIC, age, maritalStatus, password);
         this.appliedProjects = " ";
         this.flatType = " ";
-        this.applicationStatus = APPLICATION_STATUS.NOT_APPLIED;
+        this.applicationStatus = APPLICATION_STATUS.NOTAPPLIED;
     }
 
     public void viewProjects(ArrayList<BTOProperty> allBTOs){
@@ -76,7 +77,7 @@ public class Applicant extends User{
     }
 
     public boolean apply(BTOProperty project, String flatType) {
-        if (applicationStatus != APPLICATION_STATUS.NOT_APPLIED) {
+        if (applicationStatus != APPLICATION_STATUS.NOTAPPLIED) {
             System.out.println("You have already applied for a flat. ");
             return false;
         }
@@ -95,12 +96,12 @@ public class Applicant extends User{
     }
 
     public void withdrawApplication() {
-        if (applicationStatus == APPLICATION_STATUS.NOT_APPLIED) {
+        if (applicationStatus == APPLICATION_STATUS.NOTAPPLIED) {
             System.out.println("No active application to withdraw.");
             return;
         }
 
-        this.applicationStatus = APPLICATION_STATUS.NOT_APPLIED;
+        this.applicationStatus = APPLICATION_STATUS.NOTAPPLIED;
         this.appliedProjects = " ";
         this.flatType = " ";
         System.out.println("Application withdrawn successfully.");
@@ -123,14 +124,71 @@ public class Applicant extends User{
         return flatType;
     }
 
-    public void viewMenu() {
-        System.out.println("==== APPLICANT MENU ====");
-        System.out.println("1: View Available Projects"); 
-        System.out.println("2: Apply for a Project"); //done?
-        System.out.println("3: View Application Status"); //getapplicationstatus()
-        System.out.println("4: Withdraw Application"); //done?
-        System.out.println("5: Submit Enquiry"); 
-        System.out.println("6: View/Edit/Delete Enquiries");
+    @Override
+    public void viewMenu(ArrayList<User> userList, ArrayList<BTOProperty> btoList, Scanner sc) {
+        boolean run = true;
+
+        do { 
+            System.out.println("==== APPLICANT MENU ====");
+            System.out.println("1: View Available Projects"); 
+            System.out.println("2: Apply for a Project"); //done?
+            System.out.println("3: View Application Status"); //getapplicationstatus()
+            System.out.println("4: Withdraw Application"); //done?
+            System.out.println("5: Submit Enquiry"); 
+            System.out.println("6: View/Edit/Delete Enquiries");
+            System.out.println("7: Exit");
+
+            int choice = sc.nextInt();
+
+            switch(choice){
+                case 1 -> {
+                    viewProjects(btoList);
+                    break;
+                }
+                case 2 -> {
+                    // TODO: ADD the check to see if the applicant applied for the house alr before all the code below
+                    sc.nextLine();
+                    System.out.println("Enter Project Name to apply for: ");
+                    String projName = sc.nextLine();
+
+                    BTOProperty selected = null;
+                    for (BTOProperty projects: btoList){
+                        if (projects.projectName.equalsIgnoreCase(projName)){
+                            selected = projects;
+                            break;
+                        }
+                    }
+
+                    if (selected == null){
+                        System.out.println("Project not found.");
+                        break;
+                    }
+
+                    System.out.print("Enter flat type (2-Room / 3-Room): ");
+                    String selectedflatType = sc.nextLine();
+
+                    this.apply(selected, selectedflatType);
+                    break;
+                }
+                case 3 -> {
+                    System.out.println("Status: " + getApplicationStatus());
+                    break;
+                }
+                case 4 -> {
+                    withdrawApplication();
+                    break;
+                }
+                case 7 -> {
+                    run = false;
+                    break;
+                }
+                default -> {
+                    System.out.println("Retry");
+                    break;
+                }
+            }
+        } while (run);
+        
     }
 
 }
