@@ -8,7 +8,7 @@ public class MainApp {
     	Scanner s = new Scanner(System.in);
     	String nric;
     	String password;
-    	AuthenticatedUser user;
+    	User user;
     	
     	// TODO: Menu based application
     	ArrayList<User> userList = LoadInfo.loadUsers();
@@ -18,8 +18,6 @@ public class MainApp {
 
         //Showing that the load properties works
         btoList.get(0).allInfo();
-
-        
 
         //If you want to see how the ArrayList works
         // for(User u: userList){
@@ -32,7 +30,7 @@ public class MainApp {
         	nric = s.nextLine();
             System.out.println("Enter your password: ");
             password = s.nextLine();
-            user = new AuthenticatedUser(nric, password);
+            user = Authenticator.getAuthenticatedUser(nric, password);
             user.allInfo();
         } catch (Exception e) {
         	System.out.println(e.getMessage());

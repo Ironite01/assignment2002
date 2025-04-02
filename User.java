@@ -14,6 +14,10 @@ public class User {
         this.maritalStatus = maritalStatus;
         this.password = password;
     }
+    
+    public void allInfo(){//Troubleshooting;
+        System.out.printf("Name: %s \nNRIC: %s\nAge: %d\nMarital Status: %s\nPassword: %s\n\n",getName(), getNRIC(), getAge(), getMaritalStatus(), getPassword());
+    }
 
     public String getName() {
         return name;
@@ -31,7 +35,7 @@ public class User {
         return maritalStatus;
     }
 
-    public String getPassword() {
+    public String getPassword() { // TODO: Remove
         return password;
     }
 }
