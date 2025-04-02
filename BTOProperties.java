@@ -14,6 +14,7 @@ public class BTOProperties {
     ArrayList<Manager> managerIC;
     int officerSlot;
     ArrayList<Officer> officers;
+    boolean visible = true; // i shall set the default to be true 
     
 
     public BTOProperties(String projName, String neighbourhood, String twoRoom,
@@ -57,6 +58,14 @@ public class BTOProperties {
             System.out.println(o.getName());
         }
 
+    }
+
+    public boolean isVisible() { 
+        return visible;
+    }
+    
+    public void setVisible(boolean visible) { // maybe manager can use to make certain project invisible
+        this.visible = visible;
     }
 
 }
