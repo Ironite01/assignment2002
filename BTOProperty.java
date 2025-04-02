@@ -2,7 +2,7 @@ package assignment2002;
 
 import java.util.ArrayList;
 
-public class BTOProperties {
+public class BTOProperty {
     String projectName;
     String neighbourhood;
     String twoRoom; 
@@ -19,7 +19,7 @@ public class BTOProperties {
     boolean visible = true; // i shall set the default to be true 
     
 
-    public BTOProperties(String projName, String neighbourhood, String twoRoom,
+    public BTOProperty(String projName, String neighbourhood, String twoRoom,
     int twoRoomAmt, int twoRoomPrice, String threeRoom, int threeRoomAmt,
     int threeRoomPrice, String openDate, String closeDate, ArrayList<Manager> managerICRef, int officerSlot, ArrayList<Officer> officerList){
         
