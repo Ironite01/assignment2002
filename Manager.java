@@ -5,7 +5,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
-import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
@@ -48,7 +47,6 @@ public class Manager extends User{
         
     }
 
-    //TODO: Test this function
     private void createBTOListing(ArrayList<BTOProperty> btoList, Scanner sc, String fileLoc){
         String twoRoom = "2-Room", threeRoom = "3-Room";
         int twoRoomAmt = 0, twoRoomPrice = 0;
@@ -167,6 +165,16 @@ public class Manager extends User{
 
     }
 
+    private void editBTOListing(){
+
+
+    }
+
+    private void deleteBTOListing(){
+
+    }
+    
+
     private boolean dateValidator(String inputDate){ //Return true if valid
         String dateRegex = "^(0[1-9]|1[0-2])/([0][1-9]|[12][0-9]|3[01])/(202[5-9]|20[3-9][0-9]|2[1-9][0-9]{2})$";
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
@@ -209,7 +217,70 @@ public class Manager extends User{
 
     }
 
-    public void viewOtherProjects(){ //Filterable Function
+    //I renamed this 
+    public void viewProjects(ArrayList<BTOProperty> btoList, Scanner sc){ //Filterable Function 
+        boolean running = true;
+        while (running) {
+            System.out.println("\n=== View Projects: Filter Menu ===");
+            System.out.println("1: View All Projects");
+            System.out.println("2: View Personally Created Projects");
+            System.out.println("3: Exit");
+            int choice = sc.nextInt();
+
+            switch (choice) {
+                case 1: //View all projects
+                    //TODO: Maybe make this into a helper function?
+                    System.out.printf("| %-15s | %-20s | %-15s | %-8s | %-11s | %-12s | %-10s | %-14s | %-14s | %-12s | %-12s | %-14s | %-30s |\n", "MANAGER","PROJECT NAME", "NEIGHBOURHOOD", "2-ROOM", "2-ROOM AMOUNT", "2-ROOM PRICE", "3-ROOM", "3-ROOM AMOUNT", "3-ROOM PRICE", "OPEN DATE", "CLOSE DATE", "OFFICER SLOTS", "OFFICERS REGISTERED");
+                    
+                    for(BTOProperty project: btoList){
+                        String collatedOfficers = "";
+                        String managerIC = "";
+
+
+                        for(Officer offList:project.getOfficers()){
+                            collatedOfficers += offList.getName() + ",";
+                        }
+
+                        for(Manager m: project.getManagerIC()){
+                            managerIC = m.getName();
+                        }
+                        System.out.printf("| %-15s | %-20s | %-15s | %-8s | %-12d | %-13d | %-10s | %-14d | %-14d | %-12s | %-12s | %-14d | %-30s |\n", 
+                        managerIC, project.getProjectName(), project.getNeighbourhood(), project.getTwoRoom(), 
+                        project.getTwoRoomAmt(), project.getTwoRoomPrice(), project.getThreeRoom(), project.getThreeRoomAmt(),
+                        project.getThreeRoomPrice(), project.getOpenDate(), project.getCloseDate(), project.getOfficerSlot(), collatedOfficers);
+                        
+                    }
+                    break;
+                case 2:
+                    //TODO: Make this pretty
+                    System.out.println("\n==== Projects Managed By You ====");
+                    
+                    for(BTOProperty property: btoList){
+                        for(Manager m: property.getManagerIC()){
+                            if(m.getNRIC().equals(this.getNRIC())){
+                                property.allInfo();
+                                break;
+                            }
+                        }
+                    }
+
+                    break;
+                case 3:
+                    running = false;
+                    break;
+                default:
+                    System.out.println("Invalid Input");
+                    break;
+            }
+        
+            
+        }
+
+        
+
+
+
+        
         
     }
 
@@ -243,11 +314,14 @@ public class Manager extends User{
         do {
             System.out.println("==== MANAGER MENU ====");
             System.out.println("1: Manage BTO Properties");
+            System.out.println("4: View All Projects");
+            System.out.println("100: Logout"); //Temp Numbering
 
             int choice = sc.nextInt();
 
             switch (choice) {
                 case 1-> manageBTOProjects(btoList);
+                case 4-> viewProjects(btoList,sc);
                 case 100-> run = false;
                 default -> System.out.println("Retry");
             
@@ -255,6 +329,8 @@ public class Manager extends User{
 
 
     }while (run);
+
+    System.out.println("You have logged out!");
         
     }
 
