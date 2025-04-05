@@ -42,6 +42,7 @@ public class Manager extends User{
             
             //Delete
             case 3:
+            deleteBTOListing(btoList, sc);
             break;
         }
         
@@ -170,8 +171,37 @@ public class Manager extends User{
 
     }
 
-    private void deleteBTOListing(){
+    private void deleteBTOListing(ArrayList<BTOProperty> btoList, Scanner sc){
+        System.out.println("Project List: ");
 
+        if (btoList.isEmpty()) {
+            System.out.println("No projects available to delete.");
+            return;
+        }
+
+        // Show all projects with index
+        for (int i = 0; i < btoList.size(); i++) {
+            BTOProperty p = btoList.get(i);
+            System.out.printf("%d. %s (%s)\n", i + 1, p.getProjectName(), p.getNeighbourhood());
+        }
+
+        System.out.print("Enter the number of the project to delete (0 to cancel): ");
+        int choice = sc.nextInt();
+        sc.nextLine();
+
+        if (choice == 0) {
+            System.out.println("Cancelled.");
+            return;
+        }
+    
+        if (choice < 1 || choice > btoList.size()) {
+            System.out.println("Invalid choice.");
+            return;
+        }
+    
+        BTOProperty selected = btoList.get(choice - 1);
+        btoList.remove(selected);
+        System.out.println("Project deleted successfully.");
     }
     
 
@@ -223,6 +253,11 @@ public class Manager extends User{
 
         System.out.print("Enter project number to toggle visibility (0 to cancel): ");
         int choice = sc.nextInt();
+
+        if (choice == 0) {
+            System.out.println("Cancelled.");
+            return;
+        }
 
         if (choice < 1 || choice > btolist.size()) {
             System.out.println("Invalid choice.");
@@ -332,7 +367,7 @@ public class Manager extends User{
         do {
             System.out.println("==== MANAGER MENU ====");
             System.out.println("1: Manage BTO Properties");
-            System.out.println("2:  Toggle Project Visibility");
+            System.out.println("2: Toggle Project Visibility");
             System.out.println("4: View All Projects");
             System.out.println("100: Logout"); //Temp Numbering
 
