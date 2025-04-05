@@ -3,20 +3,20 @@ package assignment2002;
 import java.util.ArrayList;
 
 public class BTOProperty {
-    String projectName;
-    String neighbourhood;
-    String twoRoom; 
-    int twoRoomAmt;
-    int twoRoomPrice; //Float Double?
-    String threeRoom; 
-    int threeRoomAmt;
-    int threeRoomPrice;
-    String openDate;
-    String closeDate; //Maybe import module for dates?
-    ArrayList<Manager> managerIC;
-    int officerSlot;
-    ArrayList<Officer> officers;
-    boolean visible = true; // i shall set the default to be true 
+    protected String projectName;
+    protected String neighbourhood;
+    protected String twoRoom; 
+    protected int twoRoomAmt;
+    protected int twoRoomPrice; //Float Double?
+    protected String threeRoom; 
+    protected int threeRoomAmt;
+    protected int threeRoomPrice;
+    protected String openDate;
+    protected String closeDate; //Maybe import module for dates?
+    protected ArrayList<Manager> managerIC;
+    protected int officerSlot;
+    protected ArrayList<Officer> officers;
+    protected boolean visible = true; // i shall set the default to be true 
     
 
     public BTOProperty(String projName, String neighbourhood, String twoRoom,
@@ -39,16 +39,13 @@ public class BTOProperty {
 
     }
 
-    public ArrayList<Officer> getOfficers(){
-        return officers;
-    }
 
     public void allInfo(){ //Troubleshooting
         System.out.printf("Project Name: %s Neighbourhood: %s\n"
         + "twoRoom: %s twoRoomAmt: %d twoRoomPrice: %d\n"
         + "threeRoom: %s threeRoomAmt: %d threeRoomPrice: %d\n"
         + "openDate: %s closeDate: %s Officer Slot: %d\n"
-        ,projectName,neighbourhood,twoRoom,twoRoomAmt,twoRoomPrice,threeRoom,threeRoomAmt,threeRoomPrice,openDate,closeDate,officerSlot);
+        ,getProjectName(),getNeighbourhood(),getTwoRoom(),getTwoRoomAmt(),getTwoRoomPrice(),getThreeRoom(),getThreeRoomAmt(),getThreeRoomPrice(),getOpenDate(),getCloseDate(),getOfficerSlot());
 
         System.out.println("Managers Involved:");
         for(Manager m: managerIC){
@@ -69,5 +66,58 @@ public class BTOProperty {
     public void setVisible(boolean visible) { // maybe manager can use to make certain project invisible
         this.visible = visible;
     }
+
+
+    public String getProjectName() {
+        return projectName;
+    }
+
+    public String getNeighbourhood() {
+        return neighbourhood;
+    }
+
+    public String getTwoRoom() {
+        return twoRoom;
+    }
+
+    public int getTwoRoomAmt() {
+        return twoRoomAmt;
+    }
+
+    public int getTwoRoomPrice() {
+        return twoRoomPrice;
+    }
+
+    public String getThreeRoom() {
+        return threeRoom;
+    }
+
+    public int getThreeRoomAmt() {
+        return threeRoomAmt;
+    }
+
+    public int getThreeRoomPrice() {
+        return threeRoomPrice;
+    }
+
+    public String getOpenDate() {
+        return openDate;
+    }
+
+    public String getCloseDate() {
+        return closeDate;
+    }
+
+    public ArrayList<Manager> getManagerIC() {
+        return managerIC;
+    }
+    public int getOfficerSlot() {
+        return officerSlot;
+    }
+
+    public ArrayList<Officer> getOfficers() {
+        return officers;
+    }
+    
 
 }
