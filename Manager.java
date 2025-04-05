@@ -3,11 +3,11 @@ package assignment2002;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Scanner;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.ArrayList;
+import java.util.Scanner;
 
 public class Manager extends User{
     
@@ -213,8 +213,26 @@ public class Manager extends User{
     }
 
 
-    public void toggleProjectVisiblity(){
+    public void toggleProjectVisiblity(ArrayList<BTOProperty> btolist, Scanner sc){
+        System.out.println("Project List: ");
 
+        for(int i = 0; i < btolist.size(); i++){
+            BTOProperty projects = btolist.get(i);
+            System.out.printf("%d. %s (%s): %s\n", i + 1, projects.getProjectName(), projects.getNeighbourhood(), projects.isVisible() ? "VISIBLE" : "HIDDEN");
+        }
+
+        System.out.print("Enter project number to toggle visibility (0 to cancel): ");
+        int choice = sc.nextInt();
+
+        if (choice < 1 || choice > btolist.size()) {
+            System.out.println("Invalid choice.");
+            return;
+        }
+
+        BTOProperty selected = btolist.get(choice - 1);
+        selected.setVisible(!selected.isVisible());
+
+        System.out.printf("Project '%s' is now %s.\n", selected.getProjectName(), selected.isVisible() ? "VISIBLE" : "HIDDEN");
     }
 
     //I renamed this 
@@ -314,6 +332,7 @@ public class Manager extends User{
         do {
             System.out.println("==== MANAGER MENU ====");
             System.out.println("1: Manage BTO Properties");
+            System.out.println("2:  Toggle Project Visibility");
             System.out.println("4: View All Projects");
             System.out.println("100: Logout"); //Temp Numbering
 
@@ -321,6 +340,7 @@ public class Manager extends User{
 
             switch (choice) {
                 case 1-> manageBTOProjects(btoList);
+                case 2 -> toggleProjectVisiblity(btoList, sc);
                 case 4-> viewProjects(btoList,sc);
                 case 100-> run = false;
                 default -> System.out.println("Retry");
