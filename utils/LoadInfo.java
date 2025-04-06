@@ -1,8 +1,15 @@
-package assignment2002;
+package assignment2002.utils;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
+
+import assignment2002.Applicant;
+import assignment2002.BTOProperty;
+import assignment2002.Manager;
+import assignment2002.Officer;
+import assignment2002.User;
+
 import java.util.ArrayList;
 
 public class LoadInfo{

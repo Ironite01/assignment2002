@@ -1,7 +1,11 @@
 package assignment2002;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Scanner;
+
+import assignment2002.utils.Authenticator;
+import assignment2002.utils.LoadInfo;
 
 public class MainApp {
     public static void main(String[] args) {
@@ -32,13 +36,22 @@ public class MainApp {
             password = s.nextLine();
             user = Authenticator.getAuthenticatedUser(nric, password);
             user.allInfo();
+            
+            System.out.println("Enter message for enquiry for project id = 1:");
+            String msg = s.nextLine();
+            
+            EnquiryService.addNewEnquiry(user.getNRIC(), 1, msg);
+            Enquiry e = EnquiryService.getEnquiry(user.getNRIC(), 1);
+            e.getAllMessages().forEach((Date d, Message m) -> {
+            	System.out.println(d.toGMTString() + " : " + m.getMessage());
+            });
         } catch (Exception e) {
         	System.out.println(e.getMessage());
         	System.exit(0);
         }
-            user.viewMenu(userList, btoList, s);
+            //user.viewMenu(userList, btoList, s);
         
-
+        s.close();
     }
     
 

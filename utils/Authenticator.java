@@ -1,8 +1,10 @@
-package assignment2002;
+package assignment2002.utils;
 
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import assignment2002.User;
 
 public class Authenticator {
 	public static User getAuthenticatedUser(String NRIC, String password) {
@@ -14,7 +16,7 @@ public class Authenticator {
 		throw new IllegalArgumentException("Unable to authenticate user");
 	}
 	
-	private static boolean isValidNRIC(String NRIC) {
+	public static boolean isValidNRIC(String NRIC) {
 		// Regex expression to validate NRIC.
 		Pattern pattern = Pattern.compile("^[ST]\\d{7}[A-Z]$", Pattern.CASE_INSENSITIVE);
 		Matcher matcher = pattern.matcher(NRIC);
