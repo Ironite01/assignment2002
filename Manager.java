@@ -3,10 +3,13 @@ package assignment2002;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class Manager extends User{
@@ -172,6 +175,8 @@ public class Manager extends User{
     }
 
     private void deleteBTOListing(ArrayList<BTOProperty> btoList, Scanner sc){
+        int choice;
+        BTOProperty propertyToDel;
         System.out.println("Project List: ");
 
         if (btoList.isEmpty()) {
@@ -180,69 +185,88 @@ public class Manager extends User{
         }
 
         // Show all projects with index
-        for (int i = 0; i < btoList.size(); i++) {
-            BTOProperty p = btoList.get(i);
-            System.out.printf("%d. %s (%s)\n", i + 1, p.getProjectName(), p.getNeighbourhood());
-        }
-
-        System.out.print("Enter the number of the project to delete (0 to cancel): ");
-        int choice = sc.nextInt();
-        sc.nextLine();
-
-        if (choice == 0) {
-            System.out.println("Cancelled.");
-            return;
-        }
-    
-        if (choice < 1 || choice > btoList.size()) {
-            System.out.println("Invalid choice.");
-            return;
-        }
-    
-        BTOProperty selected = btoList.get(choice - 1);
-        btoList.remove(selected);
-        System.out.println("Project deleted successfully.");
-
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter("Information/ProjectList.txt"))) {
-            // Write header
-            writer.write("ProjectName\tNeighbourhood\tTwoRoom\tTwoRoomAmt\tTwoRoomPrice\tThreeRoom\tThreeRoomAmt\tThreeRoomPrice\tOpenDate\tCloseDate\tManagerNRIC\tOfficerSlot\tOfficerNames");
-            writer.newLine();
-    
-            for (BTOProperty p : btoList) {
-                StringBuilder officerNames = new StringBuilder();
-                for (Officer o : p.getOfficers()) {
-                    officerNames.append(o.getName()).append(",");
-                }
-    
-                // Remove trailing comma if needed
-                if (officerNames.length() > 0) {
-                    officerNames.setLength(officerNames.length() - 1);
-                }
-    
-                String managerNRIC = p.getManagerIC().get(0).getName(); // assuming 1 manager
-    
-                String formatted = String.join("\t",
-                    p.getProjectName(),
-                    p.getNeighbourhood(),
-                    p.getTwoRoom(),
-                    String.valueOf(p.getTwoRoomAmt()),
-                    String.valueOf(p.getTwoRoomPrice()),
-                    p.getThreeRoom(),
-                    String.valueOf(p.getThreeRoomAmt()),
-                    String.valueOf(p.getThreeRoomPrice()),
-                    p.getOpenDate(),
-                    p.getCloseDate(),
-                    managerNRIC,
-                    String.valueOf(p.getOfficerSlot()),
-                    officerNames.toString()
-                );
-    
-                writer.write(formatted);
-                writer.newLine();
+        while(true){
+            for (int i = 0; i < btoList.size(); i++) {
+                BTOProperty p = btoList.get(i);
+                System.out.printf("%d. %s (%s)\n", i + 1, p.getProjectName(), p.getNeighbourhood());
             }
     
+            System.out.print("Enter the number of the project to delete (0 to cancel): ");
+            choice = sc.nextInt();
+            sc.nextLine();
+    
+            if (choice == 0) {
+                System.out.println("Cancelled.");
+                return;
+            }
+        
+            if (choice < 1 || choice > btoList.size()) {
+                System.out.println("Invalid choice.");
+                continue;
+            }
+
+            propertyToDel  = btoList.get(choice - 1);
+            System.out.println("=== Project DELETION Confirmation ===");
+            System.out.printf("Project Chosen: %s\n", propertyToDel.getProjectName());
+            System.out.printf("Project Neighbourhood: %s\n", propertyToDel.getNeighbourhood());
+            System.out.println("CONFIRM? (Y/N)");
+
+            String confirm = sc.nextLine().trim().toLowerCase();
+
+            if (confirm.equals("y")) {
+                break;
+            }
+            else{
+                continue;
+            }
+
+        }
+        
+
+
+    
+        btoList.remove(propertyToDel);
+        System.out.println("Project deleted successfully.");
+
+        String filePath = "Information/ProjectList.txt";
+
+        try {
+            List<String> allLines = Files.readAllLines(Paths.get(filePath));
+
+            if (allLines.isEmpty()) {
+                System.out.println("File is empty.");
+                return;
+            }
+
+            String header = allLines.get(0);
+            List<String> filtered = new ArrayList<>();
+
+            // Keep only lines that DON'T match the project to delete
+            for (int i = 1; i < allLines.size(); i++) {
+                String line = allLines.get(i).trim();
+                if (!line.isEmpty()) {
+                    String[] parts = line.split("\t");
+                    String projectName = parts[0].trim();
+                    if (!projectName.equalsIgnoreCase(propertyToDel.getProjectName())) {
+                        filtered.add(line);
+                    }
+                }
+            }
+
+            // Write back header and filtered lines without trailing newline
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
+                writer.write(header);
+                if (!filtered.isEmpty()) writer.newLine();
+                for (int i = 0; i < filtered.size(); i++) {
+                    writer.write(filtered.get(i));
+                    if (i != filtered.size() - 1) writer.newLine(); // no trailing newline
+                }
+            }
+
+            System.out.println("Deleted project: " + propertyToDel.getProjectName());
+
         } catch (IOException e) {
-            System.out.println("Error saving to file: " + e.getMessage());
+            System.out.println("Error processing file: " + e.getMessage());
         }
     }
     
