@@ -202,6 +202,48 @@ public class Manager extends User{
         BTOProperty selected = btoList.get(choice - 1);
         btoList.remove(selected);
         System.out.println("Project deleted successfully.");
+
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter("Information/ProjectList.txt"))) {
+            // Write header
+            writer.write("ProjectName\tNeighbourhood\tTwoRoom\tTwoRoomAmt\tTwoRoomPrice\tThreeRoom\tThreeRoomAmt\tThreeRoomPrice\tOpenDate\tCloseDate\tManagerNRIC\tOfficerSlot\tOfficerNames");
+            writer.newLine();
+    
+            for (BTOProperty p : btoList) {
+                StringBuilder officerNames = new StringBuilder();
+                for (Officer o : p.getOfficers()) {
+                    officerNames.append(o.getName()).append(",");
+                }
+    
+                // Remove trailing comma if needed
+                if (officerNames.length() > 0) {
+                    officerNames.setLength(officerNames.length() - 1);
+                }
+    
+                String managerNRIC = p.getManagerIC().get(0).getName(); // assuming 1 manager
+    
+                String formatted = String.join("\t",
+                    p.getProjectName(),
+                    p.getNeighbourhood(),
+                    p.getTwoRoom(),
+                    String.valueOf(p.getTwoRoomAmt()),
+                    String.valueOf(p.getTwoRoomPrice()),
+                    p.getThreeRoom(),
+                    String.valueOf(p.getThreeRoomAmt()),
+                    String.valueOf(p.getThreeRoomPrice()),
+                    p.getOpenDate(),
+                    p.getCloseDate(),
+                    managerNRIC,
+                    String.valueOf(p.getOfficerSlot()),
+                    officerNames.toString()
+                );
+    
+                writer.write(formatted);
+                writer.newLine();
+            }
+    
+        } catch (IOException e) {
+            System.out.println("Error saving to file: " + e.getMessage());
+        }
     }
     
 
