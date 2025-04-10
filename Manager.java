@@ -5,12 +5,12 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+
+import assignment2002.utils.DateCheck;
+
 
 public class Manager extends User{
     
@@ -103,25 +103,22 @@ public class Manager extends User{
                 break;
         }
 
-        //NEEDS TO BE ADJUSTED FIXED TO ACTUAL DATES TO MAKE SURE OPEN IS NOT AFTER CLOSING ETC
-        //Need to add validator to compare that closeDate is after startDate
-
         sc.nextLine();
         while(true){ //Ensures that closeDate must come after openDate
             do {
                 System.out.print("Opening Date for HDB (MM/DD/YYYY): "); //Idk could be better
                 openDate = sc.nextLine(); 
                 
-            } while (!dateValidator(openDate));
+            } while (!DateCheck.dateValidator(openDate));
                        
     
             do {
                 System.out.print("Closing Date for HDB (MM/DD/YYYY): "); //Idk could be better
                 closeDate = sc.nextLine();
                 
-            } while (!dateValidator(closeDate));
+            } while (!DateCheck.dateValidator(closeDate));
 
-            if(dateComparator(openDate, closeDate)){
+            if(DateCheck.dateComparator(openDate, closeDate)){
                 break;
             } else{
                 System.out.println("Error with Date Ranges");
@@ -271,43 +268,6 @@ public class Manager extends User{
     }
     
 
-    private boolean dateValidator(String inputDate){ //Return true if valid
-        String dateRegex = "^(0[1-9]|1[0-2])/([0][1-9]|[12][0-9]|3[01])/(202[5-9]|20[3-9][0-9]|2[1-9][0-9]{2})$";
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
-
-        if(!inputDate.matches(dateRegex)){ //Input does not match Date regex
-            System.out.println("Date is invalid");
-            return false;
-        }
-
-        try {
-            LocalDate.parse(inputDate, formatter);
-            System.out.println("Date Accepted");
-            return true;
-            
-        } catch (DateTimeParseException e) {
-                System.out.println("Date is invalid 2");
-                return false;
-            }
-
-    }
-
-    private boolean dateComparator(String openDate, String closeDate){
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
-
-            
-        LocalDate opDate = LocalDate.parse(openDate, formatter);
-        LocalDate clDate = LocalDate.parse(closeDate, formatter);
-
-        if(clDate.isAfter(opDate)){
-            return true;
-        } 
-
-        return false;
-
-
-    }
-
 
     public void toggleProjectVisiblity(ArrayList<BTOProperty> btolist, Scanner sc){
         System.out.println("Project List: ");
@@ -348,7 +308,7 @@ public class Manager extends User{
 
             switch (choice) {
                 case 1: //View all projects
-                    //TODO: Maybe make this into a helper function?
+                    //TODO: Maybe make this into a helper function? Rewrite this lol
                     System.out.printf("| %-15s | %-20s | %-15s | %-8s | %-11s | %-12s | %-10s | %-14s | %-14s | %-12s | %-12s | %-14s | %-30s |\n", "MANAGER","PROJECT NAME", "NEIGHBOURHOOD", "2-ROOM", "2-ROOM AMOUNT", "2-ROOM PRICE", "3-ROOM", "3-ROOM AMOUNT", "3-ROOM PRICE", "OPEN DATE", "CLOSE DATE", "OFFICER SLOTS", "OFFICERS REGISTERED");
                     
                     for(BTOProperty project: btoList){
