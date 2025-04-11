@@ -17,6 +17,8 @@ public class BTOProperty {
     protected int officerSlot;
     protected ArrayList<Officer> officers;
     protected boolean visible = true; // i shall set the default to be true 
+    private ArrayList<Applicant> twoRoomApplicants = new ArrayList<>();
+    private ArrayList<Applicant> threeRoomApplicants = new ArrayList<>();
     
 
     public BTOProperty(String projName, String neighbourhood, String twoRoom,
@@ -117,6 +119,22 @@ public class BTOProperty {
 
     public ArrayList<Officer> getOfficers() {
         return officers;
+    }
+
+    public ArrayList<Applicant> getTwoRoomApplicants() {
+        return twoRoomApplicants;
+    }
+    
+    public ArrayList<Applicant> getThreeRoomApplicants() {
+        return threeRoomApplicants;
+    }
+
+    public void addApplicant(Applicant applicant, String flatType) {
+        if (flatType.equalsIgnoreCase("2-Room")) {
+            twoRoomApplicants.add(applicant);
+        } else if (flatType.equalsIgnoreCase("3-Room")) {
+            threeRoomApplicants.add(applicant);
+        }
     }
     
 

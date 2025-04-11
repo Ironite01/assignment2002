@@ -1,5 +1,9 @@
 package assignment2002;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -91,9 +95,80 @@ public class Applicant extends User{
         this.flatType = flatType;
         this.applicationStatus = APPLICATION_STATUS.PENDING;
 
+        project.addApplicant(this, flatType);
+
         System.out.println("Application submitted successfully!");
+
+        String correctHeader = "Name\tNRIC\tAge\tMaritalStatus\tPassword\tFlatType\tProjectName";
+        String filePath = "assignment2002/Information/ApplicantList.txt";
+        File file = new File(filePath);
+        ArrayList<String> updatedLines = new ArrayList<>();
+        boolean fileExists = file.exists();
+        boolean updated = false;
+
+        if (fileExists) {
+            try (Scanner fileScanner = new Scanner(file)) {
+                while (fileScanner.hasNextLine()) {
+                    String line = fileScanner.nextLine();
+                    if (line.startsWith("Name\t")) {
+                        updatedLines.add(line); // keep header
+                        continue;
+                    }
+
+                    String[] parts = line.split("\t");
+                    if (parts.length >= 2 && parts[1].equals(this.getNRIC())) {
+                        // Found matching NRIC — replace the line
+                        String newLine = String.join("\t",
+                            this.getName(),
+                            this.getNRIC(),
+                            String.valueOf(this.getAge()),
+                            this.getMaritalStatus(),
+                            this.getPassword(),
+                            flatType,
+                            project.getProjectName()
+                        );
+                        updatedLines.add(newLine);
+                        updated = true;
+                    } else {
+                        updatedLines.add(line); // keep others
+                    }
+                }
+            } catch (IOException e) {
+                System.out.println("Error reading applicant file: " + e.getMessage());
+            }
+        }
+
+        // If not updated, add as new
+        if (!updated) {
+            if (!fileExists) {
+                updatedLines.add("Name\tNRIC\tAge\tMaritalStatus\tPassword\tFlatType\tProjectName"); // header
+            }
+            String newLine = String.join("\t",
+                this.getName(),
+                this.getNRIC(),
+                String.valueOf(this.getAge()),
+                this.getMaritalStatus(),
+                this.getPassword(),
+                flatType,
+                project.getProjectName()
+            );
+            updatedLines.add(newLine);
+        }
+
+        // Write the updated list back to file
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath, false))) {
+            for (String line : updatedLines) {
+                writer.write(line);
+                writer.newLine();
+            }
+        } catch (IOException e) {
+            System.out.println("Error writing updated applicant file: " + e.getMessage());
+        }
+
         return true;
+
     }
+    
 
     public void withdrawApplication() {
         if (applicationStatus == APPLICATION_STATUS.NOTAPPLIED) {
@@ -147,6 +222,7 @@ public class Applicant extends User{
                 }
                 case 2 -> {
                     // TODO: ADD the check to see if the applicant applied for the house alr before all the code below
+                    viewProjects(btoList);
                     sc.nextLine();
                     System.out.println("Enter Project Name to apply for: ");
                     String projName = sc.nextLine();
