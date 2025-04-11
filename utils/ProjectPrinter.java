@@ -9,7 +9,7 @@ import assignment2002.Officer;
 public class ProjectPrinter {
     
     public static void viewProjects(List<BTOProperty> btoList){
-        System.out.printf("| %-15s | %-20s | %-15s | %-8s | %-11s | %-12s | %-10s | %-14s | %-14s | %-12s | %-12s | %-14s | %-30s |\n", "MANAGER","PROJECT NAME", "NEIGHBOURHOOD", "2-ROOM", "2-ROOM AMOUNT", "2-ROOM PRICE", "3-ROOM", "3-ROOM AMOUNT", "3-ROOM PRICE", "OPEN DATE", "CLOSE DATE", "OFFICER SLOTS", "OFFICERS REGISTERED");
+        System.out.printf("| %-5s | %-15s | %-20s | %-15s | %-8s | %-11s | %-12s | %-10s | %-14s | %-14s | %-12s | %-12s | %-14s | %-30s |\n", "PROJ ID","MANAGER","PROJECT NAME", "NEIGHBOURHOOD", "2-ROOM", "2-ROOM AMOUNT", "2-ROOM PRICE", "3-ROOM", "3-ROOM AMOUNT", "3-ROOM PRICE", "OPEN DATE", "CLOSE DATE", "OFFICER SLOTS", "OFFICERS REGISTERED");
         for(BTOProperty project : btoList){
                 String collatedOfficers = "";
                 String managerIC = "";
@@ -26,8 +26,8 @@ public class ProjectPrinter {
                 for(Manager m: project.getManagerIC()){
                     managerIC = m.getName();
                 }
-                System.out.printf("| %-15s | %-20s | %-15s | %-8s | %-12d | %-13d | %-10s | %-14d | %-14d | %-12s | %-12s | %-14d | %-30s |\n", 
-                managerIC, project.getProjectName(), project.getNeighbourhood(), project.getTwoRoom(), 
+                System.out.printf("| %-5d | %-15s | %-20s | %-15s | %-8s | %-12d | %-13d | %-10s | %-14d | %-14d | %-12s | %-12s | %-14d | %-30s |\n", 
+                project.getPropertyID(),managerIC, project.getProjectName(), project.getNeighbourhood(), project.getTwoRoom(), 
                 project.getTwoRoomAmt(), project.getTwoRoomPrice(), project.getThreeRoom(), project.getThreeRoomAmt(),
                 project.getThreeRoomPrice(), project.getOpenDate(), project.getCloseDate(), project.getOfficerSlot(), collatedOfficers);
                 
