@@ -81,13 +81,9 @@ public class Applicant extends User{
     }
 
     public boolean apply(BTOProperty project, String flatType) {
-        if (applicationStatus != APPLICATION_STATUS.NOTAPPLIED) {
-            System.out.println("You have already applied for a flat. ");
-            return false;
-        }
-
-        if (!isEligible(project, flatType)) {
-            System.out.println("You are not eligible to apply for this flat type.");
+        String status = getApplicationStatusFromFile();
+        if (!status.equals("NOTAPPLIED") && !status.equals("NOT FOUND")) {
+            System.out.println("You have already applied for a flat. Status: " + status);
             return false;
         }
 
@@ -101,22 +97,22 @@ public class Applicant extends User{
 
         String filePath = "assignment2002/Information/ApplicantList.txt";
         File file = new File(filePath);
-        ArrayList<String> updatedLines = new ArrayList<>();
         boolean fileExists = file.exists();
+        String desiredHeader = "Name\tNRIC\tAge\tMaritalStatus\tPassword\tFlatType\tProjectName\tApplicationStatus";
+        ArrayList<String> updatedLines = new ArrayList<>();
         boolean updated = false;
 
         if (fileExists) {
-            try (Scanner fileScanner = new Scanner(file)) {
-                while (fileScanner.hasNextLine()) {
-                    String line = fileScanner.nextLine();
+            try (Scanner scanner = new Scanner(file)) {
+                while (scanner.hasNextLine()) {
+                    String line = scanner.nextLine();
                     if (line.startsWith("Name\t")) {
-                        updatedLines.add(line); // keep header
+                        updatedLines.add(desiredHeader);
                         continue;
                     }
 
                     String[] parts = line.split("\t");
                     if (parts.length >= 2 && parts[1].equals(this.getNRIC())) {
-                        // Found matching NRIC — replace the line
                         String newLine = String.join("\t",
                             this.getName(),
                             this.getNRIC(),
@@ -124,23 +120,24 @@ public class Applicant extends User{
                             this.getMaritalStatus(),
                             this.getPassword(),
                             flatType,
-                            project.getProjectName()
+                            project.getProjectName(),
+                            "PENDING"
                         );
                         updatedLines.add(newLine);
                         updated = true;
                     } else {
-                        updatedLines.add(line); // keep others
+                        updatedLines.add(line);
                     }
                 }
             } catch (IOException e) {
                 System.out.println("Error reading applicant file: " + e.getMessage());
+                return false;
             }
         }
 
-        // If not updated, add as new
         if (!updated) {
             if (!fileExists) {
-                updatedLines.add("Name\tNRIC\tAge\tMaritalStatus\tPassword\tFlatType\tProjectName"); // header
+                updatedLines.add(desiredHeader);
             }
             String newLine = String.join("\t",
                 this.getName(),
@@ -149,41 +146,142 @@ public class Applicant extends User{
                 this.getMaritalStatus(),
                 this.getPassword(),
                 flatType,
-                project.getProjectName()
+                project.getProjectName(),
+                "PENDING"
             );
             updatedLines.add(newLine);
         }
 
-        // Write the updated list back to file
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath, false))) {
             for (String line : updatedLines) {
                 writer.write(line);
                 writer.newLine();
             }
         } catch (IOException e) {
-            System.out.println("Error writing updated applicant file: " + e.getMessage());
+            System.out.println("Error writing applicant file: " + e.getMessage());
+            return false;
         }
 
         return true;
-
     }
-    
 
     public void withdrawApplication() {
-        if (applicationStatus == APPLICATION_STATUS.NOTAPPLIED) {
+        String status = getApplicationStatusFromFile();
+        if (!status.equals("PENDING")) {
+            System.out.println("No active application to withdraw. Current status: " + status);
+            return;
+        }
+
+        String filePath = "assignment2002/Information/ApplicantList.txt";
+        File file = new File(filePath);
+        ArrayList<String> updatedLines = new ArrayList<>();
+        String desiredHeader = "Name\tNRIC\tAge\tMaritalStatus\tPassword\tFlatType\tProjectName\tApplicationStatus";
+        boolean found = false;
+        boolean withdrawn = false;
+
+        if (!file.exists()) {
+            System.out.println("Applicant file not found.");
+            return;
+        }
+
+        try (Scanner fileScanner = new Scanner(file)) {
+            while (fileScanner.hasNextLine()) {
+                String line = fileScanner.nextLine();
+
+                if (line.startsWith("Name\t")) {
+                    updatedLines.add(desiredHeader);
+                    continue;
+                }
+
+                String[] parts = line.split("\t");
+
+                if (parts.length >= 8 && parts[1].equals(this.getNRIC())) {
+                    found = true;
+
+                    if (!parts[7].equalsIgnoreCase("WITHDRAWN")) {
+                        String updatedLine = String.join("\t",
+                            parts[0],
+                            parts[1],
+                            parts[2],
+                            parts[3],
+                            parts[4],
+                            "",
+                            "",
+                            "NOTAPPLIED"
+                        );
+                        updatedLines.add(updatedLine);
+                        withdrawn = true;
+
+                        this.flatType = "";
+                        this.appliedProjects = "";
+                        this.applicationStatus = APPLICATION_STATUS.NOTAPPLIED;
+                    } else {
+                        updatedLines.add(line);
+                    }
+                } else {
+                    updatedLines.add(line);
+                }
+            }
+        } catch (IOException e) {
+            System.out.println("Error reading applicant file: " + e.getMessage());
+            return;
+        }
+
+        if (!found) {
+            System.out.println("No applicant record found.");
+            return;
+        }
+
+        if (!withdrawn) {
             System.out.println("No active application to withdraw.");
             return;
         }
 
-        this.applicationStatus = APPLICATION_STATUS.NOTAPPLIED;
-        this.appliedProjects = " ";
-        this.flatType = " ";
-        System.out.println("Application withdrawn successfully.");
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath, false))) {
+            for (String l : updatedLines) {
+                writer.write(l);
+                writer.newLine();
+            }
+            System.out.println("Application withdrawn successfully.");
+        } catch (IOException e) {
+            System.out.println("Error writing updated file: " + e.getMessage());
+        }
     }
 
-    public void updateApplicationStatus(String newStatus) {
-        this.applicationStatus = APPLICATION_STATUS.valueOf(newStatus.toUpperCase()); // do i need to account for error checking?
-        
+    public String getApplicationStatusFromFile() {
+        String filePath = "assignment2002/Information/ApplicantList.txt";
+        File file = new File(filePath);
+
+        if (!file.exists()) return "NOT FOUND";
+
+        try (Scanner scanner = new Scanner(file)) {
+            while (scanner.hasNextLine()) {
+                String line = scanner.nextLine();
+                if (line.startsWith("Name\t")) continue;
+
+                String[] parts = line.split("\t");
+                if (parts.length >= 8 && parts[1].equals(this.getNRIC())) {
+                    return parts[7].trim();
+                }
+            }
+        } catch (IOException e) {
+            System.out.println("Error reading applicant file: " + e.getMessage());
+        }
+
+        return "NOT FOUND";
+    }
+    
+
+    public void setFlatType(String flatType) {
+        this.flatType = flatType;
+    }
+
+    public void setAppliedProject(String appliedProjects) {
+        this.appliedProjects = appliedProjects;
+    }
+
+    public void setApplicationStatus(String status) {
+        this.applicationStatus = APPLICATION_STATUS.valueOf(status.toUpperCase());
     }
 
     public String getApplicationStatus() {
@@ -197,6 +295,7 @@ public class Applicant extends User{
     public String getFlatType() {
         return flatType;
     }
+    
 
     @Override
     public void viewMenu(ArrayList<User> userList, ArrayList<BTOProperty> btoList, Scanner sc) {
