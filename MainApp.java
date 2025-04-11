@@ -49,7 +49,7 @@ public class MainApp {
         	System.out.println(e.getMessage());
         	System.exit(0);
         }
-            //user.viewMenu(userList, btoList, s);
+        user.viewMenu(userList, btoList, s);
         
         s.close();
     }

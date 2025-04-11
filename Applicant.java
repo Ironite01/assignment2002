@@ -95,7 +95,7 @@ public class Applicant extends User{
 
         System.out.println("Application submitted successfully!");
 
-        String filePath = "assignment2002/Information/ApplicantList.txt";
+        String filePath = "Information/ApplicantList.txt";
         File file = new File(filePath);
         boolean fileExists = file.exists();
         String desiredHeader = "Name\tNRIC\tAge\tMaritalStatus\tPassword\tFlatType\tProjectName\tApplicationStatus";
