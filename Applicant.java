@@ -99,7 +99,6 @@ public class Applicant extends User{
 
         System.out.println("Application submitted successfully!");
 
-        String correctHeader = "Name\tNRIC\tAge\tMaritalStatus\tPassword\tFlatType\tProjectName";
         String filePath = "assignment2002/Information/ApplicantList.txt";
         File file = new File(filePath);
         ArrayList<String> updatedLines = new ArrayList<>();
