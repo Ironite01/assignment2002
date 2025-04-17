@@ -1,8 +1,6 @@
 package assignment2002;
 
-import java.nio.channels.ScatteringByteChannel;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Scanner;
 
 import assignment2002.user.Manager;
@@ -43,11 +41,9 @@ public class ManagerController {
                 case 4-> viewProjsMenu(btoList, sc);
                 case 100-> run = false;
                 default -> System.out.println("Retry");
-            
         } 
 
-
-    }while (run);
+    } while (run);
     sc.close();
     System.out.println("User Has Logged out!");
         

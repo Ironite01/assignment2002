@@ -18,14 +18,14 @@ public class User implements UserInterface {
         this.maritalStatus = maritalStatus;
         this.password = password;
     }
+    
+    public void allInfo(){//Troubleshooting;
+        System.out.printf("Name: %s \nNRIC: %s\nAge: %d\nMarital Status: %s\nPassword: %s\n\n",getName(), getNRIC(), getAge(), getMaritalStatus(), getPassword());
+    }
 
     public void viewMenu(ArrayList<User> userList, ArrayList<BTOProperty> btoList){
         System.out.println();
         return;
-    }
-    
-    public void allInfo(){//Troubleshooting;
-        System.out.printf("Name: %s \nNRIC: %s\nAge: %d\nMarital Status: %s\nPassword: %s\n\n",getName(), getNRIC(), getAge(), getMaritalStatus(), getPassword());
     }
 
     public String getName() {
