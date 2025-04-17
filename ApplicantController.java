@@ -2,6 +2,7 @@ package assignment2002;
 
 import assignment2002.user.Applicant;
 import assignment2002.user.User;
+import assignment2002.utils.ProjectPrinter;
 import java.util.ArrayList;
 import java.util.Scanner;
 public class ApplicantController {
@@ -36,7 +37,7 @@ public class ApplicantController {
                 case 1 -> viewProjects();
                 case 2 -> applyToProject(sc);
                 case 3 -> viewStatus();
-                case 4 -> applicant.withdrawApplication();
+                case 4 -> ApplicantService.withdraw(applicant);
                 case 5 -> System.out.println("Enquiry submission coming soon...");
                 case 6 -> System.out.println("Enquiry viewing/editing coming soon...");
                 case 7 -> run = false;
@@ -50,11 +51,11 @@ public class ApplicantController {
     }
 
     private void viewProjects() {
-        applicant.viewProjects(btoList);
+        ProjectPrinter.viewProjectsForApplicant(applicant, btoList);
     }
 
     private void viewStatus() {
-        String status = applicant.getApplicationStatusFromFile();
+        String status = ApplicantService.getApplicationStatus(applicant);
         System.out.println("Your current application status: " + status);
     }
 
@@ -80,6 +81,6 @@ public class ApplicantController {
         System.out.print("Enter flat type (2-Room / 3-Room): ");
         String flatType = sc.nextLine();
 
-        applicant.apply(selected, flatType);
+        ApplicantService.apply(applicant, selected, flatType);
     }
 }

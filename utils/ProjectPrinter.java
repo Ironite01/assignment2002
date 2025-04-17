@@ -1,10 +1,11 @@
 package assignment2002.utils;
 
-import java.util.List;
-
+import assignment2002.ApplicantService;
 import assignment2002.BTOProperty;
+import assignment2002.user.Applicant;
 import assignment2002.user.Manager;
 import assignment2002.user.Officer;
+import java.util.List;
 
 public class ProjectPrinter {
     
@@ -33,6 +34,35 @@ public class ProjectPrinter {
                 
             }
     }
+
+    public static void viewProjectsForApplicant(Applicant applicant, List<BTOProperty> btoList) {
+        System.out.println("Some available projects:");
+        boolean found = false;
+
+        for (BTOProperty project : btoList) {
+            if (!project.isVisible()) continue;
+
+            boolean eligibleFor2Rooms = ApplicantService.isEligible(applicant, project, "2-Room");
+            boolean eligibleFor3Rooms = ApplicantService.isEligible(applicant, project, "3-Room");
+
+            if (eligibleFor2Rooms || eligibleFor3Rooms) {
+                found = true;
+                System.out.printf("Project: %s\nNeighbourhood: %s\n", project.getProjectName(), project.getNeighbourhood());
+                if (eligibleFor2Rooms) {
+                    System.out.printf(" - 2-Room: %d units available, Price: $%d\n", project.getTwoRoomAmt(), project.getTwoRoomPrice());
+                }
+                if (eligibleFor3Rooms) {
+                    System.out.printf(" - 3-Room: %d units available, Price: $%d\n", project.getThreeRoomAmt(), project.getThreeRoomPrice());
+                }
+                System.out.println("-------------------------");
+            }
+        }
+
+        if (!found) {
+            System.out.println("No available projects matching your eligibility.");
+        }
+    }
+
 
     public static void viewProjectsVisibility(List<BTOProperty> btoList){
         System.out.println("Project List: ");
