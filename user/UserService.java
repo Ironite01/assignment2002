@@ -10,6 +10,7 @@ import java.util.Scanner;
 
 import assignment2002.utils.Authenticator;
 import assignment2002.utils.FilePath;
+import assignment2002.utils.Password;
 
 public class UserService implements FilePath {
 	private static final String passwordField = "Password";
@@ -35,8 +36,13 @@ public class UserService implements FilePath {
 		int nricHeaderIndex = -1;
 		List<String> lines = new ArrayList<>();
 		
-		System.out.println("Password reset...\nPlease enter your new password: ");
-        newPassword = s.nextLine();
+		System.out.println("--- Password reset ---");
+		while (true) {
+			System.out.println("\nPlease enter your new password: ");
+	        newPassword = s.nextLine();
+	        if (Password.isStrong(newPassword)) break;
+	        System.out.println("Your password is not strong enough!");
+		}
         System.out.println("Please enter again to confirm...\nNew password: ");
         if (!s.nextLine().equals(newPassword)) {
         	System.out.println("Your 2nd attempt mismatched the 1st...\nExiting reset password...");
@@ -90,6 +96,7 @@ public class UserService implements FilePath {
             }
             writer.close();
             
+            System.out.println("Password has been updated!");
         } catch (FileNotFoundException e){
             System.out.println("Error has occurred: " + e.getMessage());
             e.printStackTrace();
