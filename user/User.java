@@ -1,7 +1,6 @@
 package assignment2002.user;
 
 import java.util.ArrayList;
-import java.util.Scanner;
 
 import assignment2002.BTOProperty;
 
@@ -20,7 +19,7 @@ public class User implements UserInterface {
         this.password = password;
     }
 
-    public void viewMenu(ArrayList<User> userList, ArrayList<BTOProperty> btoList, Scanner sc){
+    public void viewMenu(ArrayList<User> userList, ArrayList<BTOProperty> btoList){
         System.out.println();
         return;
     }

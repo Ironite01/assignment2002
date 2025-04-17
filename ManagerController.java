@@ -1,5 +1,6 @@
 package assignment2002;
 
+import java.nio.channels.ScatteringByteChannel;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -23,7 +24,8 @@ public class ManagerController {
         this.userList = userList;
     }
 
-    public void showMenu(Scanner sc){
+    public void showMenu(){
+        Scanner sc = new Scanner(System.in);        
         boolean run = true;
 
         do {
@@ -46,7 +48,7 @@ public class ManagerController {
 
 
     }while (run);
-
+    sc.close();
     System.out.println("User Has Logged out!");
         
     }
