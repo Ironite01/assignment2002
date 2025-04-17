@@ -67,20 +67,18 @@ public class Manager extends User{
     }
 
     public void viewMyProjs (ArrayList<BTOProperty> btoList){
-        ProjectPrinter.viewProjects(btoList);
+        List<BTOProperty> myP = getMyProjects(btoList);
+        ProjectPrinter.viewProjects(myP);
     }
 
     public void viewProjectsVisibility(ArrayList<BTOProperty> btoList){
         ProjectPrinter.viewProjectsVisibility(btoList);
     }
 
-    //TODO: Make this pretty
     public List<BTOProperty> getMyProjects(ArrayList<BTOProperty> btoList){
         return btoList.stream()
         .filter(p-> p.getManagerIC().stream().anyMatch(m -> m.getNRIC().equals(this.getNRIC())))
         .toList();
-
-
     }
 
         
