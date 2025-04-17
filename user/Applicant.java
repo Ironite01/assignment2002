@@ -1,13 +1,13 @@
 package assignment2002.user;
 
+import assignment2002.ApplicantController;
+import assignment2002.BTOProperty;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
-
-import assignment2002.BTOProperty;
 
 public class Applicant extends User{
 
@@ -97,7 +97,7 @@ public class Applicant extends User{
 
         System.out.println("Application submitted successfully!");
 
-        String filePath = "Information/ApplicantList.txt";
+        String filePath = "assignment2002/Information/ApplicantList.txt";
         File file = new File(filePath);
         boolean fileExists = file.exists();
         String desiredHeader = "Name\tNRIC\tAge\tMaritalStatus\tPassword\tFlatType\tProjectName\tApplicationStatus";
@@ -301,72 +301,8 @@ public class Applicant extends User{
 
     @Override
     public void viewMenu(ArrayList<User> userList, ArrayList<BTOProperty> btoList) {
-        Scanner sc = new Scanner(System.in);
-        boolean run = true;
-
-        do { 
-            System.out.println("==== APPLICANT MENU ====");
-            System.out.println("1: View Available Projects"); 
-            System.out.println("2: Apply for a Project"); //done?
-            System.out.println("3: View Application Status"); //getapplicationstatus()
-            System.out.println("4: Withdraw Application"); //done?
-            System.out.println("5: Submit Enquiry"); 
-            System.out.println("6: View/Edit/Delete Enquiries");
-            System.out.println("7: Exit");
-
-            int choice = sc.nextInt();
-
-            switch(choice){
-                case 1 -> {
-                    viewProjects(btoList);
-                    break;
-                }
-                case 2 -> {
-                    // TODO: ADD the check to see if the applicant applied for the house alr before all the code below
-                    viewProjects(btoList);
-                    sc.nextLine();
-                    System.out.println("Enter Project Name to apply for: ");
-                    String projName = sc.nextLine();
-
-                    BTOProperty selected = null;
-                    for (BTOProperty projects: btoList){
-                        if (projects.getProjectName().equalsIgnoreCase(projName)){
-                            selected = projects;
-                            break;
-                        }
-                    }
-
-                    if (selected == null){
-                        System.out.println("Project not found.");
-                        break;
-                    }
-
-                    System.out.print("Enter flat type (2-Room / 3-Room): ");
-                    String selectedflatType = sc.nextLine();
-
-                    this.apply(selected, selectedflatType);
-                    break;
-                }
-                case 3 -> {
-                    System.out.println("Status: " + getApplicationStatus());
-                    break;
-                }
-                case 4 -> {
-                    withdrawApplication();
-                    break;
-                }
-                case 7 -> {
-                    run = false;
-                    break;
-                }
-                default -> {
-                    System.out.println("Retry");
-                    break;
-                }
-            }
-        } while (run);
-        
-        sc.close();
+        ApplicantController aController = new ApplicantController(this, btoList, userList);
+        aController.showMenu();
     }
 
 }
