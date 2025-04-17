@@ -70,6 +70,10 @@ public class Manager extends User{
         ProjectPrinter.viewProjects(btoList);
     }
 
+    public void viewProjectsVisibility(ArrayList<BTOProperty> btoList){
+        ProjectPrinter.viewProjectsVisibility(btoList);
+    }
+
     //TODO: Make this pretty
     public List<BTOProperty> getMyProjects(ArrayList<BTOProperty> btoList){
         return btoList.stream()

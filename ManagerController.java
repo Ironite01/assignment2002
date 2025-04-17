@@ -7,7 +7,6 @@ import assignment2002.user.Manager;
 import assignment2002.user.Officer;
 import assignment2002.user.User;
 import assignment2002.utils.BTOFileService;
-import assignment2002.utils.ProjectPrinter;
 import assignment2002.utils.DateCheck;
 
 public class ManagerController {
@@ -280,7 +279,7 @@ public class ManagerController {
     }
 
     private void viewVisibilityMenu(ArrayList<BTOProperty> btoList, Scanner sc){
-        ProjectPrinter.viewProjectsVisibility(btoList);
+        manager.viewProjectsVisibility(btoList);
 
         System.out.print("Enter project number to toggle visibility (0 to cancel): ");
         int choice = sc.nextInt();
