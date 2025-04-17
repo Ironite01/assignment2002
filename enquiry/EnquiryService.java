@@ -14,16 +14,16 @@ public class EnquiryService {
 		
 	}
 	
-	public static Enquiry getEnquiry(String applicantNric, int projectId) {
+	public static Enquiry getEnquiry(String applicantNric, String projectName) {
 		for (Enquiry e : enquiries) {
-			if (e.getApplicantNric().equalsIgnoreCase(applicantNric) && e.getProjectId() == projectId) {
+			if (e.getApplicantNric().equalsIgnoreCase(applicantNric) && e.getProjectName() == projectName) {
 				return e;
 			}
 		}
 		return null;
 	}
 	
-	public static void addNewEnquiry(String applicantNric, int projectId, String message) {
-		enquiries.add(new Enquiry(applicantNric, projectId, message));
+	public static void addNewEnquiry(String applicantNric, String projectName, String message) {
+		enquiries.add(new Enquiry(applicantNric, projectName, message));
 	}
 }

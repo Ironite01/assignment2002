@@ -7,9 +7,7 @@ import assignment2002.user.Manager;
 import assignment2002.user.Officer;
 
 public class BTOProperty {
-    private static int idCounter = 100;
-    protected int propertyID;
-    protected String projectName;
+    protected String projectName; // Unique identifier
     protected String neighbourhood;
     protected String twoRoom; 
     protected int twoRoomAmt;
@@ -30,8 +28,6 @@ public class BTOProperty {
     public BTOProperty(String projName, String neighbourhood, String twoRoom,
     int twoRoomAmt, int twoRoomPrice, String threeRoom, int threeRoomAmt,
     int threeRoomPrice, String openDate, String closeDate, ArrayList<Manager> managerICRef, int officerSlot, ArrayList<Officer> officerList){
-        this.propertyID = idCounter++;
-        
         this.projectName = projName;
         this.neighbourhood = neighbourhood;
         this.twoRoom = twoRoom;
@@ -126,10 +122,6 @@ public class BTOProperty {
 
     public ArrayList<Officer> getOfficers() {
         return officers;
-    }
-
-    public int getPropertyID() {
-        return propertyID;
     }
 
     public ArrayList<Applicant> getTwoRoomApplicants() {

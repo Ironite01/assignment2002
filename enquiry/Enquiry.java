@@ -6,15 +6,15 @@ import java.util.HashMap;
 import assignment2002.utils.Authenticator;
 
 public class Enquiry {
-	private int projectId;
+	private String projectName;
 	private String applicantNric;
 	private HashMap<Date, Message> messages = new HashMap<Date, Message>();
 	private Date endDate; // if null = unresolved enquiry
 	
-	public Enquiry(String applicantNric, int projectId, String msg) {
+	public Enquiry(String applicantNric, String projectName, String msg) {
 		if (Authenticator.isValidNRIC(applicantNric)) {
 			this.applicantNric = applicantNric;
-			this.projectId = projectId;
+			this.projectName = projectName;
 			this.addMessage(applicantNric, msg);
 			return;
 		}
@@ -25,8 +25,8 @@ public class Enquiry {
 		return this.applicantNric;
 	}
 	
-	public int getProjectId() {
-		return this.projectId;
+	public String getProjectName() {
+		return this.projectName;
 	}
 	
 	public HashMap<Date, Message> getAllMessages() {

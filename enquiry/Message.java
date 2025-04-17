@@ -12,7 +12,7 @@ public class Message {
 	private Date date;
 	private String authorNric;
 	
-	Message(String msg, String authorNric) {
+	public Message(String msg, String authorNric) {
 		if (Authenticator.isValidNRIC(authorNric)) {
 			this.msg = msg;
 			this.date = new Date();

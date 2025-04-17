@@ -26,8 +26,8 @@ public class ProjectPrinter {
                 for(Manager m: project.getManagerIC()){
                     managerIC = m.getName();
                 }
-                System.out.printf("| %-5d | %-15s | %-20s | %-15s | %-8s | %-12d | %-13d | %-10s | %-14d | %-14d | %-12s | %-12s | %-14d | %-30s |\n", 
-                project.getPropertyID(),managerIC, project.getProjectName(), project.getNeighbourhood(), project.getTwoRoom(), 
+                System.out.printf("| %-15s | %-20s | %-15s | %-8s | %-12d | %-13d | %-10s | %-14d | %-14d | %-12s | %-12s | %-14d | %-30s |\n", 
+                managerIC, project.getProjectName(), project.getNeighbourhood(), project.getTwoRoom(), 
                 project.getTwoRoomAmt(), project.getTwoRoomPrice(), project.getThreeRoom(), project.getThreeRoomAmt(),
                 project.getThreeRoomPrice(), project.getOpenDate(), project.getCloseDate(), project.getOfficerSlot(), collatedOfficers);
                 
