@@ -2,7 +2,6 @@ package assignment2002.user;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 
 import assignment2002.BTOProperty;
 import assignment2002.ManagerController;
@@ -46,8 +45,7 @@ public class Manager extends User{
     }
 
     private void editBTOListing(){
-
-
+        //Redundant maybe
     }
 
     //Idk if boolean or just void error checking all done at ManagerController
@@ -81,7 +79,37 @@ public class Manager extends User{
         .toList();
     }
 
+    public boolean projNameExists(ArrayList<BTOProperty> btoList, String projName){
+        return btoList.stream().anyMatch(p -> p.getProjectName().equalsIgnoreCase(projName));
+    }
         
+    public void updateProjectName(ArrayList<BTOProperty> btoList, String oldName, String newName){
+        for(BTOProperty p : btoList){
+            if(p.getProjectName().equalsIgnoreCase(oldName)){
+                p.setProjectName(newName);
+                break;
+            }
+        }
+    }
+
+    public void updateBTOByColumn(ArrayList<BTOProperty> btoList, String projName, String fieldName, String newValue) {
+        for (BTOProperty p : btoList) {
+            if (p.getProjectName().equalsIgnoreCase(projName)) {
+                switch (fieldName) {
+                    case "neighbourhood" -> p.setNeighbourhood(newValue);
+                    case "twoRoomAmt" -> p.setTwoRoomAmt(Integer.parseInt(newValue));
+                    case "twoRoomPrice" -> p.setTwoRoomPrice(Integer.parseInt(newValue));
+                    case "threeRoomAmt" -> p.setThreeRoomAmt(Integer.parseInt(newValue));
+                    case "threeRoomPrice" -> p.setThreeRoomPrice(Integer.parseInt(newValue));
+                    case "openDate" -> p.setOpenDate(newValue);
+                    case "closeDate" -> p.setCloseDate(newValue);
+                    case "officerSlot" -> p.setOfficerSlot(Integer.parseInt(newValue));
+                }
+                break;
+            }
+        }
+    }
+    
 
     public void manageOfficerRegis(){
 

@@ -140,5 +140,41 @@ public class BTOProperty {
         }
     }
     
+    public void setProjectName(String projectName) {
+        this.projectName = projectName;
+    }
+
+    public void setNeighbourhood(String neighbourhood) {
+        this.neighbourhood = neighbourhood;
+    }
+
+    public void setTwoRoomAmt(int twoRoomAmt) {
+        this.twoRoomAmt = twoRoomAmt;
+    }
+
+    public void setTwoRoomPrice(int twoRoomPrice) {
+        this.twoRoomPrice = twoRoomPrice;
+    }
+
+    public void setThreeRoomAmt(int threeRoomAmt) {
+        this.threeRoomAmt = threeRoomAmt;
+    }
+
+    public void setThreeRoomPrice(int threeRoomPrice) {
+        this.threeRoomPrice = threeRoomPrice;
+    }
+
+    public void setOpenDate(String openDate) {
+        this.openDate = openDate;
+    }
+
+    public void setCloseDate(String closeDate) {
+        this.closeDate = closeDate;
+    }
+
+    public void setOfficerSlot(int officerSlot) {
+        this.officerSlot = officerSlot;
+    }
+    
 
 }

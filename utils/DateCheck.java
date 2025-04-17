@@ -21,7 +21,7 @@ public class DateCheck {
 
         try {
             LocalDate.parse(inputDate, formatter);
-            System.out.println("Date Accepted");
+            System.out.println("This is a valid Date");
             return true;
             
         } catch (DateTimeParseException e) {

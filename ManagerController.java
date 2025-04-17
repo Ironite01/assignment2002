@@ -2,6 +2,7 @@ package assignment2002;
 
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.List;
 
 import assignment2002.user.Manager;
 import assignment2002.user.Officer;
@@ -21,6 +22,20 @@ public class ManagerController {
         this.userList = userList;
     }
 
+    private String getColValue(BTOProperty p, String colName) {
+        return switch (colName) {
+            case "neighbourhood" -> p.getNeighbourhood();
+            case "twoRoomAmt" -> String.valueOf(p.getTwoRoomAmt());
+            case "twoRoomPrice" -> String.valueOf(p.getTwoRoomPrice());
+            case "threeRoomAmt" -> String.valueOf(p.getThreeRoomAmt());
+            case "threeRoomPrice" -> String.valueOf(p.getThreeRoomPrice());
+            case "openDate" -> p.getOpenDate();
+            case "closeDate" -> p.getCloseDate();
+            case "officerSlot" -> String.valueOf(p.getOfficerSlot());
+            default -> "Undefined";
+        };
+    }
+    
     public void showMenu(){
         Scanner sc = new Scanner(System.in);        
         boolean run = true;
@@ -35,9 +50,9 @@ public class ManagerController {
             int choice = sc.nextInt();
 
             switch (choice) {
-                case 1-> manageBTOProjects(btoList);
-                case 2 -> viewVisibilityMenu(btoList, sc);
-                case 4-> viewProjsMenu(btoList, sc);
+                case 1-> manageBTOProjects(sc);
+                case 2 -> viewVisibilityMenu(sc);
+                case 4-> viewProjsMenu(sc);
                 case 100-> run = false;
                 default -> System.out.println("Retry");
         } 
@@ -48,9 +63,7 @@ public class ManagerController {
         
     }
 
-    private void manageBTOProjects(ArrayList<BTOProperty> btoList){
-
-        Scanner sc = new Scanner(System.in);
+    private void manageBTOProjects(Scanner sc){
 
         System.out.println("1: Add BTO Project");
         System.out.println("2: Edit BTO Project");
@@ -61,24 +74,16 @@ public class ManagerController {
         
 
         switch(mode){
-            //Create
-            case 1->createBTOMenu(this.manager, btoList, sc);
-
-
-            //Edit
-            case 2 -> System.out.println("TEMP");
-
-            
-            //Delete
-            case 3 -> deleteBTOMenu(btoList, sc);
-            
+            case 1 -> createBTOMenu(sc);
+            case 2 -> editBTOMenu(sc);
+            case 3 -> deleteBTOMenu(sc);
             case 4 -> System.out.println("Returning Back");
         }
         
     }
 
 
-    private void createBTOMenu(Manager manager, ArrayList<BTOProperty> btoList, Scanner sc){
+    private void createBTOMenu(Scanner sc){
         String twoRoom = "2-Room", threeRoom = "3-Room";
         int twoRoomAmt = 0, twoRoomPrice = 0;
         int threeRoomAmt = 0, threeRoomPrice = 0;
@@ -90,11 +95,7 @@ public class ManagerController {
             System.out.print("Project Name: ");
             projName = sc.nextLine().trim();
 
-            String temp = projName;
-            boolean exists = btoList.stream()
-            .anyMatch(p -> p.getProjectName().equalsIgnoreCase(temp));
-
-            if(exists){
+            if(manager.projNameExists(btoList, projName)){
                 System.out.println("Duplicate Project Name");
                 System.out.println("Please Try Again");
                 continue;
@@ -153,12 +154,13 @@ public class ManagerController {
                 
             } while (!DateCheck.dateValidator(openDate));
                        
-    
+
             do {
                 System.out.print("Closing Date for HDB (MM/DD/YYYY): "); //Idk could be better
                 closeDate = sc.nextLine();
                 
             } while (!DateCheck.dateValidator(closeDate));
+
 
             if(DateCheck.dateComparator(openDate, closeDate)){
                 break;
@@ -198,7 +200,7 @@ public class ManagerController {
         BTOFileService.appendBTO(formattedString);
     }
 
-    private void deleteBTOMenu(ArrayList<BTOProperty> btoList, Scanner sc){
+    private void deleteBTOMenu(Scanner sc){
         int choice;
         BTOProperty propertyToDel;
         System.out.println("Project List: ");
@@ -257,7 +259,370 @@ public class ManagerController {
         }
     }
 
-    private void viewProjsMenu(ArrayList<BTOProperty> btoList, Scanner sc){
+    private void editBTOMenu(Scanner sc){
+        boolean running = true;
+
+        while (running) {
+            System.out.println("==== EDIT MENU ====");
+            System.out.println("1. Edit Project Name");
+            System.out.println("2. Edit Neighbourhood");
+            System.out.println("3. Edit Two Room Amount");
+            System.out.println("4. Edit Two Room Price");
+            System.out.println("5. Edit Three Room Amount");
+            System.out.println("6. Edit Three Room Price");
+            System.out.println("7. Edit Open Date");
+            System.out.println("8. Edit Close Date");
+            System.out.println("9. Edit Officer Slots");
+            System.out.println("10. Edit Visibility"); //Idk if this should be here
+            System.out.println("0. Exit Menu"); 
+
+            int choice = sc.nextInt();
+            sc.nextLine();
+
+
+
+            switch (choice) {
+                case 0-> running = false;
+                case 1-> editProjNameMenu("projName", sc);
+                case 2-> genericEditMenu("neighbourhood","Neighbourhood", sc);
+                case 3 -> genericEditMenu("twoRoomAmt", "2-Room Amount", sc);
+                case 4 -> genericEditMenu("twoRoomPrice", "2-Room Price", sc);
+                case 5 -> genericEditMenu("threeRoomAmt", "3-Room Amount", sc);
+                case 6 -> genericEditMenu("threeRoomPrice", "3-Room Price", sc);
+                case 7 -> editOpenDateMenu("openDate", sc);
+                case 8 -> editCloseDateMenu("closeDate",sc);
+                case 9 -> editOfficerSlotsMenu("officerSlot",sc);
+                default-> System.out.println("Invalid Choice Try Again");
+            }
+        }
+        System.out.println("Exiting Menu");
+    }
+
+    private void editProjNameMenu(String colName, Scanner sc){
+        manager.viewAllProjects(btoList);
+        String oldProjName, newProjName;
+
+        while (true){ //Pick a Project
+            System.out.println("==== PROJ NAME EDIT ====");
+            System.out.print("Project Name: ");
+            oldProjName = sc.nextLine();
+
+            if(manager.projNameExists(btoList, oldProjName)){
+                break;
+            }
+            System.out.println("Try Again!\n");
+        }
+
+        while (true) { //New Name
+            System.out.print("New Project Name: ");
+            newProjName = sc.nextLine();
+
+            if(manager.projNameExists(btoList, newProjName)){
+                System.out.println("Name Already Taken");
+                System.out.println("Please Try Again!");
+                continue;
+            } break;
+        }
+
+
+        while (true) { //Confirmation
+            System.out.println("=== PROJ NAME CHANGES ===");
+            System.out.println(oldProjName + " -> " + newProjName);
+            System.out.println("Old Proj Name: " + oldProjName);
+            System.out.println("New Proj Name: " + newProjName);
+            System.out.print("Confirm (Y/N): ");
+
+            String confirm = sc.nextLine().toLowerCase().trim();
+
+            if(confirm.equals("y")){
+                //Make Manager Function + BTOFileService to Edit Name only
+                manager.updateProjectName(btoList, oldProjName, newProjName);
+                BTOFileService.editBTOByColumn(oldProjName, colName, newProjName);
+                // BTOFileService.editBTOProjectName(oldProjName,newProjName);
+                break;
+            } 
+            else if(confirm.equals("n")){
+                System.out.println("Exiting out");
+                break;
+            }
+            else{
+                System.out.println("Try Again");
+            }
+        }
+
+
+    }
+
+    private void editOpenDateMenu(String colName, Scanner sc){
+        String projName;
+
+        manager.viewAllProjects(btoList);
+        System.out.println("=== OPEN DATE EDIT ===");
+
+        while (true) {
+            System.out.print("Enter Project Name to Edit: ");
+            projName = sc.nextLine().trim();
+
+            if (manager.projNameExists(btoList, projName)) {
+                break;
+            } else{
+                System.out.println("Project Name Not Found");
+            }
+        }
+
+        String checkName = projName;
+        // Extract old value
+        String oldOpenDate = btoList.stream()
+            .filter(p -> p.getProjectName().equalsIgnoreCase(checkName))
+            .map(p -> getColValue(p, colName))
+            .findFirst()
+            .orElse("Unknown");
+
+        String closeDate = btoList.stream()
+            .filter(p -> p.getProjectName().equalsIgnoreCase(checkName))
+            .map(p -> getColValue(p, "closeDate"))
+            .findFirst()
+            .orElse("Unknown");
+
+
+        while (true) {
+            System.out.println("Old Open Date: " + oldOpenDate);
+            System.out.println("Current Close Date: " + closeDate);
+            System.out.print("New Open Date (MM/DD/YYYY): ");
+            String newOpenDate = sc.nextLine().trim();
+    
+            if(!DateCheck.dateValidator(newOpenDate)){
+                System.out.println("Try Again");
+                continue;
+            }
+
+            if (!DateCheck.dateComparator(newOpenDate, closeDate)) {
+                System.out.println("=== ERROR! ===");
+                System.out.println("Open Date comes after Close Date! Try Again!\n");
+                continue;
+            }
+
+            System.out.printf("Confirm change from %s to %s? (Y/N): ", oldOpenDate, newOpenDate);
+            String confirm = sc.nextLine().trim().toLowerCase();
+    
+            if (confirm.equals("y")) {
+                manager.updateBTOByColumn(btoList, projName, colName, newOpenDate); // optional
+                BTOFileService.editBTOByColumn(projName, colName, newOpenDate);
+                break;
+            } else if(confirm.equals("n")){
+                System.out.println("Cancelled.");
+                System.out.println("Exiting....");
+            }
+            else{
+                System.out.println("Invalid Input Try Again!");
+            }
+        }
+
+
+    }
+
+
+
+    private void editCloseDateMenu(String colName, Scanner sc){
+        String projName;
+
+        manager.viewAllProjects(btoList);
+        System.out.println("=== CLOSE DATE EDIT ===");
+
+        while (true) {
+            System.out.print("Enter Project Name to Edit: ");
+            projName = sc.nextLine().trim();
+
+            if (manager.projNameExists(btoList, projName)) {
+                break;
+            } else{
+                System.out.println("Project Name Not Found");
+            }
+        }
+
+        String checkName = projName;
+        // Extract old value
+        String oldCloseDate = btoList.stream()
+            .filter(p -> p.getProjectName().equalsIgnoreCase(checkName))
+            .map(p -> getColValue(p, colName))
+            .findFirst()
+            .orElse("Unknown");
+
+        String openDate = btoList.stream()
+            .filter(p -> p.getProjectName().equalsIgnoreCase(checkName))
+            .map(p -> getColValue(p, "openDate"))
+            .findFirst()
+            .orElse("Unknown");
+
+
+        while (true) {
+            System.out.println("Old Close Date: " + oldCloseDate);
+            System.out.println("Current Open Date: " + openDate);
+            System.out.print("New Close Date (MM/DD/YYYY): ");
+            String newCloseDate = sc.nextLine().trim();
+    
+            if(!DateCheck.dateValidator(newCloseDate)){
+                System.out.println("Try Again");
+                continue;
+            }
+
+            if (!DateCheck.dateComparator(openDate, newCloseDate)) {
+                System.out.println("=== ERROR! ===");
+                System.out.println("Close Date Comes Before Open Date! Try Again!\n");
+                continue;
+            }
+
+            System.out.printf("Confirm change from %s to %s? (Y/N): ", oldCloseDate, newCloseDate);
+            String confirm = sc.nextLine().trim().toLowerCase();
+    
+            if (confirm.equals("y")) {
+                manager.updateBTOByColumn(btoList, projName, colName, newCloseDate); // optional
+                BTOFileService.editBTOByColumn(projName, colName, newCloseDate);
+                break;
+            } else if(confirm.equals("n")){
+                System.out.println("Cancelled.");
+                System.out.println("Exiting....");
+            }
+            else{
+                System.out.println("Invalid Input Try Again!");
+            }
+        }
+    }
+
+    private void editOfficerSlotsMenu(String colName, Scanner sc){
+        String projName;
+
+        manager.viewAllProjects(btoList);
+        System.out.println("=== OFFICER SLOT EDIT ===");
+
+        while (true) {
+            System.out.print("Enter Project Name to Edit: ");
+            projName = sc.nextLine().trim();
+
+            if (manager.projNameExists(btoList, projName)) {
+                break;
+            } else{
+                System.out.println("Project Name Not Found");
+            }
+        }
+
+        String checkName = projName;
+        // Extract old value
+        String oldOfficerSlots = btoList.stream()
+            .filter(p -> p.getProjectName().equalsIgnoreCase(checkName))
+            .map(p -> getColValue(p, colName))
+            .findFirst()
+            .orElse("Unknown");
+        
+        int currentOfficersRegistered = btoList.stream()
+            .filter(p -> p.getProjectName().equalsIgnoreCase(checkName))
+            .map(p -> p.getOfficers().size())  
+            .findFirst()
+            .orElse(0); 
+        
+
+        while (true) {
+            System.out.println("=== EDIT SLOT AMOUNT ===");
+            System.out.println("Current Total Officer Slots: " + oldOfficerSlots);
+            System.out.println("Current Registered Officer Amount: " + currentOfficersRegistered);
+            System.out.print("New Officer Slots (1 ~ 10): ");
+            int newOfficerSlots = sc.nextInt();
+            sc.nextLine();
+
+            if(newOfficerSlots < 1 || newOfficerSlots > 10){
+                System.out.println("Invalid Slots Try Again!\n");
+                continue;
+            }
+
+            if(newOfficerSlots < currentOfficersRegistered){
+                System.out.println("Currently Registered Officers > New Slot Amount");
+                System.out.println("Try Again!");
+                continue;
+            }
+
+
+            System.out.printf("Confirm change from %s to %d? (Y/N): ", oldOfficerSlots, newOfficerSlots);
+            String confirm = sc.nextLine().trim().toLowerCase();
+    
+            if (confirm.equals("y")) {
+                manager.updateBTOByColumn(btoList, projName, colName, String.valueOf(newOfficerSlots)); // optional
+                BTOFileService.editBTOByColumn(projName, colName, String.valueOf(newOfficerSlots));
+                break;
+            } else if(confirm.equals("n")){
+                System.out.println("Cancelled.");
+                System.out.println("Exiting....");
+            }
+            else{
+                System.out.println("Invalid Input Try Again!");
+            }
+        }
+    }
+
+    private void genericEditMenu(String colName, String displayName, Scanner sc) {
+        String projName;
+        manager.viewAllProjects(btoList);
+    
+        System.out.printf("==== %s EDIT ====\n", displayName.toUpperCase());
+
+        while (true) {
+            System.out.print("Enter Project Name to Edit: ");
+            projName = sc.nextLine().trim();
+
+            if (manager.projNameExists(btoList, projName)) {
+                break;
+            } else{
+                System.out.println("Project Name Not Found");
+            }
+        }
+        
+        String checkName = projName;
+        // Extract old value
+        String oldValue = btoList.stream()
+            .filter(p -> p.getProjectName().equalsIgnoreCase(checkName))
+            .map(p -> getColValue(p, colName))
+            .findFirst()
+            .orElse("Unknown");
+    
+        while (true) {
+            System.out.println("Old " + displayName + ": " + oldValue);
+            System.out.print("New " + displayName + ": ");
+            String newValue = sc.nextLine().trim();
+
+            if (List.of("twoRoomAmt", "twoRoomPrice", "threeRoomAmt", "threeRoomPrice").contains(colName)) {
+                try {
+                    int parsed = Integer.parseInt(newValue);
+                    if (parsed < 0) {
+                        System.out.println("Value cannot be negative. Try again!");
+                        continue;
+                    }
+                } catch (NumberFormatException e) {
+                    System.out.println("Invalid number format. Please enter a valid integer.");
+                    continue;
+                }
+            }
+    
+            System.out.printf("Confirm change from %s to %s? (Y/N): ", oldValue, newValue);
+            String confirm = sc.nextLine().trim().toLowerCase();
+    
+            if (confirm.equals("y")) {
+                manager.updateBTOByColumn(btoList, projName, colName, newValue); // optional
+                BTOFileService.editBTOByColumn(projName, colName, newValue);
+                break;
+            } else if(confirm.equals("n")){
+                System.out.println("Cancelled.");
+                System.out.println("Exiting....");
+            }
+            else{
+                System.out.println("Invalid Input Try Again!");
+            }
+        }
+        
+    }
+
+
+
+
+    private void viewProjsMenu(Scanner sc){
         boolean running = true;
         while (running) {
             System.out.println("\n=== View Projects: Filter Menu ===");
@@ -278,7 +643,9 @@ public class ManagerController {
         }
     }
 
-    private void viewVisibilityMenu(ArrayList<BTOProperty> btoList, Scanner sc){
+    
+
+    private void viewVisibilityMenu(Scanner sc){
         manager.viewProjectsVisibility(btoList);
 
         System.out.print("Enter project number to toggle visibility (0 to cancel): ");
