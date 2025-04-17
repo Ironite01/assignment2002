@@ -300,7 +300,8 @@ public class Applicant extends User{
     
 
     @Override
-    public void viewMenu(ArrayList<User> userList, ArrayList<BTOProperty> btoList, Scanner sc) {
+    public void viewMenu(ArrayList<User> userList, ArrayList<BTOProperty> btoList) {
+        Scanner sc = new Scanner(System.in);
         boolean run = true;
 
         do { 
@@ -365,6 +366,7 @@ public class Applicant extends User{
             }
         } while (run);
         
+        sc.close();
     }
 
 }
