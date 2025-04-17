@@ -85,9 +85,24 @@ public class ManagerController {
         int threeRoomAmt = 0, threeRoomPrice = 0;
         int officerSlot = 0;
         String openDate, closeDate;
+        String projName;
 
-        System.out.print("Project Name: ");
-        String projName = sc.nextLine();
+        while (true) {
+            System.out.print("Project Name: ");
+            projName = sc.nextLine().trim();
+
+            String temp = projName;
+            boolean exists = btoList.stream()
+            .anyMatch(p -> p.getProjectName().equalsIgnoreCase(temp));
+
+            if(exists){
+                System.out.println("Duplicate Project Name");
+                System.out.println("Please Try Again");
+                continue;
+            } break;
+
+        }
+
         System.out.print("Neighbourhood: ");
         String neighbourhood = sc.nextLine();
 
