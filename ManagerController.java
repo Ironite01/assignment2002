@@ -269,8 +269,8 @@ public class ManagerController {
             sc.nextLine();
 
             switch(choice){
-                case 1 -> ProjectPrinter.viewProjects(btoList);
-                case 2 -> ProjectPrinter.viewProjects(manager.getMyProjects(btoList));
+                case 1 -> manager.viewAllProjects(btoList);
+                case 2 -> manager.viewMyProjs(btoList);
                 case 3 -> running = false;
                 default -> System.out.println("Invalid Input");
             }

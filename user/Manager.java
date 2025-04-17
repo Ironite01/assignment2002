@@ -7,6 +7,7 @@ import java.util.Scanner;
 import assignment2002.BTOProperty;
 import assignment2002.ManagerController;
 import assignment2002.utils.BTOFileService;
+import assignment2002.utils.ProjectPrinter;
 
 
 public class Manager extends User{
@@ -61,9 +62,12 @@ public class Manager extends User{
     }
 
     
-    public void getAllProjs(ArrayList<BTOProperty> btoList){
-        //TODO: Kind of redundant now lol
+    public void viewAllProjects(ArrayList<BTOProperty> btoList){
+        ProjectPrinter.viewProjects(btoList);
+    }
 
+    public void viewMyProjs (ArrayList<BTOProperty> btoList){
+        ProjectPrinter.viewProjects(btoList);
     }
 
     //TODO: Make this pretty
