@@ -4,22 +4,19 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
 
-import assignment2002.Applicant;
 import assignment2002.BTOProperty;
-import assignment2002.Manager;
-import assignment2002.Officer;
-import assignment2002.User;
+import assignment2002.user.Applicant;
+import assignment2002.user.Manager;
+import assignment2002.user.Officer;
+import assignment2002.user.User;
 
 import java.util.ArrayList;
 
-public class LoadInfo{
+public class LoadInfo implements FilePath {
 
     public static ArrayList<User> loadUsers(){ //Static function no need init.
         ArrayList<User> users = new ArrayList<>();
-        String applicantLoc = "Information/ApplicantList.txt";
-        String officerLoc = "Information/OfficerList.txt";
-        String managerLoc = "Information/ManagerList.txt";
-        String[] fileLocations = {applicantLoc, officerLoc, managerLoc};
+        String[] fileLocations = {APPLICANT_TXT_PATH, OFFICER_TXT_PATH, MANAGER_TXT_PATH};
         
 
         for(String file : fileLocations){
@@ -34,13 +31,13 @@ public class LoadInfo{
                     // System.out.println(line); //Troubleshooting delete later
                     String[] info = line.split("\t");
 
-                    if (file.equals(applicantLoc)){
+                    if (file.equals(APPLICANT_TXT_PATH)){
                         users.add(new Applicant(info[0],info[1],Integer.parseInt(info[2]),info[3],info[4]));
                         
-                    } else if (file.equals(officerLoc)){
+                    } else if (file.equals(OFFICER_TXT_PATH)){
                         users.add(new Officer(info[0],info[1],Integer.parseInt(info[2]),info[3],info[4]));
 
-                    } else if (file.equals(managerLoc)){
+                    } else if (file.equals(MANAGER_TXT_PATH)){
                         users.add(new Manager(info[0],info[1],Integer.parseInt(info[2]),info[3],info[4]));
                     }
                 }

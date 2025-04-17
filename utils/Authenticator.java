@@ -4,16 +4,16 @@ import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import assignment2002.User;
+import assignment2002.user.User;
 
-public class Authenticator {
+public interface Authenticator {
 	public static User getAuthenticatedUser(String NRIC, String password) {
 		// Forward any errors to main thread - we do not perform any exception handling here.
 		User temp = getUserByNRIC(NRIC);
-		if (isAuthenticated(temp, password)) {
+		if (temp != null && isAuthenticated(temp, password)) {
 			return temp;
 		}
-		throw new IllegalArgumentException("Unable to authenticate user");
+		return null;
 	}
 	
 	public static boolean isValidNRIC(String NRIC) {
@@ -33,7 +33,7 @@ public class Authenticator {
 				return u;
 			}
 		}
-		throw new NullPointerException("No user found with NRIC = " + NRIC);
+		return null;
 	}
 	
 	// Rationale of seperating the authorisation is as follows:

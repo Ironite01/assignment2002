@@ -1,7 +1,9 @@
-package assignment2002;
+package assignment2002.enquiry;
 
 import java.util.Date;
 import java.util.HashMap;
+
+import assignment2002.utils.Authenticator;
 
 public class Enquiry {
 	private int projectId;
@@ -10,9 +12,13 @@ public class Enquiry {
 	private Date endDate; // if null = unresolved enquiry
 	
 	public Enquiry(String applicantNric, int projectId, String msg) {
-		this.applicantNric = applicantNric;
-		this.projectId = projectId;
-		this.addMessage(applicantNric, msg);
+		if (Authenticator.isValidNRIC(applicantNric)) {
+			this.applicantNric = applicantNric;
+			this.projectId = projectId;
+			this.addMessage(applicantNric, msg);
+			return;
+		}
+		System.out.println("Unable to generate new enquiry as NRIC = " + applicantNric + " is not a valid NRIC!");
 	}
 	
 	public String getApplicantNric() {
@@ -32,7 +38,7 @@ public class Enquiry {
 			messages.put(new Date(), new Message(msg, nric));
 			return;
 		}
-		throw new Error("User is not allowed to add a new message!");
+		System.out.println("User is not allowed to add a new message!");
 	}
 	
 	// Officer only access

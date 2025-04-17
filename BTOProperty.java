@@ -2,6 +2,10 @@ package assignment2002;
 
 import java.util.ArrayList;
 
+import assignment2002.user.Applicant;
+import assignment2002.user.Manager;
+import assignment2002.user.Officer;
+
 public class BTOProperty {
     private static int idCounter = 100;
     protected int propertyID;

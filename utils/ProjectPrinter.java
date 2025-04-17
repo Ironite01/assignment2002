@@ -3,8 +3,8 @@ package assignment2002.utils;
 import java.util.List;
 
 import assignment2002.BTOProperty;
-import assignment2002.Manager;
-import assignment2002.Officer;
+import assignment2002.user.Manager;
+import assignment2002.user.Officer;
 
 public class ProjectPrinter {
     

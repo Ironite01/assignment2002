@@ -1,9 +1,11 @@
-package assignment2002;
+package assignment2002.user;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+import assignment2002.BTOProperty;
+import assignment2002.ManagerController;
 import assignment2002.utils.BTOFileService;
 
 

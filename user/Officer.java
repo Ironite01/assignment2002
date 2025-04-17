@@ -1,4 +1,4 @@
-package assignment2002;
+package assignment2002.user;
 
 import java.util.List;
 

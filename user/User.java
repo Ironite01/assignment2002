@@ -1,9 +1,11 @@
-package assignment2002;
+package assignment2002.user;
 
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class User {
+import assignment2002.BTOProperty;
+
+public class User implements UserInterface {
     private String name;
     private String NRIC;
     private int age;
@@ -19,7 +21,8 @@ public class User {
     }
 
     public void viewMenu(ArrayList<User> userList, ArrayList<BTOProperty> btoList, Scanner sc){
-        
+        System.out.println();
+        return;
     }
     
     public void allInfo(){//Troubleshooting;

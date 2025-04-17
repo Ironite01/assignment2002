@@ -1,4 +1,4 @@
-package assignment2002;
+package assignment2002.enquiry;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +20,7 @@ public class EnquiryService {
 				return e;
 			}
 		}
-		throw new NullPointerException("Unable to find enquiry");
+		return null;
 	}
 	
 	public static void addNewEnquiry(String applicantNric, int projectId, String message) {

@@ -1,4 +1,4 @@
-package assignment2002;
+package assignment2002.user;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -6,6 +6,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
+
+import assignment2002.BTOProperty;
 
 public class Applicant extends User{
 
@@ -41,12 +43,12 @@ public class Applicant extends User{
 
             if (eligibleFor2Rooms || eligibleFor3Rooms){
                 found = true;
-                System.out.printf("Project: %s\nNeighbourhood: %s\n", project.projectName, project.neighbourhood);
+                System.out.printf("Project: %s\nNeighbourhood: %s\n", project.getProjectName(), project.getNeighbourhood());
                 if (eligibleFor2Rooms) {
-                    System.out.printf(" - 2-Room: %d units available, Price: $%d\n", project.twoRoomAmt, project.twoRoomPrice);
+                    System.out.printf(" - 2-Room: %d units available, Price: $%d\n", project.getTwoRoomAmt(), project.getTwoRoomPrice());
                 }
                 if (eligibleFor3Rooms) {
-                    System.out.printf(" - 3-Room: %d units available, Price: $%d\n", project.threeRoomAmt, project.threeRoomPrice);
+                    System.out.printf(" - 3-Room: %d units available, Price: $%d\n", project.getThreeRoomAmt(), project.getThreeRoomPrice());
                 }
                 System.out.println("-------------------------");
             }
@@ -65,13 +67,13 @@ public class Applicant extends User{
         }
 
         if (this.getMaritalStatus().equalsIgnoreCase("Single")) {
-            if (this.getAge() >= 35 && flatType.equals("2-Room") && project.twoRoomAmt > 0) {
+            if (this.getAge() >= 35 && flatType.equals("2-Room") && project.getTwoRoomAmt()> 0) {
                 return true;
             }
         } else if (this.getMaritalStatus().equalsIgnoreCase("Married")) {
             if (this.getAge() >= 21) {
-                if ((flatType.equals("2-Room") && project.twoRoomAmt > 0) ||
-                    (flatType.equals("3-Room") && project.threeRoomAmt > 0)) {
+                if ((flatType.equals("2-Room") && project.getTwoRoomAmt() > 0) ||
+                    (flatType.equals("3-Room") && project.getThreeRoomAmt() > 0)) {
                     return true;
                 }
             }
@@ -87,7 +89,7 @@ public class Applicant extends User{
             return false;
         }
 
-        this.appliedProjects = project.projectName;
+        this.appliedProjects = project.getProjectName();
         this.flatType = flatType;
         this.applicationStatus = APPLICATION_STATUS.PENDING;
 
@@ -327,7 +329,7 @@ public class Applicant extends User{
 
                     BTOProperty selected = null;
                     for (BTOProperty projects: btoList){
-                        if (projects.projectName.equalsIgnoreCase(projName)){
+                        if (projects.getProjectName().equalsIgnoreCase(projName)){
                             selected = projects;
                             break;
                         }
