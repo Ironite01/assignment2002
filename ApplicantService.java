@@ -1,6 +1,8 @@
 package assignment2002;
 
 import assignment2002.user.Applicant;
+import assignment2002.user.Officer;
+import assignment2002.utils.FilePath;
 import java.io.*;
 import java.util.*;
 
@@ -61,14 +63,22 @@ public class ApplicantService {
     
 
     private static boolean updateApplicantFile(Applicant applicant, BTOProperty project, String flatType, String status) {
-        String filePath = "assignment2002/Information/ApplicantList.txt";
-        File file = new File(filePath);
+        String filePath = "";
+
+        if (applicant instanceof Officer) {
+            filePath = FilePath.OFFICER_TXT_PATH;
+        } else if (applicant instanceof Applicant) {
+            filePath = FilePath.APPLICANT_TXT_PATH;
+        }
+        
+        
         String desiredHeader = "Name\tNRIC\tAge\tMaritalStatus\tPassword\tFlatType\tProjectName\tApplicationStatus";
         ArrayList<String> updatedLines = new ArrayList<>();
-        boolean fileExists = file.exists();
         boolean updated = false;
 
-        try (Scanner scanner = new Scanner(file)) {
+        try {
+            File file = new File(filePath);
+            Scanner scanner = new Scanner(file);
             while (scanner.hasNextLine()) {
                 String line = scanner.nextLine();
                 if (line.startsWith("Name\t")) {
