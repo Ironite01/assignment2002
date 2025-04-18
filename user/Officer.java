@@ -2,13 +2,15 @@ package assignment2002.user;
 
 import java.util.List;
 
+import assignment2002.OfficerController;
+
 public class Officer extends Applicant {
-	enum REGISTRATION_STATUS {PENDING, REJECTED, SUCCESSFUL};
+	private enum REGISTRATION_STATUS { PENDING, REJECTED, SUCCESSFUL };
 	
-	// private Project handledProject;
 	private REGISTRATION_STATUS registrationStatus;
+	private String projectName; // Which the officer is handling
 	
-    public Officer(String name, String NRIC, int age, String maritalStatus, String password){
+    public Officer(String name, String NRIC, int age, String maritalStatus, String password) {
         super(name, NRIC, age, maritalStatus, password);
     }
     
@@ -17,6 +19,9 @@ public class Officer extends Applicant {
     }
 
     public Object registerToHandleProject() {
+    	if (applicationStatus == APPLICATION_STATUS.NOTAPPLIED) {
+    		// TODO: Send a
+    	}
     	return null;
     	
     }
@@ -35,5 +40,11 @@ public class Officer extends Applicant {
     
     public Object generateReceipt(Applicant applicant) {
     	return null;
+    }
+    
+    @Override
+    public void viewMenu() {
+        OfficerController aController = new OfficerController(this);
+        aController.showMenu();
     }
 }

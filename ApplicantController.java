@@ -2,18 +2,15 @@ package assignment2002;
 
 import assignment2002.user.Applicant;
 import assignment2002.user.User;
+import assignment2002.utils.Data;
 import assignment2002.utils.ProjectPrinter;
 import java.util.ArrayList;
 import java.util.Scanner;
 public class ApplicantController {
     private Applicant applicant;
-    private ArrayList<BTOProperty> btoList;
-    private ArrayList<User> userList;
 
-    public ApplicantController(Applicant applicant, ArrayList<BTOProperty> btoList, ArrayList<User> userList) {
+    public ApplicantController(Applicant applicant) {
         this.applicant = applicant;
-        this.btoList = btoList;
-        this.userList = userList;
     }
 
     public void showMenu() {
@@ -51,7 +48,7 @@ public class ApplicantController {
     }
 
     private void viewProjects() {
-        ProjectPrinter.viewProjectsForApplicant(applicant, btoList);
+        ProjectPrinter.viewProjectsForApplicant(applicant, Data.btoList);
     }
 
     private void viewStatus() {
@@ -66,7 +63,7 @@ public class ApplicantController {
         String projName = sc.nextLine();
 
         BTOProperty selected = null;
-        for (BTOProperty p : btoList) {
+        for (BTOProperty p : Data.btoList) {
             if (p.getProjectName().equalsIgnoreCase(projName)) {
                 selected = p;
                 break;

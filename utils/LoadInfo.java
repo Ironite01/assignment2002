@@ -58,10 +58,9 @@ public class LoadInfo implements FilePath {
     //add another static function loadProperties() or something similar here.
     public static ArrayList<BTOProperty> loadProperties(ArrayList<User> users){
         ArrayList<BTOProperty> btoList = new ArrayList<>();
-        String propertyLoc = "Information/ProjectList.txt";
 
         try {
-            File propertyFile = new File(propertyLoc);
+            File propertyFile = new File(PROJECT_TXT_PATH);
             Scanner propertyReader = new Scanner(propertyFile);
             propertyReader.nextLine(); //Skip header
 

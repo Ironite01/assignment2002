@@ -136,7 +136,7 @@ public class Manager extends User{
     // View Project Details
 
     public void viewMenu(ArrayList<User> userList, ArrayList<BTOProperty> btoList){
-        ManagerController mController = new ManagerController(this, btoList, userList);
+        ManagerController mController = new ManagerController(this);
         mController.showMenu();
 
     }

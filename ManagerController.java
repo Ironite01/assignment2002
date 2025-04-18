@@ -8,18 +8,15 @@ import assignment2002.user.Manager;
 import assignment2002.user.Officer;
 import assignment2002.user.User;
 import assignment2002.utils.BTOFileService;
+import assignment2002.utils.Data;
 import assignment2002.utils.DateCheck;
 
 public class ManagerController {
     private Manager manager;
-    private ArrayList<BTOProperty> btoList;
-    private ArrayList<User> userList;
 
 
-    public ManagerController(Manager manager, ArrayList<BTOProperty> btoList, ArrayList<User> userList){
+    public ManagerController(Manager manager){
         this.manager = manager;
-        this.btoList = btoList;
-        this.userList = userList;
     }
 
     private String getColValue(BTOProperty p, String colName) {
@@ -95,7 +92,7 @@ public class ManagerController {
             System.out.print("Project Name: ");
             projName = sc.nextLine().trim();
 
-            if(manager.projNameExists(btoList, projName)){
+            if(manager.projNameExists(Data.btoList, projName)){
                 System.out.println("Duplicate Project Name");
                 System.out.println("Please Try Again");
                 continue;
@@ -196,7 +193,7 @@ public class ManagerController {
                 threeRoom, String.valueOf(threeRoomAmt),String.valueOf(threeRoomPrice), openDate, closeDate,
                 managerIC, String.valueOf(officerSlot), "Empty"); //13 Total Inputs
 
-        manager.createBTOListing(btoList, managerICRef, officerRef, formattedString);
+        manager.createBTOListing(Data.btoList, managerICRef, officerRef, formattedString);
         BTOFileService.appendBTO(formattedString);
     }
 
@@ -205,15 +202,15 @@ public class ManagerController {
         BTOProperty propertyToDel;
         System.out.println("Project List: ");
 
-        if (btoList.isEmpty()) {
+        if (Data.btoList.isEmpty()) {
             System.out.println("No projects available to delete.");
             return;
         }
 
         // Show all projects with index
         while(true){
-            for (int i = 0; i < btoList.size(); i++) {
-                BTOProperty p = btoList.get(i);
+            for (int i = 0; i < Data.btoList.size(); i++) {
+                BTOProperty p = Data.btoList.get(i);
                 System.out.printf("%d. %s (%s)\n", i + 1, p.getProjectName(), p.getNeighbourhood());
             }
     
@@ -226,12 +223,12 @@ public class ManagerController {
                 return;
             }
         
-            if (choice < 1 || choice > btoList.size()) {
+            if (choice < 1 || choice > Data.btoList.size()) {
                 System.out.println("Invalid choice.");
                 continue;
             }
 
-            propertyToDel  = btoList.get(choice - 1);
+            propertyToDel  = Data.btoList.get(choice - 1);
             System.out.println("=== Project DELETION Confirmation ===");
             System.out.printf("Project Chosen: %s\n", propertyToDel.getProjectName());
             System.out.printf("Project Neighbourhood: %s\n", propertyToDel.getNeighbourhood());
@@ -249,7 +246,7 @@ public class ManagerController {
         }
 
 
-        if(manager.deleteBTOListing(btoList, propertyToDel)){
+        if(manager.deleteBTOListing(Data.btoList, propertyToDel)){
             System.out.println("Project deleted successfully.");
             BTOFileService.removeBTO(propertyToDel.getProjectName());
 
@@ -299,7 +296,7 @@ public class ManagerController {
     }
 
     private void editProjNameMenu(String colName, Scanner sc){
-        manager.viewAllProjects(btoList);
+        manager.viewAllProjects(Data.btoList);
         String oldProjName, newProjName;
 
         while (true){ //Pick a Project
@@ -307,7 +304,7 @@ public class ManagerController {
             System.out.print("Project Name: ");
             oldProjName = sc.nextLine();
 
-            if(manager.projNameExists(btoList, oldProjName)){
+            if(manager.projNameExists(Data.btoList, oldProjName)){
                 break;
             }
             System.out.println("Try Again!\n");
@@ -317,7 +314,7 @@ public class ManagerController {
             System.out.print("New Project Name: ");
             newProjName = sc.nextLine();
 
-            if(manager.projNameExists(btoList, newProjName)){
+            if(manager.projNameExists(Data.btoList, newProjName)){
                 System.out.println("Name Already Taken");
                 System.out.println("Please Try Again!");
                 continue;
@@ -336,7 +333,7 @@ public class ManagerController {
 
             if(confirm.equals("y")){
                 //Make Manager Function + BTOFileService to Edit Name only
-                manager.updateProjectName(btoList, oldProjName, newProjName);
+                manager.updateProjectName(Data.btoList, oldProjName, newProjName);
                 BTOFileService.editBTOByColumn(oldProjName, colName, newProjName);
                 // BTOFileService.editBTOProjectName(oldProjName,newProjName);
                 break;
@@ -356,14 +353,14 @@ public class ManagerController {
     private void editOpenDateMenu(String colName, Scanner sc){
         String projName;
 
-        manager.viewAllProjects(btoList);
+        manager.viewAllProjects(Data.btoList);
         System.out.println("=== OPEN DATE EDIT ===");
 
         while (true) {
             System.out.print("Enter Project Name to Edit: ");
             projName = sc.nextLine().trim();
 
-            if (manager.projNameExists(btoList, projName)) {
+            if (manager.projNameExists(Data.btoList, projName)) {
                 break;
             } else{
                 System.out.println("Project Name Not Found");
@@ -372,13 +369,13 @@ public class ManagerController {
 
         String checkName = projName;
         // Extract old value
-        String oldOpenDate = btoList.stream()
+        String oldOpenDate = Data.btoList.stream()
             .filter(p -> p.getProjectName().equalsIgnoreCase(checkName))
             .map(p -> getColValue(p, colName))
             .findFirst()
             .orElse("Unknown");
 
-        String closeDate = btoList.stream()
+        String closeDate = Data.btoList.stream()
             .filter(p -> p.getProjectName().equalsIgnoreCase(checkName))
             .map(p -> getColValue(p, "closeDate"))
             .findFirst()
@@ -406,7 +403,7 @@ public class ManagerController {
             String confirm = sc.nextLine().trim().toLowerCase();
     
             if (confirm.equals("y")) {
-                manager.updateBTOByColumn(btoList, projName, colName, newOpenDate); // optional
+                manager.updateBTOByColumn(Data.btoList, projName, colName, newOpenDate); // optional
                 BTOFileService.editBTOByColumn(projName, colName, newOpenDate);
                 break;
             } else if(confirm.equals("n")){
@@ -426,14 +423,14 @@ public class ManagerController {
     private void editCloseDateMenu(String colName, Scanner sc){
         String projName;
 
-        manager.viewAllProjects(btoList);
+        manager.viewAllProjects(Data.btoList);
         System.out.println("=== CLOSE DATE EDIT ===");
 
         while (true) {
             System.out.print("Enter Project Name to Edit: ");
             projName = sc.nextLine().trim();
 
-            if (manager.projNameExists(btoList, projName)) {
+            if (manager.projNameExists(Data.btoList, projName)) {
                 break;
             } else{
                 System.out.println("Project Name Not Found");
@@ -442,13 +439,13 @@ public class ManagerController {
 
         String checkName = projName;
         // Extract old value
-        String oldCloseDate = btoList.stream()
+        String oldCloseDate = Data.btoList.stream()
             .filter(p -> p.getProjectName().equalsIgnoreCase(checkName))
             .map(p -> getColValue(p, colName))
             .findFirst()
             .orElse("Unknown");
 
-        String openDate = btoList.stream()
+        String openDate = Data.btoList.stream()
             .filter(p -> p.getProjectName().equalsIgnoreCase(checkName))
             .map(p -> getColValue(p, "openDate"))
             .findFirst()
@@ -476,7 +473,7 @@ public class ManagerController {
             String confirm = sc.nextLine().trim().toLowerCase();
     
             if (confirm.equals("y")) {
-                manager.updateBTOByColumn(btoList, projName, colName, newCloseDate); // optional
+                manager.updateBTOByColumn(Data.btoList, projName, colName, newCloseDate); // optional
                 BTOFileService.editBTOByColumn(projName, colName, newCloseDate);
                 break;
             } else if(confirm.equals("n")){
@@ -492,14 +489,14 @@ public class ManagerController {
     private void editOfficerSlotsMenu(String colName, Scanner sc){
         String projName;
 
-        manager.viewAllProjects(btoList);
+        manager.viewAllProjects(Data.btoList);
         System.out.println("=== OFFICER SLOT EDIT ===");
 
         while (true) {
             System.out.print("Enter Project Name to Edit: ");
             projName = sc.nextLine().trim();
 
-            if (manager.projNameExists(btoList, projName)) {
+            if (manager.projNameExists(Data.btoList, projName)) {
                 break;
             } else{
                 System.out.println("Project Name Not Found");
@@ -508,13 +505,13 @@ public class ManagerController {
 
         String checkName = projName;
         // Extract old value
-        String oldOfficerSlots = btoList.stream()
+        String oldOfficerSlots = Data.btoList.stream()
             .filter(p -> p.getProjectName().equalsIgnoreCase(checkName))
             .map(p -> getColValue(p, colName))
             .findFirst()
             .orElse("Unknown");
         
-        int currentOfficersRegistered = btoList.stream()
+        int currentOfficersRegistered = Data.btoList.stream()
             .filter(p -> p.getProjectName().equalsIgnoreCase(checkName))
             .map(p -> p.getOfficers().size())  
             .findFirst()
@@ -545,7 +542,7 @@ public class ManagerController {
             String confirm = sc.nextLine().trim().toLowerCase();
     
             if (confirm.equals("y")) {
-                manager.updateBTOByColumn(btoList, projName, colName, String.valueOf(newOfficerSlots)); // optional
+                manager.updateBTOByColumn(Data.btoList, projName, colName, String.valueOf(newOfficerSlots)); // optional
                 BTOFileService.editBTOByColumn(projName, colName, String.valueOf(newOfficerSlots));
                 break;
             } else if(confirm.equals("n")){
@@ -560,7 +557,7 @@ public class ManagerController {
 
     private void genericEditMenu(String colName, String displayName, Scanner sc) {
         String projName;
-        manager.viewAllProjects(btoList);
+        manager.viewAllProjects(Data.btoList);
     
         System.out.printf("==== %s EDIT ====\n", displayName.toUpperCase());
 
@@ -568,7 +565,7 @@ public class ManagerController {
             System.out.print("Enter Project Name to Edit: ");
             projName = sc.nextLine().trim();
 
-            if (manager.projNameExists(btoList, projName)) {
+            if (manager.projNameExists(Data.btoList, projName)) {
                 break;
             } else{
                 System.out.println("Project Name Not Found");
@@ -577,7 +574,7 @@ public class ManagerController {
         
         String checkName = projName;
         // Extract old value
-        String oldValue = btoList.stream()
+        String oldValue = Data.btoList.stream()
             .filter(p -> p.getProjectName().equalsIgnoreCase(checkName))
             .map(p -> getColValue(p, colName))
             .findFirst()
@@ -605,7 +602,7 @@ public class ManagerController {
             String confirm = sc.nextLine().trim().toLowerCase();
     
             if (confirm.equals("y")) {
-                manager.updateBTOByColumn(btoList, projName, colName, newValue); // optional
+                manager.updateBTOByColumn(Data.btoList, projName, colName, newValue); // optional
                 BTOFileService.editBTOByColumn(projName, colName, newValue);
                 break;
             } else if(confirm.equals("n")){
@@ -633,8 +630,8 @@ public class ManagerController {
             sc.nextLine();
 
             switch(choice){
-                case 1 -> manager.viewAllProjects(btoList);
-                case 2 -> manager.viewMyProjs(btoList);
+                case 1 -> manager.viewAllProjects(Data.btoList);
+                case 2 -> manager.viewMyProjs(Data.btoList);
                 case 3 -> running = false;
                 default -> System.out.println("Invalid Input");
             }
@@ -646,7 +643,7 @@ public class ManagerController {
     
 
     private void viewVisibilityMenu(Scanner sc){
-        manager.viewProjectsVisibility(btoList);
+        manager.viewProjectsVisibility(Data.btoList);
 
         System.out.print("Enter project number to toggle visibility (0 to cancel): ");
         int choice = sc.nextInt();
@@ -656,11 +653,11 @@ public class ManagerController {
             return;
         }
 
-        if (choice < 1 || choice > btoList.size()) {
+        if (choice < 1 || choice > Data.btoList.size()) {
             System.out.println("Invalid choice.");
             return;
         }
-        BTOProperty selected = btoList.get(choice - 1);
+        BTOProperty selected = Data.btoList.get(choice - 1);
         manager.toggleProjectVisiblity(selected);
         System.out.printf("Project '%s' is now %s.\n", selected.getProjectName(), selected.isVisible() ? "VISIBLE" : "HIDDEN");
 

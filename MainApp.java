@@ -37,26 +37,7 @@ public class MainApp {
         }
         user.allInfo();
         //UserService.resetPasswordPrompt(user);
-        
-        try {
-            System.out.println("Enter message for enquiry for project Acacia Breeze:");
-            Scanner s = new Scanner(System.in);
-            String msg = s.nextLine();
-            
-            EnquiryService.addNewEnquiry(user.getNRIC(), "Acacia Breeze", msg);
-            Enquiry e = EnquiryService.getEnquiry(user.getNRIC(), "Acacia Breeze");
-            e.getAllMessages().forEach((Date d, Message m) -> {
-            	System.out.println(d.toGMTString() + " : " + m.getMessage());
-            });
-        } catch (Exception e) {
-        	System.out.println(e.getMessage());
-        	System.exit(0);
-        }
-        //user.viewMenu(userList, btoList, s);
+
+        user.viewMenu();
     }
-    
-
-
-
-
 }

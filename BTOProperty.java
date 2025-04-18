@@ -19,7 +19,8 @@ public class BTOProperty {
     protected String closeDate; //Maybe import module for dates?
     protected ArrayList<Manager> managerIC;
     protected int officerSlot;
-    protected ArrayList<Officer> officers;
+    private ArrayList<Officer> appliedOfficers;
+    protected ArrayList<Officer> officers; // Approved officers
     protected boolean visible = true; // i shall set the default to be true 
     private ArrayList<Applicant> twoRoomApplicants = new ArrayList<>();
     private ArrayList<Applicant> threeRoomApplicants = new ArrayList<>();

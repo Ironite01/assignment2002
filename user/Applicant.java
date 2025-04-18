@@ -9,9 +9,9 @@ public class Applicant extends User{
     private String appliedProjects;
     private String flatType;
 
-    private APPLICATION_STATUS applicationStatus;
+    APPLICATION_STATUS applicationStatus;
 
-    private enum APPLICATION_STATUS {
+    enum APPLICATION_STATUS {
         SUCCESSFUL,
         UNSUCCESSFUL,
         PENDING,
@@ -52,8 +52,8 @@ public class Applicant extends User{
     
 
     @Override
-    public void viewMenu(ArrayList<User> userList, ArrayList<BTOProperty> btoList) {
-        ApplicantController aController = new ApplicantController(this, btoList, userList);
+    public void viewMenu() {
+        ApplicantController aController = new ApplicantController(this);
         aController.showMenu();
     }
 

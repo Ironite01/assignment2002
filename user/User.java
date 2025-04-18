@@ -23,7 +23,7 @@ public class User implements UserInterface {
         System.out.printf("Name: %s \nNRIC: %s\nAge: %d\nMarital Status: %s\nPassword: %s\n\n",getName(), getNRIC(), getAge(), getMaritalStatus(), getPassword());
     }
 
-    public void viewMenu(ArrayList<User> userList, ArrayList<BTOProperty> btoList){
+    public void viewMenu(){
         System.out.println();
         return;
     }
