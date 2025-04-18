@@ -1,16 +1,14 @@
 package assignment2002.utils;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.util.Scanner;
-
 import assignment2002.BTOProperty;
 import assignment2002.user.Applicant;
 import assignment2002.user.Manager;
 import assignment2002.user.Officer;
 import assignment2002.user.User;
-
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 public class LoadInfo implements FilePath {
 
@@ -31,8 +29,17 @@ public class LoadInfo implements FilePath {
                     // System.out.println(line); //Troubleshooting delete later
                     String[] info = line.split("\t");
 
-                    if (file.equals(APPLICANT_TXT_PATH)){
-                        users.add(new Applicant(info[0],info[1],Integer.parseInt(info[2]),info[3],info[4]));
+                    if (file.equals(APPLICANT_TXT_PATH)) {
+                        Applicant a = new Applicant(info[0], info[1], Integer.parseInt(info[2]), info[3], info[4]);
+                    
+                        // These are the 3 new columns i added, i put it as a seperate if statement cos not all user have info on these columns
+                        if (info.length >= 8) {
+                            a.setFlatType(info[5]);
+                            a.setAppliedProject(info[6]);
+                            a.setApplicationStatus(info[7]);
+                        }
+                    
+                        users.add(a);
                         
                     } else if (file.equals(OFFICER_TXT_PATH)){
                         users.add(new Officer(info[0],info[1],Integer.parseInt(info[2]),info[3],info[4]));
