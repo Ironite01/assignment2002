@@ -16,6 +16,7 @@ import java.util.stream.Collectors;
 public class ApplicationService {
 
     private static final List<Application> applications = new ArrayList<>();
+    private static final String FILE_PATH = "assignment2002/Information/Application.txt";
 
     public static boolean isEligible(Applicant applicant, BTOProperty project, String flatType) {
         if (!project.isVisible()) return false;
@@ -47,6 +48,10 @@ public class ApplicationService {
         applicant.setAppliedProject(project.getProjectName());
         applicant.setApplicationStatus("PENDING");
         project.addApplicant(applicant, flatType);
+
+        Application app = new Application(applicant, project, flatType);
+        applications.add(app);
+        saveToFile(app);
 
         return updateApplicantFile(applicant, project, flatType, "PENDING");
     }
@@ -128,6 +133,79 @@ public class ApplicationService {
             return false;
         }
     }
+
+    public static boolean saveToFile(Application app) {
+        File file = new File(FILE_PATH);
+        boolean updated = false;
+        ArrayList<String> updatedLines = new ArrayList<>();
+        String header = "NRIC\tName\tFlatType\tProjectName\tStatus";
+
+        try {
+            if (!file.exists()) {
+                file.getParentFile().mkdirs();
+                file.createNewFile();
+            }
+
+            Scanner sc = new Scanner(file);
+
+            boolean headerExists = false;
+            while (sc.hasNextLine()) {
+                String line = sc.nextLine();
+
+                if (line.startsWith("NRIC\t")) {
+                    headerExists = true;
+                    updatedLines.add(line);
+                    continue;
+                }
+
+                String[] parts = line.split("\t");
+                if (parts.length >= 5 && parts[0].equals(app.getApplicant().getNRIC())) {
+                    String newLine = String.join("\t",
+                            app.getApplicant().getNRIC(),
+                            app.getApplicant().getName(),
+                            app.getFlatType(),
+                            app.getProperty().getProjectName(),
+                            app.getStatus().toString()
+                    );
+                    updatedLines.add(newLine);
+                    updated = true;
+                } else {
+                    updatedLines.add(line);
+                }
+            }
+            sc.close();
+
+            // Add header if file was empty
+            if (updatedLines.isEmpty() && !headerExists) {
+                updatedLines.add(header);
+            }
+
+            // Add new entry if not already updated
+            if (!updated) {
+                updatedLines.add(String.join("\t",
+                        app.getApplicant().getNRIC(),
+                        app.getApplicant().getName(),
+                        app.getFlatType(),
+                        app.getProperty().getProjectName(),
+                        app.getStatus().toString()
+                ));
+            }
+
+            BufferedWriter writer = new BufferedWriter(new FileWriter(file, false));
+            for (String line : updatedLines) {
+                writer.write(line);
+                writer.newLine();
+            }
+            writer.close();
+
+            return true;
+        } catch (IOException e) {
+            System.out.println("Error writing to application.txt: " + e.getMessage());
+            return false;
+        }
+    }
+
+
 
     public static List<Application> getApplications() {
         return applications;
