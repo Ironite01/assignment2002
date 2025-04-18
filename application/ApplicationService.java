@@ -3,9 +3,14 @@ package assignment2002.application;
 import assignment2002.BTOProperty;
 import assignment2002.user.Applicant;
 import assignment2002.user.Officer;
+import assignment2002.user.User;
 import assignment2002.utils.FilePath;
+import assignment2002.user.Manager;
+
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -16,7 +21,7 @@ import java.util.stream.Collectors;
 public class ApplicationService {
 
     private static final List<Application> applications = new ArrayList<>();
-    private static final String FILE_PATH = "assignment2002/Information/Application.txt";
+    private static final String FILE_PATH = "Information/Application.txt";
 
     public static boolean isEligible(Applicant applicant, BTOProperty project, String flatType) {
         if (!project.isVisible()) return false;
@@ -211,6 +216,18 @@ public class ApplicationService {
         return applications;
     }
 
+    public static List<Application> getMyManagedApplications(Manager m) {
+        return applications.stream().filter(p -> p.getProperty().getManagerIC().stream()
+        .anyMatch(managerIC -> managerIC.getNRIC().equalsIgnoreCase(m.getNRIC()))).toList();
+    }
+
+    public static List<Application> getMyManagedApplicationsByStatus(Manager m, Application.ApplicationStatus status) {
+        return getMyManagedApplications(m).stream()
+            .filter(app -> app.getStatus() == status)
+            .toList();
+    }
+    
+
     public static List<Application> getApplicationsByApplicant(Applicant applicant) {
         return applications.stream()
                 .filter(app -> app.getApplicant().equals(applicant))
@@ -235,12 +252,21 @@ public class ApplicationService {
             System.out.println("No available units for flat type: " + flatType);
             return false;
         }
-
+        
+        updateApplicantFile(application.getApplicant(), 
+        property, flatType, "SUCCESSFUL");
+        
         application.setStatus(Application.ApplicationStatus.SUCCESSFUL);
         return true;
     }
 
     public static void rejectApplication(Application application) {
+        BTOProperty property = application.getProperty();
+        String flatType = application.getFlatType();
+
+        updateApplicantFile(application.getApplicant(), 
+        property, flatType, "UNSUCCESSFUL");
+
         application.setStatus(Application.ApplicationStatus.UNSUCCESSFUL);
     }
 
@@ -274,5 +300,59 @@ public class ApplicationService {
         a.getName(), a.getNRIC(), a.getAge(), a.getMaritalStatus(),
         application.getFlatType(), p.getProjectName(), p.getNeighbourhood(),
         application.getStatus());
+    }
+
+    public static void loadApplications(List<User> userList, List<BTOProperty> btoList) {
+    File file = new File(FilePath.APPLICATION_TXT_PATH);
+    if (!file.exists()) {
+        System.out.println("No existing applications found.");
+        return;
+    }
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+            String line = reader.readLine(); // Skip header
+
+            while ((line = reader.readLine()) != null) {
+                String[] info = line.split("\t");
+                if (info.length < 5) continue;
+
+                String nric = info[0];
+                String flatType = info[2];
+                String projectName = info[3];
+                String status = info[4];
+
+                // Find Applicant by NRIC
+                Applicant applicant = (Applicant) userList.stream()
+                    .filter(u -> u instanceof Applicant && u.getNRIC().equalsIgnoreCase(nric))
+                    .findFirst()
+                    .orElse(null);
+
+                // Find Project by name
+                BTOProperty property = btoList.stream()
+                    .filter(p -> p.getProjectName().equalsIgnoreCase(projectName))
+                    .findFirst()
+                    .orElse(null);
+
+                if (applicant != null && property != null) {
+                    Application app = new Application(applicant, property, flatType);
+                    app.setStatus(Application.ApplicationStatus.valueOf(status));
+                    applications.add(app);
+                }
+            }
+
+            System.out.println("Applications loaded successfully.");
+
+        } catch (IOException e) {
+            System.out.println("Failed to load applications: " + e.getMessage());
+        }
+    }
+
+    public static void printApplication(Application app) {
+        System.out.printf("NRIC: %s | Name: %s | Flat: %s | Project: %s | Status: %s\n",
+            app.getApplicant().getNRIC(),
+            app.getApplicant().getName(),
+            app.getFlatType(),
+            app.getProperty().getProjectName(),
+            app.getStatus());
     }
 }

@@ -59,82 +59,82 @@ public class ApplicantService {
         System.out.println("Application withdrawn successfully.");
     }
 
-    // public static String getApplicationStatus(Applicant applicant) {
-    //     return applicant.getApplicationStatus();
-    // }
+    public static String getApplicationStatus(Applicant applicant) {
+        return applicant.getApplicationStatus();
+    }
     
 
-    // private static boolean updateApplicantFile(Applicant applicant, BTOProperty project, String flatType, String status) {
-    //     String filePath = "";
+    private static boolean updateApplicantFile(Applicant applicant, BTOProperty project, String flatType, String status) {
+        String filePath = "";
 
-    //     if (applicant instanceof Officer) {
-    //         filePath = FilePath.OFFICER_TXT_PATH;
-    //     } else if (applicant instanceof Applicant) {
-    //         filePath = FilePath.APPLICANT_TXT_PATH;
-    //     }
+        if (applicant instanceof Officer) {
+            filePath = FilePath.OFFICER_TXT_PATH;
+        } else if (applicant instanceof Applicant) {
+            filePath = FilePath.APPLICANT_TXT_PATH;
+        }
         
         
-    //     String desiredHeader = "Name\tNRIC\tAge\tMaritalStatus\tPassword\tFlatType\tProjectName\tApplicationStatus";
-    //     ArrayList<String> updatedLines = new ArrayList<>();
-    //     boolean updated = false;
+        String desiredHeader = "Name\tNRIC\tAge\tMaritalStatus\tPassword\tFlatType\tProjectName\tApplicationStatus";
+        ArrayList<String> updatedLines = new ArrayList<>();
+        boolean updated = false;
 
-    //     try {
-    //         File file = new File(filePath);
-    //         Scanner scanner = new Scanner(file);
-    //         while (scanner.hasNextLine()) {
-    //             String line = scanner.nextLine();
-    //             if (line.startsWith("Name\t")) {
-    //                 updatedLines.add(desiredHeader);
-    //                 continue;
-    //             }
+        try {
+            File file = new File(filePath);
+            Scanner scanner = new Scanner(file);
+            while (scanner.hasNextLine()) {
+                String line = scanner.nextLine();
+                if (line.startsWith("Name\t")) {
+                    updatedLines.add(desiredHeader);
+                    continue;
+                }
 
-    //             String[] parts = line.split("\t");
-    //             if (parts.length >= 2 && parts[1].equals(applicant.getNRIC())) {
-    //                 String newLine = String.join("\t",
-    //                         applicant.getName(),
-    //                         applicant.getNRIC(),
-    //                         String.valueOf(applicant.getAge()),
-    //                         applicant.getMaritalStatus(),
-    //                         applicant.getPassword(),
-    //                         flatType,
-    //                         (project == null ? "" : project.getProjectName()),
-    //                         status
-    //                 );
-    //                 updatedLines.add(newLine);
-    //                 updated = true;
-    //             } else {
-    //                 updatedLines.add(line);
-    //             }
-    //         }
-    //     } catch (IOException e) {
-    //         System.out.println("Error reading file: " + e.getMessage());
-    //         return false;
-    //     }
+                String[] parts = line.split("\t");
+                if (parts.length >= 2 && parts[1].equals(applicant.getNRIC())) {
+                    String newLine = String.join("\t",
+                            applicant.getName(),
+                            applicant.getNRIC(),
+                            String.valueOf(applicant.getAge()),
+                            applicant.getMaritalStatus(),
+                            applicant.getPassword(),
+                            flatType,
+                            (project == null ? "" : project.getProjectName()),
+                            status
+                    );
+                    updatedLines.add(newLine);
+                    updated = true;
+                } else {
+                    updatedLines.add(line);
+                }
+            }
+        } catch (IOException e) {
+            System.out.println("Error reading file: " + e.getMessage());
+            return false;
+        }
 
-    //     if (!updated) {
-    //         updatedLines.add(desiredHeader);
-    //         String newLine = String.join("\t",
-    //                 applicant.getName(),
-    //                 applicant.getNRIC(),
-    //                 String.valueOf(applicant.getAge()),
-    //                 applicant.getMaritalStatus(),
-    //                 applicant.getPassword(),
-    //                 flatType,
-    //                 (project == null ? "" : project.getProjectName()),
-    //                 status
-    //         );
-    //         updatedLines.add(newLine);
-    //     }
+        if (!updated) {
+            updatedLines.add(desiredHeader);
+            String newLine = String.join("\t",
+                    applicant.getName(),
+                    applicant.getNRIC(),
+                    String.valueOf(applicant.getAge()),
+                    applicant.getMaritalStatus(),
+                    applicant.getPassword(),
+                    flatType,
+                    (project == null ? "" : project.getProjectName()),
+                    status
+            );
+            updatedLines.add(newLine);
+        }
 
-    //     try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath, false))) {
-    //         for (String line : updatedLines) {
-    //             writer.write(line);
-    //             writer.newLine();
-    //         }
-    //         return true;
-    //     } catch (IOException e) {
-    //         System.out.println("Error writing file: " + e.getMessage());
-    //         return false;
-    //     }
-    // }
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath, false))) {
+            for (String line : updatedLines) {
+                writer.write(line);
+                writer.newLine();
+            }
+            return true;
+        } catch (IOException e) {
+            System.out.println("Error writing file: " + e.getMessage());
+            return false;
+        }
+    }
 }

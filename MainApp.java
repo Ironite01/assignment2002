@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Scanner;
 
+import assignment2002.application.ApplicationService;
 import assignment2002.enquiry.Enquiry;
 import assignment2002.enquiry.EnquiryService;
 import assignment2002.enquiry.Message;
@@ -18,11 +19,12 @@ public class MainApp {
     	// TODO: Menu based application
     	ArrayList<User> userList = LoadInfo.loadUsers();
         ArrayList<BTOProperty> btoList = LoadInfo.loadProperties(userList);
+        ApplicationService.loadApplications(userList, btoList);
 
-        System.out.println(btoList);
+        // System.out.println(btoList);
 
         //Showing that the load properties works
-        btoList.get(0).allInfo();
+        // btoList.get(0).allInfo();
 
         //If you want to see how the ArrayList works
         // for(User u: userList){
@@ -35,7 +37,7 @@ public class MainApp {
         	System.out.println("Unable to authenticate user!");
         	return;
         }
-        user.allInfo();
+        // user.allInfo();
         //UserService.resetPasswordPrompt(user);
 
         user.viewMenu();
