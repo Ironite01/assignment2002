@@ -25,7 +25,8 @@ public class BTOFileService {
     Map.entry("closeDate", 9),
     Map.entry("manager", 10),
     Map.entry("officerSlot", 11),
-    Map.entry("officers", 12)
+    Map.entry("officers", 12),
+    Map.entry("visible", 13)
     );
 
     public static void appendBTO(String formattedString){

@@ -29,6 +29,7 @@ public class ManagerController {
             case "openDate" -> p.getOpenDate();
             case "closeDate" -> p.getCloseDate();
             case "officerSlot" -> String.valueOf(p.getOfficerSlot());
+            case "visible" -> Boolean.toString(p.isVisible());
             default -> "Undefined";
         };
     }
@@ -172,6 +173,7 @@ public class ManagerController {
         while(true){
             System.out.println("Max Number of Officers (1 ~ 10): ");
             officerSlot = sc.nextInt();
+            sc.nextLine();
 
             if(officerSlot > 10 || officerSlot < 1){
                 System.out.println("Error! Range between 1 ~ 10");
@@ -181,17 +183,42 @@ public class ManagerController {
 
         }
 
+
+        String visibleString;
+        while (true) {
+            System.out.println("== Visibility of Property ==");
+            System.out.println("Visible = Y");
+            System.out.println("Not Visible = N");
+            System.out.print("Choice: ");
+            visibleString = sc.nextLine().toLowerCase().trim();
+
+            switch (visibleString) {
+                case "y":
+                    System.out.println("Visibility Selected: Visible");
+                    visibleString = "TRUE";
+                    break;
+                case "n":
+                    System.out.println("Visibility Selected: Not Visible");
+                    visibleString = "FALSE";
+                    break;
+                default:
+                    System.out.println("Invalid Input Try Again!");
+                    break;
+            }
+            break;
+            
+        }
+
+        System.out.printf("Project: %s Has Been Successfully Added\n", projName);
         String managerIC = manager.getName();
         ArrayList<Manager> managerICRef = new ArrayList<>();
         ArrayList<Officer> officerRef = new ArrayList<>();
         managerICRef.add(manager);
 
-        sc.nextLine();
-
         String formattedString = String.join("\t", 
                 projName, neighbourhood, twoRoom, String.valueOf(twoRoomAmt), String.valueOf(twoRoomPrice),
                 threeRoom, String.valueOf(threeRoomAmt),String.valueOf(threeRoomPrice), openDate, closeDate,
-                managerIC, String.valueOf(officerSlot), "Empty"); //13 Total Inputs
+                managerIC, String.valueOf(officerSlot), "Empty", visibleString); //14 Total Inputs
 
         manager.createBTOListing(Data.btoList, managerICRef, officerRef, formattedString);
         BTOFileService.appendBTO(formattedString);
@@ -269,7 +296,7 @@ public class ManagerController {
             System.out.println("6. Edit Three Room Price");
             System.out.println("7. Edit Open Date");
             System.out.println("8. Edit Close Date");
-            System.out.println("9. Edit Officer Slots");
+            System.out.println("9. Adjust Maximum Officer Slots");
             System.out.println("10. Edit Visibility"); //Idk if this should be here
             System.out.println("0. Exit Menu"); 
 
@@ -659,6 +686,7 @@ public class ManagerController {
         }
         BTOProperty selected = Data.btoList.get(choice - 1);
         manager.toggleProjectVisiblity(selected);
+        BTOFileService.editBTOByColumn(selected.getProjectName(), "visible", Boolean.toString(selected.isVisible()).toUpperCase());
         System.out.printf("Project '%s' is now %s.\n", selected.getProjectName(), selected.isVisible() ? "VISIBLE" : "HIDDEN");
 
 

@@ -30,10 +30,11 @@ public class Manager extends User{
         String openDate = fragments[8];
         String closeDate = fragments[9];
         int officerSlot= Integer.parseInt(fragments[11]);
+        String visible = fragments[13];
 
 
         return new BTOProperty(projName, neighbourhood, twoRoom, twoRoomAmt, twoRoomPrice, threeRoom,
-         threeRoomAmt, threeRoomPrice, openDate, closeDate, managerList, officerSlot, officerList);
+         threeRoomAmt, threeRoomPrice, openDate, closeDate, managerList, officerSlot, officerList, visible);
 
 
     }

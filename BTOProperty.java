@@ -7,28 +7,28 @@ import assignment2002.user.Manager;
 import assignment2002.user.Officer;
 
 public class BTOProperty {
-    protected String projectName; // Unique identifier
-    protected String neighbourhood;
-    protected String twoRoom; 
-    protected int twoRoomAmt;
-    protected int twoRoomPrice; //Float Double?
-    protected String threeRoom; 
-    protected int threeRoomAmt;
-    protected int threeRoomPrice;
-    protected String openDate;
-    protected String closeDate; //Maybe import module for dates?
-    protected ArrayList<Manager> managerIC;
-    protected int officerSlot;
+    private String projectName; // Unique identifier
+    private String neighbourhood;
+    private String twoRoom; 
+    private int twoRoomAmt;
+    private int twoRoomPrice; //Float Double?
+    private String threeRoom; 
+    private int threeRoomAmt;
+    private int threeRoomPrice;
+    private String openDate;
+    private String closeDate; //Maybe import module for dates?
+    private ArrayList<Manager> managerIC;
+    private int officerSlot;
     private ArrayList<Officer> appliedOfficers;
-    protected ArrayList<Officer> officers; // Approved officers
-    protected boolean visible = true; // i shall set the default to be true 
+    private ArrayList<Officer> officers; // Approved officers
+    private boolean visible; // i shall set the default to be true 
     private ArrayList<Applicant> twoRoomApplicants = new ArrayList<>();
     private ArrayList<Applicant> threeRoomApplicants = new ArrayList<>();
     
 
     public BTOProperty(String projName, String neighbourhood, String twoRoom,
     int twoRoomAmt, int twoRoomPrice, String threeRoom, int threeRoomAmt,
-    int threeRoomPrice, String openDate, String closeDate, ArrayList<Manager> managerICRef, int officerSlot, ArrayList<Officer> officerList){
+    int threeRoomPrice, String openDate, String closeDate, ArrayList<Manager> managerICRef, int officerSlot, ArrayList<Officer> officerList, String visible){
         this.projectName = projName;
         this.neighbourhood = neighbourhood;
         this.twoRoom = twoRoom;
@@ -42,7 +42,7 @@ public class BTOProperty {
         managerIC = managerICRef;
         this.officerSlot = officerSlot;
         officers = officerList; //Holds Object references to the officers
-
+        this.visible = visible.equalsIgnoreCase("true") ? true : false;
     }
 
 

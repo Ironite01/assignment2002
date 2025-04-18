@@ -106,7 +106,7 @@ public class LoadInfo implements FilePath {
 
                 btoList.add(new BTOProperty(info[0], info[1], info[2], Integer.parseInt(info[3]), Integer.parseInt(info[4]),
                 info[5],Integer.parseInt(info[6]),Integer.parseInt(info[7]), info[8], info[9], managerRef,
-                 Integer.parseInt(info[11]), officerRef));
+                 Integer.parseInt(info[11]), officerRef, info[13]));
                 
                 
             }
