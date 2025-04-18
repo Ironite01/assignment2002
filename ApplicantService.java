@@ -51,25 +51,9 @@ public class ApplicantService {
     }
 
     public static String getApplicationStatus(Applicant applicant) {
-        File file = new File("assignment2002/Information/ApplicantList.txt");
-        if (!file.exists()) return "NOT FOUND";
-
-        try (Scanner scanner = new Scanner(file)) {
-            while (scanner.hasNextLine()) {
-                String line = scanner.nextLine();
-                if (line.startsWith("Name\t")) continue;
-
-                String[] parts = line.split("\t");
-                if (parts.length >= 8 && parts[1].equals(applicant.getNRIC())) {
-                    return parts[7].trim();
-                }
-            }
-        } catch (IOException e) {
-            System.out.println("Error reading file: " + e.getMessage());
-        }
-
-        return "NOT FOUND";
+        return applicant.getApplicationStatus();
     }
+    
 
     private static boolean updateApplicantFile(Applicant applicant, BTOProperty project, String flatType, String status) {
         String filePath = "assignment2002/Information/ApplicantList.txt";
