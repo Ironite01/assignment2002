@@ -27,6 +27,11 @@ public class ApplicantService {
             return false;
         }
 
+        if (!isEligible(applicant, project, flatType)) {
+            System.out.println("You are not eligible to apply for this flat type.");
+            return false;
+        }
+
         applicant.setFlatType(flatType);
         applicant.setAppliedProject(project.getProjectName());
         applicant.setApplicationStatus("PENDING");
