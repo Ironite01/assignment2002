@@ -42,7 +42,15 @@ public class LoadInfo implements FilePath {
                         users.add(a);
                         
                     } else if (file.equals(OFFICER_TXT_PATH)){
-                        users.add(new Officer(info[0],info[1],Integer.parseInt(info[2]),info[3],info[4]));
+                        Officer o = new Officer(info[0],info[1],Integer.parseInt(info[2]),info[3],info[4]);
+
+                        if (info.length >= 8) {
+                            o.setFlatType(info[5]);
+                            o.setAppliedProject(info[6]);
+                            o.setApplicationStatus(info[7]);
+                        }
+
+                        users.add(o);
 
                     } else if (file.equals(MANAGER_TXT_PATH)){
                         users.add(new Manager(info[0],info[1],Integer.parseInt(info[2]),info[3],info[4]));

@@ -1,5 +1,6 @@
 package assignment2002;
 
+import assignment2002.application.ApplicationService;
 import assignment2002.enquiry.Enquiry;
 import assignment2002.enquiry.EnquiryService;
 import assignment2002.user.Applicant;
@@ -24,12 +25,12 @@ public class ApplicantController {
             System.out.println("2: Apply for a Project");
             System.out.println("3: View Application Status");
             System.out.println("4: Withdraw Application");
-            System.out.println("5: Submit Enquiry"); // For future
-            System.out.println("6: View/Edit/Delete Enquiries"); // For future
+            System.out.println("5: Submit Enquiry");
+            System.out.println("6: View/Edit/Delete Enquiries");
             System.out.println("7: Logout");
 
             int choice = sc.nextInt();
-            sc.nextLine(); // consume newline
+            sc.nextLine(); 
 
             switch (choice) {
                 case 1 -> viewProjects();
@@ -53,16 +54,16 @@ public class ApplicantController {
     }
 
     private void viewStatus() {
-        String status = ApplicantService.getApplicationStatus(applicant);
+        String status = ApplicationService.getApplicationStatus(applicant);
         System.out.println("Your current application status: " + status);
     }
 
     private void applyToProject(Scanner sc) {
         viewProjects();
-
+    
         System.out.print("Enter Project Name to apply for: ");
         String projName = sc.nextLine();
-
+    
         BTOProperty selected = null;
         for (BTOProperty p : Data.btoList) {
             if (p.getProjectName().equalsIgnoreCase(projName)) {
@@ -70,17 +71,23 @@ public class ApplicantController {
                 break;
             }
         }
-
+    
         if (selected == null) {
             System.out.println("Project not found.");
             return;
         }
-
+    
         System.out.print("Enter flat type (2-Room / 3-Room): ");
         String flatType = sc.nextLine();
-
-        ApplicantService.apply(applicant, selected, flatType);
+    
+        boolean success = ApplicationService.apply(applicant, selected, flatType);
+        if (success) {
+            System.out.println("Application submitted.");
+        } else {
+            System.out.println("Application failed.");
+        }
     }
+    
 
     private void submitEnquiry(Scanner sc) {
         String project = applicant.getAppliedProject().trim();

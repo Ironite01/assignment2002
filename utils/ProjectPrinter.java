@@ -1,7 +1,7 @@
 package assignment2002.utils;
 
-import assignment2002.ApplicantService;
 import assignment2002.BTOProperty;
+import assignment2002.application.ApplicationService;
 import assignment2002.user.Applicant;
 import assignment2002.user.Manager;
 import assignment2002.user.Officer;
@@ -42,8 +42,8 @@ public class ProjectPrinter {
         for (BTOProperty project : btoList) {
             if (!project.isVisible()) continue;
 
-            boolean eligibleFor2Rooms = ApplicantService.isEligible(applicant, project, "2-Room");
-            boolean eligibleFor3Rooms = ApplicantService.isEligible(applicant, project, "3-Room");
+            boolean eligibleFor2Rooms = ApplicationService.isEligible(applicant, project, "2-Room");
+            boolean eligibleFor3Rooms = ApplicationService.isEligible(applicant, project, "3-Room");
 
             if (eligibleFor2Rooms || eligibleFor3Rooms) {
                 found = true;
