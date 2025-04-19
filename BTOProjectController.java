@@ -173,7 +173,7 @@ public class BTOProjectController {
         String formattedString = String.join("\t", 
                 projName, neighbourhood, twoRoom, String.valueOf(twoRoomAmt), String.valueOf(twoRoomPrice),
                 threeRoom, String.valueOf(threeRoomAmt),String.valueOf(threeRoomPrice), openDate, closeDate,
-                managerIC, String.valueOf(officerSlot), "Empty", "Empty", "Empty", visibleString); //14 Total Inputs
+                managerIC, String.valueOf(officerSlot), "Empty", "Empty", "Empty", visibleString); //16 Total Inputs
 
 
         manager.createBTOListing(Data.btoList, managerICRef, new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), formattedString);

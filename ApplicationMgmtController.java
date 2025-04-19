@@ -41,8 +41,8 @@ public class ApplicationMgmtController {
                     case 2 -> viewApplicationsByStatus(ApplicationStatus.PENDING, "Pending");
                     case 3 -> viewApplicationsByStatus(ApplicationStatus.SUCCESSFUL, "Successful");
                     case 4 -> viewApplicationsByStatus(ApplicationStatus.UNSUCCESSFUL, "Unsuccessful");
-                    case 5 -> approveApplication(sc);
-                    case 6 -> rejectApplication(sc);
+                    case 5 -> approveApplication();
+                    case 6 -> rejectApplication();
                     case 7 -> viewPendingWithdrawals();
                     case 8 -> finalizeWithdrawals();
                     case 0 -> running = false; 
@@ -71,7 +71,7 @@ public class ApplicationMgmtController {
         apps.forEach(ApplicationService::printApplication);
     }
     
-    private void approveApplication(Scanner sc) {
+    private void approveApplication() {
         List<Application> pendingApps = ApplicationService.getMyManagedApplicationsByStatus(manager, ApplicationStatus.PENDING);
     
         if (pendingApps.isEmpty()) {
@@ -104,7 +104,7 @@ public class ApplicationMgmtController {
         }
     }
 
-    private void rejectApplication(Scanner sc) {
+    private void rejectApplication() {
         List<Application> pendingApps = ApplicationService.getMyManagedApplicationsByStatus(manager, ApplicationStatus.PENDING);
     
         if (pendingApps.isEmpty()) {
