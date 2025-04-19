@@ -1,7 +1,7 @@
 package assignment2002.application;
 
-import assignment2002.user.Applicant;
 import assignment2002.BTOProperty;
+import assignment2002.user.Applicant;
 
 public class Application {
 
@@ -9,7 +9,9 @@ public class Application {
         PENDING,
         SUCCESSFUL,
         UNSUCCESSFUL,
-        BOOKED
+        BOOKED,
+        PENDINGWITHDRAWN,
+        WITHDRAWN
     }
 
     private Applicant applicant;

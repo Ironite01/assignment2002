@@ -36,7 +36,7 @@ public class ApplicantController {
                 case 1 -> viewProjects();
                 case 2 -> applyToProject(sc);
                 case 3 -> viewStatus();
-                case 4 -> ApplicantService.withdraw(applicant);
+                case 4 -> ApplicationService.withdraw(applicant);
                 case 5 -> submitEnquiry(sc);
                 case 6 -> manageEnquiries(sc);
                 case 7 -> run = false;

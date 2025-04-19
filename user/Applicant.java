@@ -1,8 +1,6 @@
 package assignment2002.user;
 
 import assignment2002.ApplicantController;
-import assignment2002.BTOProperty;
-import java.util.ArrayList;
 
 public class Applicant extends User{
 
@@ -16,7 +14,9 @@ public class Applicant extends User{
         UNSUCCESSFUL,
         PENDING,
         BOOKED,
-        NOTAPPLIED
+        NOTAPPLIED,
+        PENDINGWITHDRAWN,
+        WITHDRAWN
     }
 
     public Applicant(String name, String NRIC, int age, String maritalStatus, String password){

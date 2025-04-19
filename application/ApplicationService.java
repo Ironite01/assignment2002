@@ -2,11 +2,10 @@ package assignment2002.application;
 
 import assignment2002.BTOProperty;
 import assignment2002.user.Applicant;
+import assignment2002.user.Manager;
 import assignment2002.user.Officer;
 import assignment2002.user.User;
 import assignment2002.utils.FilePath;
-import assignment2002.user.Manager;
-
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -21,7 +20,7 @@ import java.util.stream.Collectors;
 public class ApplicationService {
 
     private static final List<Application> applications = new ArrayList<>();
-    private static final String FILE_PATH = "Information/Application.txt";
+    private static final String FILE_PATH = "assignment2002/Information/Application.txt";
 
     public static boolean isEligible(Applicant applicant, BTOProperty project, String flatType) {
         if (!project.isVisible()) return false;
@@ -59,6 +58,24 @@ public class ApplicationService {
         saveToFile(app);
 
         return updateApplicantFile(applicant, project, flatType, "PENDING");
+    }
+
+    public static void withdraw(Applicant applicant) {
+        String status = getApplicationStatus(applicant);
+        if (!status.equals("PENDING")) {
+            System.out.println("No active application to withdraw.");
+            return;
+        }
+
+        applicant.setFlatType("");
+        applicant.setAppliedProject("");
+        applicant.setApplicationStatus("PENDINGWITHDRAWN");
+
+        updateApplicantFile(applicant, null, "", "PENDINGWITHDRAWN");
+        Application app = new Application(applicant, null, "");
+        app.setStatus(Application.ApplicationStatus.valueOf("PENDINGWITHDRAWN"));
+        saveToFile(app);
+        System.out.println("Withdrawal Request Submmitted");
     }
 
     public static String getApplicationStatus(Applicant applicant) {
@@ -168,8 +185,8 @@ public class ApplicationService {
                     String newLine = String.join("\t",
                             app.getApplicant().getNRIC(),
                             app.getApplicant().getName(),
-                            app.getFlatType(),
-                            app.getProperty().getProjectName(),
+                            app.getFlatType() == null ? "" : app.getFlatType(),
+                            app.getProperty() == null ? "" : app.getProperty().getProjectName(),
                             app.getStatus().toString()
                     );
                     updatedLines.add(newLine);
