@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class ApplicationService {
@@ -78,6 +79,119 @@ public class ApplicationService {
         System.out.println("Withdrawal Request Submmitted");
     }
 
+    public static List<Application> getPendingWithdrawalApplications() {
+        List<Application> pendingWithdrawals = new ArrayList<>();
+    
+        try (Scanner scanner = new Scanner(new File(FILE_PATH))) {
+            scanner.nextLine(); // skip header
+            while (scanner.hasNextLine()) {
+                String[] parts = scanner.nextLine().split("\t");
+                if (parts.length >= 5 && parts[4].equalsIgnoreCase("PENDINGWITHDRAWN")) {
+                    String nric = parts[0];
+                    String name = parts[1];
+                    String flatType = parts[2];
+                    String projectName = parts[3];
+    
+                    Applicant dummy = new Applicant(name, nric, 0, "", "");
+                    Application app = new Application(dummy, null, flatType);
+                    app.setStatus(Application.ApplicationStatus.PENDINGWITHDRAWN);
+                    pendingWithdrawals.add(app);
+                }
+            }
+        } catch (IOException e) {
+            System.out.println("Error reading application.txt: " + e.getMessage());
+        }
+    
+        return pendingWithdrawals;
+    }    
+
+    public static void finalizeWithdrawals(Set<String> selectedNrics) {
+        removeApplicationsFromFile(FILE_PATH, selectedNrics, "PENDINGWITHDRAWN");
+        updateStatusInFile(FilePath.APPLICANT_TXT_PATH, selectedNrics, "PENDINGWITHDRAWN", "WITHDRAWN", 7);
+        updateStatusInFile(FilePath.OFFICER_TXT_PATH, selectedNrics, "PENDINGWITHDRAWN", "WITHDRAWN", 7);
+    }
+
+    private static void updateStatusInFile(String path, Set<String> targetNrics, String fromStatus, String toStatus, int statusColumnIndex) {
+        File file = new File(path);
+        List<String> updatedLines = new ArrayList<>();
+    
+        try (Scanner scanner = new Scanner(file)) {
+            while (scanner.hasNextLine()) {
+                String line = scanner.nextLine();
+                String[] parts = line.split("\t");
+    
+                if (line.startsWith("Name\t") || parts.length <= statusColumnIndex) {
+                    updatedLines.add(line);
+                    continue;
+                }
+    
+                String nric = parts[1]; // NRIC is column 1 in Applicant/Officer txt
+                String currentStatus = parts[statusColumnIndex];
+    
+                if (targetNrics.contains(nric) && currentStatus.equalsIgnoreCase(fromStatus)) {
+                    parts[statusColumnIndex] = toStatus;
+                    updatedLines.add(String.join("\t", parts));
+                } else {
+                    updatedLines.add(line);
+                }
+            }
+        } catch (IOException e) {
+            System.out.println("Failed to read " + path + ": " + e.getMessage());
+            return;
+        }
+    
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(file, false))) {
+            for (String line : updatedLines) {
+                writer.write(line);
+                writer.newLine();
+            }
+        } catch (IOException e) {
+            System.out.println("Failed to write to " + path + ": " + e.getMessage());
+        }
+    }
+
+    private static void removeApplicationsFromFile(String path, Set<String> targetNrics, String statusToMatch) {
+        File file = new File(path);
+        List<String> updatedLines = new ArrayList<>();
+    
+        try (Scanner scanner = new Scanner(file)) {
+            while (scanner.hasNextLine()) {
+                String line = scanner.nextLine();
+                String[] parts = line.split("\t");
+    
+                if (line.startsWith("NRIC") || parts.length < 5) {
+                    updatedLines.add(line); // keep header or malformed
+                    continue;
+                }
+    
+                String nric = parts[0];
+                String status = parts[4];
+    
+                if (targetNrics.contains(nric) && status.equalsIgnoreCase(statusToMatch)) {
+                    continue; // Skip the line = remove it
+                }
+    
+                updatedLines.add(line);
+            }
+        } catch (IOException e) {
+            System.out.println("Failed to read " + path + ": " + e.getMessage());
+            return;
+        }
+    
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(file, false))) {
+            for (int i = 0; i < updatedLines.size(); i++) {
+                writer.write(updatedLines.get(i));
+                if (i != updatedLines.size() - 1) {
+                    writer.newLine();
+                }
+            }
+        } catch (IOException e) {
+            System.out.println("Failed to write to " + path + ": " + e.getMessage());
+        }
+    }
+    
+    
+    
     public static String getApplicationStatus(Applicant applicant) {
         return applicant.getApplicationStatus();
     }

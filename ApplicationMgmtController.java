@@ -1,11 +1,13 @@
 package assignment2002;
-import java.util.List;
-import java.util.Scanner;
-
 import assignment2002.application.Application;
-import assignment2002.user.Manager;
 import assignment2002.application.Application.ApplicationStatus;
 import assignment2002.application.ApplicationService;
+import assignment2002.user.Manager;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Scanner;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public class ApplicationMgmtController {
     private Manager manager;
@@ -28,6 +30,8 @@ public class ApplicationMgmtController {
                 System.out.println("4. View Unsuccessful Applications");
                 System.out.println("5. Approve Applications");
                 System.out.println("6. Reject Applications");
+                System.out.println("7. View Pending Withdrawals");
+                System.out.println("8. Finalize Withdrawals");
                 System.out.println("0. Back");    
                 choice = sc.nextInt();
                 sc.nextLine();
@@ -39,6 +43,8 @@ public class ApplicationMgmtController {
                     case 4 -> viewApplicationsByStatus(ApplicationStatus.UNSUCCESSFUL, "Unsuccessful");
                     case 5 -> approveApplication(sc);
                     case 6 -> rejectApplication(sc);
+                    case 7 -> viewPendingWithdrawals();
+                    case 8 -> finalizeWithdrawals();
                     case 0 -> running = false; 
                 }
             }
@@ -126,5 +132,41 @@ public class ApplicationMgmtController {
         System.out.println("Application has been rejected.");
     }
     
+    private void viewPendingWithdrawals() {
+        List<Application> withdrawals = ApplicationService.getPendingWithdrawalApplications();
+    
+        if (withdrawals.isEmpty()) {
+            System.out.println("No Pending Withdrawals.");
+            return;
+        }
+    
+        System.out.println("=== PENDING WITHDRAWALS ===");
+        for (Application app : withdrawals) {
+            System.out.printf("NRIC: %s | Name: %s | Status: %s\n",
+                    app.getApplicant().getNRIC(),
+                    app.getApplicant().getName(),
+                    app.getStatus());
+        }
+    }
+
+    private void finalizeWithdrawals() {
+        List<Application> withdrawals = ApplicationService.getPendingWithdrawalApplications();
+
+        if (withdrawals.isEmpty()) {
+            System.out.println("No Pending Withdrawals to Finalize.");
+            return;
+        }
+
+        viewPendingWithdrawals(); // Reuse display
+
+        System.out.print("Enter NRICs to finalize (comma separated): ");
+        String input = sc.nextLine();
+        Set<String> selectedNrics = Arrays.stream(input.split(","))
+                .map(String::trim)
+                .collect(Collectors.toSet());
+
+        ApplicationService.finalizeWithdrawals(selectedNrics);
+        System.out.println("Selected withdrawal(s) have been finalized.");
+    }
     
 }
