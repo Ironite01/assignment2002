@@ -1,5 +1,7 @@
 package assignment2002;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -8,6 +10,7 @@ import java.util.stream.Collectors;
 
 import assignment2002.user.Officer;
 import assignment2002.utils.Data;
+import assignment2002.utils.DateCheck;
 import assignment2002.utils.LoadInfo;
 import assignment2002.utils.Status;
 
@@ -19,6 +22,7 @@ public class OfficerService implements Status {
 					&& p.getAppliedOfficers().stream().noneMatch(o -> o.getNRIC().equalsIgnoreCase(officer.getNRIC()))
 					&& p.getRejectedOfficers().stream().noneMatch(o -> o.getNRIC().equalsIgnoreCase(officer.getNRIC()))
 					&& p.getOfficers().size() < p.getOfficerSlot()
+					&& DateCheck.dateComparator(LocalDate.now().format(DateTimeFormatter.ofPattern("MM/dd/yyyy")).toString(), p.getCloseDate())
 					&& !(officer.getAppliedProject().equalsIgnoreCase(p.getProjectName())
 					&& !officer.getApplicationStatus().equalsIgnoreCase(APPLICATION_STATUS.NOTAPPLIED.toString()))
 					)
