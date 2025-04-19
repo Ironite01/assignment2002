@@ -111,7 +111,7 @@ public class BTOEditController implements FileManifest {
             if(confirm.equals("y")){
                 //Make Manager Function + BTOFileService to Edit Name only
                 manager.updateProjectName(Data.btoList, oldProjName, newProjName);
-                BTOFileService.editBTOByColumn(oldProjName, colName, newProjName);
+                BTOFileService.editBTOByColumn(oldProjName, colName, newProjName, false);
                 // BTOFileService.editBTOProjectName(oldProjName,newProjName);
                 break;
             } 
@@ -181,7 +181,7 @@ public class BTOEditController implements FileManifest {
     
             if (confirm.equals("y")) {
                 manager.updateBTOByColumn(Data.btoList, projName, colName, newOpenDate); // optional
-                BTOFileService.editBTOByColumn(projName, colName, newOpenDate);
+                BTOFileService.editBTOByColumn(projName, colName, newOpenDate, false);
                 break;
             } else if(confirm.equals("n")){
                 System.out.println("Cancelled.");
@@ -251,7 +251,7 @@ public class BTOEditController implements FileManifest {
     
             if (confirm.equals("y")) {
                 manager.updateBTOByColumn(Data.btoList, projName, colName, newCloseDate); // optional
-                BTOFileService.editBTOByColumn(projName, colName, newCloseDate);
+                BTOFileService.editBTOByColumn(projName, colName, newCloseDate, false);
                 break;
             } else if(confirm.equals("n")){
                 System.out.println("Cancelled.");
@@ -320,7 +320,7 @@ public class BTOEditController implements FileManifest {
     
             if (confirm.equals("y")) {
                 manager.updateBTOByColumn(Data.btoList, projName, colName, String.valueOf(newOfficerSlots)); // optional
-                BTOFileService.editBTOByColumn(projName, colName, String.valueOf(newOfficerSlots));
+                BTOFileService.editBTOByColumn(projName, colName, String.valueOf(newOfficerSlots),false);
                 break;
             } else if(confirm.equals("n")){
                 System.out.println("Cancelled.");
@@ -380,7 +380,7 @@ public class BTOEditController implements FileManifest {
     
             if (confirm.equals("y")) {
                 manager.updateBTOByColumn(Data.btoList, projName, colName, newValue); // optional
-                BTOFileService.editBTOByColumn(projName, colName, newValue);
+                BTOFileService.editBTOByColumn(projName, colName, newValue,false);
                 break;
             } else if(confirm.equals("n")){
                 System.out.println("Cancelled.");

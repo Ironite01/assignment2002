@@ -23,7 +23,7 @@ public class BTOFileService implements FileManifest {
 
     }
 
-    public static void editBTOByColumn(String projName, PROPERTY_COLUMNS col, String newValue) {
+    public static void editBTOByColumn(String projName, PROPERTY_COLUMNS col, String newValue, boolean silent) {
         Integer columnIndex = PROPERTY_COLUMNS_MAP.get(col.toString());
     
         try {
@@ -59,7 +59,9 @@ public class BTOFileService implements FileManifest {
                 }
             }
     
-            System.out.printf("Successfully updated %s for %s -> %s\n", col.toString(), projName, newValue);
+            if(!silent){
+                System.out.printf("Successfully updated %s for %s -> %s\n", col.toString(), projName, newValue);
+            }
     
         } catch (IOException e) {
             System.out.println("Error editing field: " + e.getMessage());

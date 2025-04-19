@@ -46,4 +46,9 @@ public interface FileManifest {
 		    Map.entry(PROPERTY_COLUMNS.REJECTED_OFFICERS.toString(), 14),
 		    Map.entry(PROPERTY_COLUMNS.VISIBLE.toString(), 15)
 		    );
+
+	public static int getCol(PROPERTY_COLUMNS col) {
+		return PROPERTY_COLUMNS_MAP.get(col.toString());
+	}
+	
 }

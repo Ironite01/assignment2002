@@ -150,5 +150,18 @@ public class LoadInfo implements FileManifest {
 
         return btoList;
     }
+
+
+    public static void autoCloseExpiredProjects(){
+        for(BTOProperty p : Data.btoList){
+            if(p.isVisible() && !DateCheck.dateComparatorVisiblity(p.getCloseDate())){ 
+                p.setVisible(false);
+                BTOFileService.editBTOByColumn(p.getProjectName(), PROPERTY_COLUMNS.VISIBLE, "FALSE", true);
+            }
+        }
+
+    }
     
+
+
 }

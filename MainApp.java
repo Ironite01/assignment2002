@@ -1,8 +1,5 @@
 package assignment2002;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Scanner;
 
 import assignment2002.application.ApplicationService;
 import assignment2002.enquiry.Enquiry;
@@ -10,6 +7,7 @@ import assignment2002.enquiry.EnquiryService;
 import assignment2002.enquiry.Message;
 import assignment2002.user.User;
 import assignment2002.user.UserService;
+import assignment2002.utils.Data;
 import assignment2002.utils.LoadInfo;
 
 public class MainApp {
@@ -17,9 +15,8 @@ public class MainApp {
     	User user = null;
     	
     	// TODO: Menu based application
-    	ArrayList<User> userList = LoadInfo.loadUsers();
-        ArrayList<BTOProperty> btoList = LoadInfo.loadProperties(userList);
-        ApplicationService.loadApplications(userList, btoList);
+        ApplicationService.loadApplications(Data.userList, Data.btoList);
+        LoadInfo.autoCloseExpiredProjects();
 
         // System.out.println(btoList);
 
@@ -32,14 +29,18 @@ public class MainApp {
         // }
         
         // FOR TESTING PURPOSES ONLY
-        user = UserService.loginPrompt();
-        if (user == null) {
-        	System.out.println("Unable to authenticate user!");
-        	return;
+        while (true) {
+            user = UserService.loginPrompt();
+            if (user == null) {
+                System.out.println("Unable to authenticate user!");
+                continue;
+            }
+            user.viewMenu();
+            break;
         }
+        
         // user.allInfo();
         //UserService.resetPasswordPrompt(user);
 
-        user.viewMenu();
     }
 }

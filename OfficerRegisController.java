@@ -109,9 +109,9 @@ public class OfficerRegisController {
         targetProject.getAppliedOfficers().remove(officer);
         targetProject.getOfficers().add(officer);
         BTOFileService.editBTOByColumn(targetProject.getProjectName(), FileManifest.PROPERTY_COLUMNS.PENDING_OFFICERS,
-            targetProject.getAppliedOfficers().stream().map(Officer::getName).collect(Collectors.joining(",")));
+            targetProject.getAppliedOfficers().stream().map(Officer::getName).collect(Collectors.joining(",")),false);
         BTOFileService.editBTOByColumn(targetProject.getProjectName(), FileManifest.PROPERTY_COLUMNS.APPROVED_OFFICERS,
-            targetProject.getOfficers().stream().map(Officer::getName).collect(Collectors.joining(",")));
+            targetProject.getOfficers().stream().map(Officer::getName).collect(Collectors.joining(",")),false);
 
         System.out.printf("Approved officer %s for project '%s'.\n", officer.getName(), projName);
     }
@@ -153,9 +153,9 @@ public class OfficerRegisController {
         targetProject.getAppliedOfficers().remove(officer);
         targetProject.getRejectedOfficers().add(officer);
         BTOFileService.editBTOByColumn(targetProject.getProjectName(), FileManifest.PROPERTY_COLUMNS.PENDING_OFFICERS,
-            targetProject.getAppliedOfficers().stream().map(Officer::getName).collect(Collectors.joining(",")));
+            targetProject.getAppliedOfficers().stream().map(Officer::getName).collect(Collectors.joining(",")),false);
         BTOFileService.editBTOByColumn(targetProject.getProjectName(), FileManifest.PROPERTY_COLUMNS.REJECTED_OFFICERS,
-            targetProject.getRejectedOfficers().stream().map(Officer::getName).collect(Collectors.joining(",")));
+            targetProject.getRejectedOfficers().stream().map(Officer::getName).collect(Collectors.joining(",")),false);
     
         System.out.printf("Rejected officer %s for project '%s'.\n", officer.getName(), projName);
     }

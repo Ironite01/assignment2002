@@ -44,9 +44,6 @@ public class Manager extends User implements FileManifest {
         btoList.add(p);
     }
 
-    private void editBTOListing(){
-        //Redundant maybe
-    }
 
     //Idk if boolean or just void error checking all done at ManagerController
     public boolean deleteBTOListing(ArrayList<BTOProperty> btoList, BTOProperty propertyToDel){ 
@@ -141,6 +138,7 @@ public class Manager extends User implements FileManifest {
         mController.showMenu();
 
     }
+
 
         
 }
