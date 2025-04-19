@@ -11,6 +11,7 @@ public class ManagerController {
     private BTOProjectController projectController;
     private ApplicationMgmtController appMgmtController;
     private OfficerRegisController officerController;
+    private ProjectFilterController filterController;
     private final Scanner sc = new Scanner(System.in);
 
 
@@ -19,6 +20,7 @@ public class ManagerController {
         this.projectController = new BTOProjectController(manager, sc);
         this.appMgmtController = new ApplicationMgmtController(manager, sc);
         this.officerController = new OfficerRegisController(manager, sc);
+        this.filterController = new ProjectFilterController(manager, sc);
     }
 
     
@@ -41,7 +43,7 @@ public class ManagerController {
                 case 2 -> viewVisibilityMenu();
                 case 3 -> appMgmtController.viewApplicationsMenu();
                 case 4 -> officerController.viewOfficerRegisMenu();
-                case 5 -> viewProjsMenu();
+                case 5 -> filterController.viewProjsMenu();
                 case 100-> run = false;
                 default -> System.out.println("Retry");
         } 
@@ -52,31 +54,6 @@ public class ManagerController {
         
     }
 
-    
-
-
-
-    private void viewProjsMenu(){
-        boolean running = true;
-        while (running) {
-            System.out.println("\n=== View Projects: Filter Menu ===");
-            System.out.println("1: View All Projects");
-            System.out.println("2: View Personally Created Projects");
-            System.out.println("3: Exit");
-            int choice = sc.nextInt();
-            sc.nextLine();
-
-            switch(choice){
-                case 1 -> manager.viewAllProjects(Data.btoList);
-                case 2 -> manager.viewMyProjs(Data.btoList);
-                case 3 -> running = false;
-                default -> System.out.println("Invalid Input");
-            }
-
-            
-        }
-    }
-    
 
     private void viewVisibilityMenu(){
         manager.viewProjectsVisibility(Data.btoList);
