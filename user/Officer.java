@@ -1,22 +1,30 @@
 package assignment2002.user;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
+import assignment2002.BTOProperty;
 import assignment2002.OfficerController;
+import assignment2002.OfficerService;
+import assignment2002.utils.Status;
 
 public class Officer extends Applicant {
-	private String projectName; // Which the officer is handling
+	private Map<String, REGISTRATION> allProjectStatus;
 	
     public Officer(String name, String NRIC, int age, String maritalStatus, String password) {
         super(name, NRIC, age, maritalStatus, password);
     }
-
-    public Object registerToHandleProject() {
-    	if (applicationStatus == APPLICATION_STATUS.NOTAPPLIED) {
-    		// TODO: Send a
+    
+    public Map<String, REGISTRATION> getAllProjectStatus() {
+    	if (allProjectStatus == null) {
+    		this.allProjectStatus = OfficerService.getAllProjectStatus(this); // putting this on constructor causes an error
     	}
-    	return null;
-    	
+    	return allProjectStatus;
+    }
+    
+    public ArrayList<BTOProperty> getRegisteredProperties() {
+    	return OfficerService.getRegisteredProjects(this);
     }
     
     public List<Object> viewEnquiry() {
