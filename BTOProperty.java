@@ -132,6 +132,10 @@ public class BTOProperty {
     	return appliedOfficers;
     }
     
+    public ArrayList<Officer> getRejectedOfficers() {
+    	return rejectedOfficers;
+    }
+    
     public void addAppliedOfficer(Officer o) {
     	appliedOfficers.add(o);
     	BTOFileService.editBTOByColumn(projectName, "pendingOfficers", appliedOfficers.stream().map(Officer::getName).collect(Collectors.joining(",")));

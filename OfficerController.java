@@ -1,9 +1,12 @@
 package assignment2002;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 
 import assignment2002.user.Officer;
+import assignment2002.utils.ProjectPrinter;
+import assignment2002.utils.Status.REGISTRATION;
 
 public class OfficerController {
 	private Officer officer;
@@ -47,8 +50,8 @@ public class OfficerController {
         do {
             System.out.println("==== OFFICER MENU ===="
             		+ "\n1: Register to join a project team"
-            		+ "\n2: View status of project as officer"
-            		+ "\n3: View ALL projects"
+            		+ "\n2: View status of projects as officer"
+            		+ "\n3: View registered projects"
             		+ "\n4. View enquiries"
             		+ "\n5. Generate receipts for booked flats"
             		+ "\n6. Back");
@@ -75,6 +78,16 @@ public class OfficerController {
                 		}
             		}
             	}
+            	case 2 -> {
+            		Map<String, REGISTRATION> temp = OfficerService.getAllProjectStatus(officer);
+            		if (temp.size() > 0) {
+            			System.out.println("Listing " + temp.size() + " project status:");
+            			temp.forEach((k, v) -> System.out.println(k + " : " + v.toString()));
+            		} else {
+            			System.out.println("You have not registered for any projects!");
+            		}
+            	}
+            	case 3 -> ProjectPrinter.viewProjects(OfficerService.getRegisteredProjects(officer));
                 case 6 -> run = false;
                 default -> System.out.println("Invalid input. Try again.");
             }
