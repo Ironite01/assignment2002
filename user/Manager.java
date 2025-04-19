@@ -16,7 +16,7 @@ public class Manager extends User{
     }
     
 
-    private BTOProperty fromTabString(String data, ArrayList<Manager> managerList, ArrayList<Officer> officerList){
+    private BTOProperty fromTabString(String data, ArrayList<Manager> managerList, ArrayList<Officer> officerList, ArrayList<Officer> appliedOfficers, ArrayList<Officer> rejectedOfficers){
         String[] fragments = data.split("\t");
 
         String projName = fragments[0];
@@ -34,14 +34,14 @@ public class Manager extends User{
 
 
         return new BTOProperty(projName, neighbourhood, twoRoom, twoRoomAmt, twoRoomPrice, threeRoom,
-         threeRoomAmt, threeRoomPrice, openDate, closeDate, managerList, officerSlot, officerList, visible);
+         threeRoomAmt, threeRoomPrice, openDate, closeDate, managerList, officerSlot, officerList, appliedOfficers,rejectedOfficers,visible);
 
 
     }
     
 
-    public void createBTOListing(ArrayList<BTOProperty> btoList, ArrayList<Manager> managerICRef, ArrayList<Officer> officerRef, String dataString){
-        BTOProperty p = fromTabString(dataString, managerICRef, officerRef);
+    public void createBTOListing(ArrayList<BTOProperty> btoList, ArrayList<Manager> managerICRef, ArrayList<Officer> officerRef, ArrayList<Officer> appliedOfficers, ArrayList<Officer> rejectedOfficers, String dataString){
+        BTOProperty p = fromTabString(dataString, managerICRef, officerRef, appliedOfficers,rejectedOfficers);
         btoList.add(p);
     }
 

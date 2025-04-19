@@ -169,6 +169,8 @@ public class BTOProjectController {
         String managerIC = manager.getName();
         ArrayList<Manager> managerICRef = new ArrayList<>();
         ArrayList<Officer> officerRef = new ArrayList<>();
+        ArrayList<Officer> appliedOfficersList = new ArrayList<>();
+        ArrayList<Officer> rejectedOfficersList = new ArrayList<>();
         managerICRef.add(manager);
 
         String formattedString = String.join("\t", 
@@ -176,7 +178,7 @@ public class BTOProjectController {
                 threeRoom, String.valueOf(threeRoomAmt),String.valueOf(threeRoomPrice), openDate, closeDate,
                 managerIC, String.valueOf(officerSlot), "Empty", visibleString); //14 Total Inputs
 
-        manager.createBTOListing(Data.btoList, managerICRef, officerRef, formattedString);
+        manager.createBTOListing(Data.btoList, managerICRef, officerRef, appliedOfficersList, rejectedOfficersList, formattedString);
         BTOFileService.appendBTO(formattedString);
     }
 
