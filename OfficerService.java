@@ -37,6 +37,19 @@ public class OfficerService implements Status {
 		return false;
 	}
 	
+	public static ArrayList<BTOProperty> getRegisteredProjects(Officer o) {
+		ArrayList<BTOProperty> registeredProperties = new ArrayList<>();
+		ArrayList<BTOProperty> properties = LoadInfo.loadProperties(LoadInfo.loadUsers());
+		for (BTOProperty p : properties) {
+			for (Officer o1 : p.getOfficers()) {
+				if (o.getNRIC().equalsIgnoreCase(o1.getNRIC())) {
+					registeredProperties.add(p);
+				}
+			}
+		}
+		return registeredProperties;
+	}
+	
 	public static Map<String, REGISTRATION> getAllProjectStatus(Officer o) {
 		Map<String, REGISTRATION> temp = new HashMap<>();
 		ArrayList<BTOProperty> properties = LoadInfo.loadProperties(LoadInfo.loadUsers());
