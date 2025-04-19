@@ -45,7 +45,6 @@ public class ApplicantController {
 
         } while (run);
 
-        sc.close();
         System.out.println("You have logged out.");
     }
 

@@ -1,5 +1,6 @@
 package assignment2002;
 
+import java.util.List;
 import java.util.Scanner;
 
 import assignment2002.user.Officer;
@@ -36,7 +37,6 @@ public class OfficerController {
 
         } while (run);
 
-        sc.close();
         System.out.println("You have logged out.");
     }
 	
@@ -51,19 +51,35 @@ public class OfficerController {
             		+ "\n3: View ALL projects"
             		+ "\n4. View enquiries"
             		+ "\n5. Generate receipts for booked flats"
-            		+ "\n6. Logout");
+            		+ "\n6. Back");
 
             int choice = sc.nextInt();
             sc.nextLine();
 
             switch (choice) {
+            	case 1 -> {
+            		List<BTOProperty> proj = OfficerService.getAvailableProjectsToRegister(officer);
+            		if (proj.size() == 0) {
+            			System.out.println("Sorry, there are no projects that you can register!");
+            		} else {
+            			System.out.println("There are " + proj.size() + " you can choose to register!\n");
+            			for (BTOProperty p : proj) {
+            				System.out.println(p.getProjectName());
+            			}
+            			
+                		System.out.println("\nPlease type the project name you want to register in:");
+                		if (!OfficerService.registerProject(officer, sc.nextLine())) {
+                			System.out.println("Unable to register for specified project");
+                		} else {
+                			System.out.println("Registeration has been successful. Please wait for the relevant manager for it's updated status!");
+                		}
+            		}
+            	}
                 case 6 -> run = false;
                 default -> System.out.println("Invalid input. Try again.");
             }
 
         } while (run);
-
-        sc.close();
         System.out.println("You have logged out.");
 	}
 }

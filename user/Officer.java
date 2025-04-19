@@ -5,17 +5,10 @@ import java.util.List;
 import assignment2002.OfficerController;
 
 public class Officer extends Applicant {
-	private enum REGISTRATION_STATUS { PENDING, REJECTED, SUCCESSFUL };
-	
-	private REGISTRATION_STATUS registrationStatus;
 	private String projectName; // Which the officer is handling
 	
     public Officer(String name, String NRIC, int age, String maritalStatus, String password) {
         super(name, NRIC, age, maritalStatus, password);
-    }
-    
-    public REGISTRATION_STATUS viewRegistrationStatus() {
-    	return registrationStatus;
     }
 
     public Object registerToHandleProject() {

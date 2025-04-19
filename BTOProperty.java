@@ -1,10 +1,12 @@
 package assignment2002;
 
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 import assignment2002.user.Applicant;
 import assignment2002.user.Manager;
 import assignment2002.user.Officer;
+import assignment2002.utils.BTOFileService;
 
 public class BTOProperty {
     private String projectName; // Unique identifier
@@ -20,6 +22,7 @@ public class BTOProperty {
     private ArrayList<Manager> managerIC;
     private int officerSlot;
     private ArrayList<Officer> appliedOfficers;
+    private ArrayList<Officer> rejectedOfficers;
     private ArrayList<Officer> officers; // Approved officers
     private boolean visible; // i shall set the default to be true 
     private ArrayList<Applicant> twoRoomApplicants = new ArrayList<>();
@@ -28,7 +31,9 @@ public class BTOProperty {
 
     public BTOProperty(String projName, String neighbourhood, String twoRoom,
     int twoRoomAmt, int twoRoomPrice, String threeRoom, int threeRoomAmt,
-    int threeRoomPrice, String openDate, String closeDate, ArrayList<Manager> managerICRef, int officerSlot, ArrayList<Officer> officerList, String visible){
+    int threeRoomPrice, String openDate, String closeDate, ArrayList<Manager> managerICRef, int officerSlot,
+    	ArrayList<Officer> officerList, ArrayList<Officer> appliedOfficersList,
+    	ArrayList<Officer> rejectedOfficersList, String visible){
         this.projectName = projName;
         this.neighbourhood = neighbourhood;
         this.twoRoom = twoRoom;
@@ -42,6 +47,8 @@ public class BTOProperty {
         managerIC = managerICRef;
         this.officerSlot = officerSlot;
         officers = officerList; //Holds Object references to the officers
+        this.appliedOfficers = appliedOfficersList;
+        this.rejectedOfficers = rejectedOfficersList;
         this.visible = visible.equalsIgnoreCase("true") ? true : false;
     }
 
@@ -119,6 +126,20 @@ public class BTOProperty {
     }
     public int getOfficerSlot() {
         return officerSlot;
+    }
+    
+    public ArrayList<Officer> getAppliedOfficers() {
+    	return appliedOfficers;
+    }
+    
+    public void addAppliedOfficer(Officer o) {
+    	appliedOfficers.add(o);
+    	BTOFileService.editBTOByColumn(projectName, "pendingOfficers", appliedOfficers.stream().map(Officer::getName).collect(Collectors.joining(",")));
+    }
+    
+    public void addRejectedOfficer(Officer o) {
+    	rejectedOfficers.add(o);
+    	BTOFileService.editBTOByColumn(projectName, "rejectedOfficers", appliedOfficers.stream().map(Officer::getName).collect(Collectors.joining(",")));
     }
 
     public ArrayList<Officer> getOfficers() {

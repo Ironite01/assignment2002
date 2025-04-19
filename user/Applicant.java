@@ -1,23 +1,14 @@
 package assignment2002.user;
 
 import assignment2002.ApplicantController;
+import assignment2002.utils.Status;
 
-public class Applicant extends User{
+public class Applicant extends User implements Status {
 
     private String appliedProjects;
     private String flatType;
 
     APPLICATION_STATUS applicationStatus;
-
-    enum APPLICATION_STATUS {
-        SUCCESSFUL,
-        UNSUCCESSFUL,
-        PENDING,
-        BOOKED,
-        NOTAPPLIED,
-        PENDINGWITHDRAWN,
-        WITHDRAWN
-    }
 
     public Applicant(String name, String NRIC, int age, String maritalStatus, String password){
         super(name, NRIC, age, maritalStatus, password);

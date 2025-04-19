@@ -84,7 +84,11 @@ public class LoadInfo implements FilePath {
                 String[] info = line.split("\t");
                 
                 String[] officerList = info[12].split(",");
+                String[] pendingOfficerList = info[13].split(",");
+                String[] rejectedOfficerList = info[14].split(",");
                 ArrayList<Officer> officerRef = new ArrayList<>();
+                ArrayList<Officer> pendingOfficerRef = new ArrayList<>();
+                ArrayList<Officer> rejectedOfficerRef = new ArrayList<>();
                 ArrayList<Manager> managerRef = new ArrayList<>();
                 
                 for(User u: users){
@@ -102,11 +106,27 @@ public class LoadInfo implements FilePath {
                         }
                     }
                 }
+                for(String name: pendingOfficerList){
+                    for(User userList: users){
+                        if(userList.getName().equals(name) && userList instanceof Officer){
+                        	pendingOfficerRef.add((Officer) userList);
+                            break;
+                        }
+                    }
+                }
+                for(String name: rejectedOfficerList){
+                    for(User userList: users){
+                        if(userList.getName().equals(name) && userList instanceof Officer){
+                        	rejectedOfficerRef.add((Officer) userList);
+                            break;
+                        }
+                    }
+                }
                 
 
                 btoList.add(new BTOProperty(info[0], info[1], info[2], Integer.parseInt(info[3]), Integer.parseInt(info[4]),
                 info[5],Integer.parseInt(info[6]),Integer.parseInt(info[7]), info[8], info[9], managerRef,
-                 Integer.parseInt(info[11]), officerRef, info[13]));
+                 Integer.parseInt(info[11]), officerRef, pendingOfficerRef, rejectedOfficerRef, info[13]));
                 
                 
             }

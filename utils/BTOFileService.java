@@ -9,9 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class BTOFileService {
-    private static String propertyFile = "Information/ProjectList.txt"; //Constant
-
+public class BTOFileService implements FilePath {
     private static final Map<String, Integer> COLUMN_MAP = Map.ofEntries(
     Map.entry("projName", 0),
     Map.entry("neighbourhood", 1),
@@ -26,12 +24,14 @@ public class BTOFileService {
     Map.entry("manager", 10),
     Map.entry("officerSlot", 11),
     Map.entry("officers", 12),
-    Map.entry("visible", 13)
+    Map.entry("pendingOfficers", 13),
+    Map.entry("rejectedOfficers", 14),
+    Map.entry("visible", 15)
     );
 
     public static void appendBTO(String formattedString){
 
-        try(BufferedWriter writer = new BufferedWriter(new FileWriter(propertyFile,true))){
+        try(BufferedWriter writer = new BufferedWriter(new FileWriter(PROJECT_TXT_PATH,true))){
             writer.newLine();
             writer.write(formattedString);
 
@@ -51,7 +51,7 @@ public class BTOFileService {
         }
     
         try {
-            List<String> allLines = Files.readAllLines(Paths.get(propertyFile));
+            List<String> allLines = Files.readAllLines(Paths.get(PROJECT_TXT_PATH));
             String header = allLines.get(0);
             List<String> updatedLines = new ArrayList<>();
     
@@ -74,7 +74,7 @@ public class BTOFileService {
                 }
             }
     
-            try (BufferedWriter writer = new BufferedWriter(new FileWriter(propertyFile))) {
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter(PROJECT_TXT_PATH))) {
                 writer.write(header);
                 if (!updatedLines.isEmpty()) writer.newLine();
                 for (int i = 0; i < updatedLines.size(); i++) {
@@ -93,7 +93,7 @@ public class BTOFileService {
     public static void removeBTO(String projName){
 
         try {
-            List<String> allLines = Files.readAllLines(Paths.get(propertyFile));
+            List<String> allLines = Files.readAllLines(Paths.get(PROJECT_TXT_PATH));
 
             if (allLines.isEmpty()) {
                 System.out.println("File is empty.");
@@ -116,7 +116,7 @@ public class BTOFileService {
             }
 
             // Write back header and filtered lines without trailing newline
-            try (BufferedWriter writer = new BufferedWriter(new FileWriter(propertyFile))) {
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter(PROJECT_TXT_PATH))) {
                 writer.write(header);
                 if (!filtered.isEmpty()) writer.newLine();
                 for (int i = 0; i < filtered.size(); i++) {
