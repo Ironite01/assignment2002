@@ -92,7 +92,7 @@ public class LoadInfo implements FileManifest {
                 ArrayList<Manager> managerRef = new ArrayList<>();
                 
                 for(User u: users){
-                    if(info[10].equals(u.getName()) && u instanceof Manager){
+                    if(info[PROPERTY_COLUMNS_MAP.get(PROPERTY_COLUMNS.MANAGER.toString())].equals(u.getName()) && u instanceof Manager){
                         managerRef.add((Manager)u);
                     }
                 }
