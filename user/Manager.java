@@ -1,14 +1,12 @@
 package assignment2002.user;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import assignment2002.BTOProperty;
 import assignment2002.ManagerController;
-import assignment2002.utils.BTOFileService;
 import assignment2002.utils.FileManifest;
-import assignment2002.utils.ProjectPrinter;
 import assignment2002.utils.FileManifest.PROPERTY_COLUMNS;
+import assignment2002.utils.ProjectPrinter;
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class Manager extends User implements FileManifest {
@@ -98,14 +96,14 @@ public class Manager extends User implements FileManifest {
         for (BTOProperty p : btoList) {
             if (p.getProjectName().equalsIgnoreCase(projName)) {
                 switch (fieldName) {
-                    case PROPERTY_COLUMNS.NEIGHBOURHOOD -> p.setNeighbourhood(newValue);
-                    case PROPERTY_COLUMNS.TWO_ROOM_AMT -> p.setTwoRoomAmt(Integer.parseInt(newValue));
-                    case PROPERTY_COLUMNS.TWO_ROOM_PRICE -> p.setTwoRoomPrice(Integer.parseInt(newValue));
-                    case PROPERTY_COLUMNS.THREE_ROOM_AMT -> p.setThreeRoomAmt(Integer.parseInt(newValue));
-                    case PROPERTY_COLUMNS.THREE_ROOM_PRICE -> p.setThreeRoomPrice(Integer.parseInt(newValue));
-                    case PROPERTY_COLUMNS.OPEN_DATE -> p.setOpenDate(newValue);
-                    case PROPERTY_COLUMNS.CLOSE_DATE -> p.setCloseDate(newValue);
-                    case PROPERTY_COLUMNS.OFFICER_SLOT -> p.setOfficerSlot(Integer.parseInt(newValue));
+                    case NEIGHBOURHOOD -> p.setNeighbourhood(newValue);
+                    case TWO_ROOM_AMT -> p.setTwoRoomAmt(Integer.parseInt(newValue));
+                    case TWO_ROOM_PRICE -> p.setTwoRoomPrice(Integer.parseInt(newValue));
+                    case THREE_ROOM_AMT -> p.setThreeRoomAmt(Integer.parseInt(newValue));
+                    case THREE_ROOM_PRICE -> p.setThreeRoomPrice(Integer.parseInt(newValue));
+                    case OPEN_DATE -> p.setOpenDate(newValue);
+                    case CLOSE_DATE -> p.setCloseDate(newValue);
+                    case OFFICER_SLOT -> p.setOfficerSlot(Integer.parseInt(newValue));
                 }
                 break;
             }
