@@ -5,7 +5,8 @@ import assignment2002.user.Applicant;
 import assignment2002.user.Manager;
 import assignment2002.user.Officer;
 import assignment2002.user.User;
-import assignment2002.utils.FilePath;
+import assignment2002.utils.FileManifest;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -18,10 +19,9 @@ import java.util.Scanner;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class ApplicationService {
+public class ApplicationService implements FileManifest {
 
     private static final List<Application> applications = new ArrayList<>();
-    private static final String FILE_PATH = "assignment2002/Information/Application.txt";
 
     public static boolean isEligible(Applicant applicant, BTOProperty project, String flatType) {
         if (!project.isVisible()) return false;
@@ -83,7 +83,7 @@ public class ApplicationService {
         List<Application> pendingWithdrawals = new ArrayList<>();
     
         try{
-            Scanner scanner = new Scanner(new File(FILE_PATH));
+            Scanner scanner = new Scanner(new File(APPLICATION_TXT_PATH));
             scanner.nextLine(); // skip header
             while (scanner.hasNextLine()) {
                 String[] parts = scanner.nextLine().split("\t");
@@ -107,9 +107,9 @@ public class ApplicationService {
     }    
 
     public static void finalizeWithdrawals(Set<String> selectedNrics) {
-        removeApplicationsFromFile(FILE_PATH, selectedNrics, "PENDINGWITHDRAWN");
-        updateStatusInFile(FilePath.APPLICANT_TXT_PATH, selectedNrics, "PENDINGWITHDRAWN", "WITHDRAWN", 7);
-        updateStatusInFile(FilePath.OFFICER_TXT_PATH, selectedNrics, "PENDINGWITHDRAWN", "WITHDRAWN", 7);
+        removeApplicationsFromFile(APPLICATION_TXT_PATH, selectedNrics, "PENDINGWITHDRAWN");
+        updateStatusInFile(APPLICANT_TXT_PATH, selectedNrics, "PENDINGWITHDRAWN", "WITHDRAWN", 7);
+        updateStatusInFile(OFFICER_TXT_PATH, selectedNrics, "PENDINGWITHDRAWN", "WITHDRAWN", 7);
     }
 
     private static void updateStatusInFile(String path, Set<String> targetNrics, String fromStatus, String toStatus, int statusColumnIndex) {
@@ -203,9 +203,9 @@ public class ApplicationService {
         String filePath = "";
 
         if (applicant instanceof Officer) {
-            filePath = FilePath.OFFICER_TXT_PATH;
+            filePath = OFFICER_TXT_PATH;
         } else if (applicant instanceof Applicant) {
-            filePath = FilePath.APPLICANT_TXT_PATH;
+            filePath = APPLICANT_TXT_PATH;
         }
         
         
@@ -274,7 +274,7 @@ public class ApplicationService {
     }
 
     public static boolean saveToFile(Application app) {
-        File file = new File(FILE_PATH);
+        File file = new File(APPLICATION_TXT_PATH);
         boolean updated = false;
         ArrayList<String> updatedLines = new ArrayList<>();
         String header = "NRIC\tName\tFlatType\tProjectName\tStatus";
@@ -437,7 +437,7 @@ public class ApplicationService {
     }
 
     public static void loadApplications(List<User> userList, List<BTOProperty> btoList) {
-    File file = new File(FilePath.APPLICATION_TXT_PATH);
+    File file = new File(APPLICATION_TXT_PATH);
     if (!file.exists()) {
         System.out.println("No existing applications found.");
         return;

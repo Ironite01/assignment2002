@@ -9,26 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class BTOFileService implements FilePath {
-    private static final Map<String, Integer> COLUMN_MAP = Map.ofEntries(
-    Map.entry("projName", 0),
-    Map.entry("neighbourhood", 1),
-    Map.entry("2-Room", 2),
-    Map.entry("twoRoomAmt", 3),
-    Map.entry("twoRoomPrice", 4),
-    Map.entry("3-Room", 5),
-    Map.entry("threeRoomAmt", 6),
-    Map.entry("threeRoomPrice", 7),
-    Map.entry("openDate", 8),
-    Map.entry("closeDate", 9),
-    Map.entry("manager", 10),
-    Map.entry("officerSlot", 11),
-    Map.entry("officers", 12),
-    Map.entry("pendingOfficers", 13),
-    Map.entry("rejectedOfficers", 14),
-    Map.entry("visible", 15)
-    );
-
+public class BTOFileService implements FileManifest {
     public static void appendBTO(String formattedString){
 
         try(BufferedWriter writer = new BufferedWriter(new FileWriter(PROJECT_TXT_PATH,true))){
@@ -43,12 +24,8 @@ public class BTOFileService implements FilePath {
 
     }
 
-    public static void editBTOByColumn(String projName, String colName, String newValue) {
-        Integer columnIndex = COLUMN_MAP.get(colName);
-        if (columnIndex == null) {
-            System.out.println("Invalid Column name: " + colName);
-            return;
-        }
+    public static void editBTOByColumn(String projName, PROPERTY_COLUMNS col, String newValue) {
+        Integer columnIndex = PROPERTY_COLUMNS_MAP.get(col.toString());
     
         try {
             List<String> allLines = Files.readAllLines(Paths.get(PROJECT_TXT_PATH));
@@ -83,7 +60,7 @@ public class BTOFileService implements FilePath {
                 }
             }
     
-            System.out.printf("Successfully updated %s for %s -> %s\n", colName, projName, newValue);
+            System.out.printf("Successfully updated %s for %s -> %s\n", col.toString(), projName, newValue);
     
         } catch (IOException e) {
             System.out.println("Error editing field: " + e.getMessage());

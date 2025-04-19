@@ -10,7 +10,7 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class LoadInfo implements FilePath {
+public class LoadInfo implements FileManifest {
 
     public static ArrayList<User> loadUsers(){ //Static function no need init.
         ArrayList<User> users = new ArrayList<>();
@@ -83,9 +83,9 @@ public class LoadInfo implements FilePath {
                 String line = propertyReader.nextLine();
                 String[] info = line.split("\t");
                 
-                String[] officerList = info[12].split(",");
-                String[] pendingOfficerList = info[13].split(",");
-                String[] rejectedOfficerList = info[14].split(",");
+                String[] officerList = info[PROPERTY_COLUMNS_MAP.get(PROPERTY_COLUMNS.APPROVED_OFFICERS.toString())].split(",");
+                String[] pendingOfficerList = info[PROPERTY_COLUMNS_MAP.get(PROPERTY_COLUMNS.PENDING_OFFICERS.toString())].split(",");
+                String[] rejectedOfficerList = info[PROPERTY_COLUMNS_MAP.get(PROPERTY_COLUMNS.REJECTED_OFFICERS.toString())].split(",");
                 ArrayList<Officer> officerRef = new ArrayList<>();
                 ArrayList<Officer> pendingOfficerRef = new ArrayList<>();
                 ArrayList<Officer> rejectedOfficerRef = new ArrayList<>();
@@ -124,9 +124,20 @@ public class LoadInfo implements FilePath {
                 }
                 
 
-                btoList.add(new BTOProperty(info[0], info[1], info[2], Integer.parseInt(info[3]), Integer.parseInt(info[4]),
-                info[5],Integer.parseInt(info[6]),Integer.parseInt(info[7]), info[8], info[9], managerRef,
-                 Integer.parseInt(info[11]), officerRef, pendingOfficerRef, rejectedOfficerRef, info[13]));
+                btoList.add(new BTOProperty(info[PROPERTY_COLUMNS_MAP.get(PROPERTY_COLUMNS.PROJECT_NAME.toString())],
+                		info[PROPERTY_COLUMNS_MAP.get(PROPERTY_COLUMNS.NEIGHBOURHOOD.toString())],
+                		info[PROPERTY_COLUMNS_MAP.get(PROPERTY_COLUMNS.TWO_ROOM.toString())],
+                		Integer.parseInt(info[PROPERTY_COLUMNS_MAP.get(PROPERTY_COLUMNS.TWO_ROOM_AMT.toString())]),
+                		Integer.parseInt(info[PROPERTY_COLUMNS_MAP.get(PROPERTY_COLUMNS.TWO_ROOM_PRICE.toString())]),
+                		info[PROPERTY_COLUMNS_MAP.get(PROPERTY_COLUMNS.THREE_ROOM.toString())],
+                		Integer.parseInt(info[PROPERTY_COLUMNS_MAP.get(PROPERTY_COLUMNS.THREE_ROOM_AMT.toString())]),
+                		Integer.parseInt(info[PROPERTY_COLUMNS_MAP.get(PROPERTY_COLUMNS.THREE_ROOM_PRICE.toString())]),
+                		info[PROPERTY_COLUMNS_MAP.get(PROPERTY_COLUMNS.OPEN_DATE.toString())],
+                		info[PROPERTY_COLUMNS_MAP.get(PROPERTY_COLUMNS.CLOSE_DATE.toString())],
+                		managerRef,
+                		Integer.parseInt(info[PROPERTY_COLUMNS_MAP.get(PROPERTY_COLUMNS.OFFICER_SLOT.toString())]),
+                		officerRef, pendingOfficerRef, rejectedOfficerRef,
+                		info[PROPERTY_COLUMNS_MAP.get(PROPERTY_COLUMNS.VISIBLE.toString())]));
                 
                 
             }

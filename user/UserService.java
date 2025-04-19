@@ -9,10 +9,10 @@ import java.util.List;
 import java.util.Scanner;
 
 import assignment2002.utils.Authenticator;
-import assignment2002.utils.FilePath;
+import assignment2002.utils.FileManifest;
 import assignment2002.utils.Password;
 
-public class UserService implements FilePath {
+public class UserService implements FileManifest {
 	private static final String passwordField = "Password";
 	private static final String nricField = "NRIC";
 	

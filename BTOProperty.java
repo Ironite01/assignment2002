@@ -7,6 +7,7 @@ import assignment2002.user.Applicant;
 import assignment2002.user.Manager;
 import assignment2002.user.Officer;
 import assignment2002.utils.BTOFileService;
+import assignment2002.utils.FileManifest;
 
 public class BTOProperty {
     private String projectName; // Unique identifier
@@ -138,12 +139,12 @@ public class BTOProperty {
     
     public void addAppliedOfficer(Officer o) {
     	appliedOfficers.add(o);
-    	BTOFileService.editBTOByColumn(projectName, "pendingOfficers", appliedOfficers.stream().map(Officer::getName).collect(Collectors.joining(",")));
+    	BTOFileService.editBTOByColumn(projectName, FileManifest.PROPERTY_COLUMNS.PENDING_OFFICERS, appliedOfficers.stream().map(Officer::getName).collect(Collectors.joining(",")));
     }
     
     public void addRejectedOfficer(Officer o) {
     	rejectedOfficers.add(o);
-    	BTOFileService.editBTOByColumn(projectName, "rejectedOfficers", appliedOfficers.stream().map(Officer::getName).collect(Collectors.joining(",")));
+    	BTOFileService.editBTOByColumn(projectName, FileManifest.PROPERTY_COLUMNS.REJECTED_OFFICERS, appliedOfficers.stream().map(Officer::getName).collect(Collectors.joining(",")));
     }
 
     public ArrayList<Officer> getOfficers() {
