@@ -87,7 +87,7 @@ public class OfficerController {
             			System.out.println("You have not registered for any projects!");
             		}
             	}
-            	case 3 -> ProjectPrinter.viewProjects(OfficerService.getRegisteredProjects(officer));
+            	case 3 -> ProjectPrinter.viewProjects(officer.getRegisteredProperties());
                 case 6 -> run = false;
                 default -> System.out.println("Invalid input. Try again.");
             }
