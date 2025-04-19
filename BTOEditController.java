@@ -18,30 +18,18 @@ public class BTOEditController implements FileManifest {
     }
 
     private String getColValue(BTOProperty p, PROPERTY_COLUMNS colName) {
-        switch (colName) {
-            case PROJECT_NAME:
-                return p.getProjectName();
-            case NEIGHBOURHOOD:
-                return p.getNeighbourhood();
-            case TWO_ROOM_AMT:
-                return String.valueOf(p.getTwoRoomAmt());
-            case TWO_ROOM_PRICE:
-                return String.valueOf(p.getTwoRoomPrice());
-            case THREE_ROOM_AMT:
-                return String.valueOf(p.getThreeRoomAmt());
-            case THREE_ROOM_PRICE:
-                return String.valueOf(p.getThreeRoomPrice());
-            case OPEN_DATE:
-                return p.getOpenDate();
-            case CLOSE_DATE:
-                return p.getCloseDate();
-            case OFFICER_SLOT:
-                return String.valueOf(p.getOfficerSlot());
-            case VISIBLE:
-                return Boolean.toString(p.isVisible());
-            default:
-                return "Undefined";
-        }
+        return switch (colName) {
+            case PROPERTY_COLUMNS.NEIGHBOURHOOD -> p.getNeighbourhood();
+            case PROPERTY_COLUMNS.TWO_ROOM_AMT -> String.valueOf(p.getTwoRoomAmt());
+            case PROPERTY_COLUMNS.TWO_ROOM_PRICE -> String.valueOf(p.getTwoRoomPrice());
+            case PROPERTY_COLUMNS.THREE_ROOM_AMT -> String.valueOf(p.getThreeRoomAmt());
+            case PROPERTY_COLUMNS.THREE_ROOM_PRICE -> String.valueOf(p.getThreeRoomPrice());
+            case PROPERTY_COLUMNS.OPEN_DATE -> p.getOpenDate();
+            case PROPERTY_COLUMNS.CLOSE_DATE -> p.getCloseDate();
+            case PROPERTY_COLUMNS.OFFICER_SLOT -> String.valueOf(p.getOfficerSlot());
+            case PROPERTY_COLUMNS.VISIBLE -> Boolean.toString(p.isVisible());
+            default -> "Undefined";
+        };
     }
     
 
