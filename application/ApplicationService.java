@@ -82,7 +82,8 @@ public class ApplicationService {
     public static List<Application> getPendingWithdrawalApplications() {
         List<Application> pendingWithdrawals = new ArrayList<>();
     
-        try (Scanner scanner = new Scanner(new File(FILE_PATH))) {
+        try{
+            Scanner scanner = new Scanner(new File(FILE_PATH));
             scanner.nextLine(); // skip header
             while (scanner.hasNextLine()) {
                 String[] parts = scanner.nextLine().split("\t");
@@ -115,7 +116,8 @@ public class ApplicationService {
         File file = new File(path);
         List<String> updatedLines = new ArrayList<>();
     
-        try (Scanner scanner = new Scanner(file)) {
+        try {
+            Scanner scanner = new Scanner(file);
             while (scanner.hasNextLine()) {
                 String line = scanner.nextLine();
                 String[] parts = line.split("\t");
@@ -154,13 +156,14 @@ public class ApplicationService {
         File file = new File(path);
         List<String> updatedLines = new ArrayList<>();
     
-        try (Scanner scanner = new Scanner(file)) {
+        try {
+            Scanner scanner = new Scanner(file);
             while (scanner.hasNextLine()) {
                 String line = scanner.nextLine();
                 String[] parts = line.split("\t");
     
                 if (line.startsWith("NRIC") || parts.length < 5) {
-                    updatedLines.add(line); // keep header or malformed
+                    updatedLines.add(line);
                     continue;
                 }
     
@@ -168,7 +171,7 @@ public class ApplicationService {
                 String status = parts[4];
     
                 if (targetNrics.contains(nric) && status.equalsIgnoreCase(statusToMatch)) {
-                    continue; // Skip the line = remove it
+                    continue;
                 }
     
                 updatedLines.add(line);
