@@ -119,8 +119,9 @@ public class OfficerService implements Status {
 			System.out.println("Application status is not successful!");
 			return;
 		}
-			
+		
 		app.getApplicant().setApplicationStatus(APPLICATION_STATUS.BOOKED.toString());
+		app.setStatus(APPLICATION_STATUS.BOOKED);
 		ApplicationService.editApplicationByColumn(app, "Status", APPLICATION_STATUS.BOOKED.toString());
 		
 		updateApplicantProfile(app, flatType);

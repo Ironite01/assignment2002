@@ -14,21 +14,9 @@ public class MainApp {
     public static void main(String[] args) {
     	User user = null;
     	
-    	// TODO: Menu based application
         ApplicationService.loadApplications(Data.userList, Data.btoList);
         LoadInfo.autoCloseExpiredProjects();
 
-        // System.out.println(btoList);
-
-        //Showing that the load properties works
-        // btoList.get(0).allInfo();
-
-        //If you want to see how the ArrayList works
-        // for(User u: userList){
-        //     u.allInfo();
-        // }
-        
-        // FOR TESTING PURPOSES ONLY
         while (true) {
             user = UserService.loginPrompt();
             if (user == null) {
@@ -38,9 +26,5 @@ public class MainApp {
             user.viewMenu();
             break;
         }
-        
-        // user.allInfo();
-        //UserService.resetPasswordPrompt(user);
-
     }
 }

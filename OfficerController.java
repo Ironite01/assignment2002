@@ -7,6 +7,7 @@ import java.util.Scanner;
 import assignment2002.application.Application;
 import assignment2002.application.ApplicationService;
 import assignment2002.user.Officer;
+import assignment2002.user.UserService;
 import assignment2002.utils.Authenticator;
 import assignment2002.utils.ProjectPrinter;
 import assignment2002.utils.Status.REGISTRATION;
@@ -26,7 +27,8 @@ public class OfficerController {
             System.out.println("==== ROLE MENU ===="
             		+ "\n1: Applicant menu"
             		+ "\n2: Officer menu"
-            		+ "\n3: Logout");
+            		+ "\n3: Change password"
+            		+ "\n4: Logout");
 
             int choice = sc.nextInt();
             sc.nextLine();
@@ -37,7 +39,8 @@ public class OfficerController {
                     aController.showMenu();
                 }
                 case 2 -> exclusiveOfficerMenu();
-                case 3 -> run = false;
+                case 3 -> UserService.resetPasswordPrompt(officer);
+                case 4 -> run = false;
                 default -> System.out.println("Invalid input. Try again.");
             }
 
