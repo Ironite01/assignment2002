@@ -7,6 +7,7 @@ import assignment2002.user.Officer;
 import assignment2002.user.User;
 import assignment2002.utils.FileManifest;
 import assignment2002.utils.Status;
+import assignment2002.utils.Status.APPLICATION_STATUS;
 import assignment2002.utils.FileManifest.PROPERTY_COLUMNS;
 
 import java.io.BufferedReader;
@@ -360,7 +361,7 @@ public class ApplicationService implements FileManifest {
     public static List<Application> getSuccessfulApplicationsFromOfficer(Officer o) {
     	return applications
     			.stream()
-    			.filter(app -> o.getRegisteredProject(app.getProperty().getProjectName()) != null)
+    			.filter(app -> o.getRegisteredProject(app.getProperty().getProjectName()) != null && app.getStatus() == APPLICATION_STATUS.SUCCESSFUL)
     			.toList();
     }
     
