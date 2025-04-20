@@ -121,6 +121,8 @@ public class OfficerController {
             					return;
             				}
             				OfficerService.updateBTOApplication(officer, app, roomType);
+            				System.out.println("Application has been updated!");
+            				break;
             			}
             		} while (nric.equals("0"));
             	}
