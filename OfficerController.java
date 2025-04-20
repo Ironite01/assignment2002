@@ -94,14 +94,18 @@ public class OfficerController {
             	case 3 -> ProjectPrinter.viewProjects(officer.getRegisteredProjects());
             	case 4 -> {}// TODO
             	case 5 -> {
-            		System.out.println("Here are all successful applications:");
             		List<Application> apps = officer.getAllSuccessfulApplications();
+            		if (apps.size() <= 0) {
+            			System.out.println("No applications at the moment!");
+            			return;
+            		}
+            		System.out.println("Here are all successful applications:");
             		for (Application app1 : apps) {
             			ApplicationService.generateReceipt(app1);
             		}
             		String nric = "";
             		do {
-            			System.out.println("Please enter applicant's NRIC to update applicant's detail (enter 0 to exit):");
+            			System.out.println("Please enter applicant's NRIC to update applicant's detail (invalid input to exit):");
             			nric = sc.nextLine();
             			if (Authenticator.isValidNRIC(nric)) {
             				Application app = null;
@@ -121,8 +125,7 @@ public class OfficerController {
             					return;
             				}
             				OfficerService.updateBTOApplication(officer, app, roomType);
-            				System.out.println("Application has been updated!");
-            				break;
+            				return;
             			}
             		} while (nric.equals("0"));
             	}

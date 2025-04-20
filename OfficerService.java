@@ -114,10 +114,15 @@ public class OfficerService implements Status {
 	public static void updateBTOApplication(Officer o, Application app, String flatType) {
 		BTOProperty p = o.getRegisteredProject(app.getProperty().getProjectName());
 		if (p == null) return;
-		if (!ApplicationService.getApplicationStatus(app.getApplicant()).equalsIgnoreCase(APPLICATION_STATUS.SUCCESSFUL.toString()))
+		if (!ApplicationService.getApplicationStatus(app.getApplicant())
+				.equalsIgnoreCase(APPLICATION_STATUS.SUCCESSFUL.toString())) {
+			System.out.println("Application status is not successful!");
 			return;
+		}
 			
 		app.getApplicant().setApplicationStatus(APPLICATION_STATUS.BOOKED.toString());
+		ApplicationService.editApplicationByColumn(app, "Status", APPLICATION_STATUS.BOOKED.toString());
+		
 		updateApplicantProfile(app, flatType);
 		
 		if (app.getFlatType().equalsIgnoreCase("2-Room")) {
@@ -125,6 +130,8 @@ public class OfficerService implements Status {
 		} else if (app.getFlatType().equalsIgnoreCase("3-Room")) {
 			p.setTwoRoomAmt(p.getThreeRoomAmt() - 1);
 		}
+		
+		System.out.println("Application has been updated!");
 		
 		generateReceiptOfApplication(o, app);
 	}
