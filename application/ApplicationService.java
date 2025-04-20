@@ -6,6 +6,7 @@ import assignment2002.user.Manager;
 import assignment2002.user.Officer;
 import assignment2002.user.User;
 import assignment2002.utils.FileManifest;
+import assignment2002.utils.Status;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -74,7 +75,7 @@ public class ApplicationService implements FileManifest {
 
         updateApplicantFile(applicant, null, "", "PENDINGWITHDRAWN");
         Application app = new Application(applicant, null, "");
-        app.setStatus(Application.ApplicationStatus.valueOf("PENDINGWITHDRAWN"));
+        app.setStatus(Status.APPLICATION_STATUS.valueOf("PENDINGWITHDRAWN"));
         saveToFile(app);
         System.out.println("Withdrawal Request Submmitted");
     }
@@ -95,7 +96,7 @@ public class ApplicationService implements FileManifest {
     
                     Applicant dummy = new Applicant(name, nric, 0, "", "");
                     Application app = new Application(dummy, null, flatType);
-                    app.setStatus(Application.ApplicationStatus.PENDINGWITHDRAWN);
+                    app.setStatus(Status.APPLICATION_STATUS.PENDINGWITHDRAWN);
                     pendingWithdrawals.add(app);
                 }
             }
@@ -349,16 +350,30 @@ public class ApplicationService implements FileManifest {
     public static List<Application> getApplications() {
         return applications;
     }
-
+    
+    public static List<Application> getSuccessfulApplicationsFromOfficer(Officer o) {
+    	return applications
+    			.stream()
+    			.filter(app -> o.getRegisteredProject(app.getProperty().getProjectName()) != null)
+    			.toList();
+    }
+    
     public static List<Application> getMyManagedApplications(Manager m) {
         return applications.stream().filter(p -> p.getProperty().getManagerIC().stream()
         .anyMatch(managerIC -> managerIC.getNRIC().equalsIgnoreCase(m.getNRIC()))).toList();
     }
 
-    public static List<Application> getMyManagedApplicationsByStatus(Manager m, Application.ApplicationStatus status) {
+    public static List<Application> getMyManagedApplicationsByStatus(Manager m, Status.APPLICATION_STATUS status) {
         return getMyManagedApplications(m).stream()
             .filter(app -> app.getStatus() == status)
             .toList();
+    }
+    
+    public static Application getApplicationByApplicantAndProperty(Applicant applicant, BTOProperty property) {
+        return applications.stream()
+                .filter(app -> app.getApplicant().equals(applicant) && app.getProperty().equals(property))
+                .findFirst()
+                .orElse(null);
     }
     
 
@@ -390,7 +405,7 @@ public class ApplicationService implements FileManifest {
         updateApplicantFile(application.getApplicant(), 
         property, flatType, "SUCCESSFUL");
         
-        application.setStatus(Application.ApplicationStatus.SUCCESSFUL);
+        application.setStatus(Status.APPLICATION_STATUS.SUCCESSFUL);
         return true;
     }
 
@@ -401,7 +416,7 @@ public class ApplicationService implements FileManifest {
         updateApplicantFile(application.getApplicant(), 
         property, flatType, "UNSUCCESSFUL");
 
-        application.setStatus(Application.ApplicationStatus.UNSUCCESSFUL);
+        application.setStatus(Status.APPLICATION_STATUS.UNSUCCESSFUL);
     }
 
     public static boolean bookFlat(Application application) {
@@ -415,7 +430,7 @@ public class ApplicationService implements FileManifest {
             return false;
         }
 
-        application.setStatus(Application.ApplicationStatus.BOOKED);
+        application.setStatus(Status.APPLICATION_STATUS.BOOKED);
         return true;
     }
 
@@ -469,7 +484,7 @@ public class ApplicationService implements FileManifest {
 
                 if (applicant != null && property != null) {
                     Application app = new Application(applicant, property, flatType);
-                    app.setStatus(Application.ApplicationStatus.valueOf(status));
+                    app.setStatus(Status.APPLICATION_STATUS.valueOf(status));
                     applications.add(app);
                 }
             }

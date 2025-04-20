@@ -4,7 +4,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 
+import assignment2002.application.Application;
+import assignment2002.application.ApplicationService;
 import assignment2002.user.Officer;
+import assignment2002.utils.Authenticator;
 import assignment2002.utils.ProjectPrinter;
 import assignment2002.utils.Status.REGISTRATION;
 
@@ -53,8 +56,9 @@ public class OfficerController {
             		+ "\n2: View status of projects as officer"
             		+ "\n3: View registered projects"
             		+ "\n4. View enquiries"
-            		+ "\n5. Generate receipts for booked flats"
-            		+ "\n6. Back");
+            		+ "\n5. View/update applicant's detail"
+            		+ "\n6. Generate receipts for booked flats"
+            		+ "\n7. Back");
 
             int choice = sc.nextInt();
             sc.nextLine();
@@ -87,8 +91,48 @@ public class OfficerController {
             			System.out.println("You have not registered for any projects!");
             		}
             	}
-            	case 3 -> ProjectPrinter.viewProjects(officer.getRegisteredProperties());
-                case 6 -> run = false;
+            	case 3 -> ProjectPrinter.viewProjects(officer.getRegisteredProjects());
+            	case 4 -> {}// TODO
+            	case 5 -> {
+            		System.out.println("Here are all successful applications:");
+            		List<Application> apps = officer.getAllSuccessfulApplications();
+            		for (Application app1 : apps) {
+            			ApplicationService.generateReceipt(app1);
+            		}
+            		String nric = "";
+            		do {
+            			System.out.println("Please enter applicant's NRIC to update applicant's detail (enter 0 to exit):");
+            			nric = sc.nextLine();
+            			if (Authenticator.isValidNRIC(nric)) {
+            				Application app = null;
+            				for (Application app2 : apps) {
+                    			if (app2.getApplicant().getNRIC().equalsIgnoreCase(nric)) {
+                    				app = app2;
+                    			}
+                    		}
+            				if (app == null) {
+            					System.out.println("Unable to find application with this NRIC");
+            					return;
+            				}
+            				System.out.println("Please confirm applicant's room type (2-Room / 3-Room):");
+            				String roomType = sc.nextLine();
+            				if (!roomType.equals("2-Room") && !roomType.equals("3-Room")) {
+            					System.out.println("Invalid input! Please try again!");
+            					return;
+            				}
+            				OfficerService.updateBTOApplication(officer, app, roomType);
+            			}
+            		} while (nric.equals("0"));
+            	}
+            	case 6 -> {
+            		System.out.println("Enter the project name:");
+            		String projectName = sc.nextLine();
+            		System.out.println("Enter the applicant's NRIC:");
+            		String applicantNric = sc.nextLine();
+            		Application app = OfficerService.getSuccessfulApplicationByApplicantNRIC(officer, projectName, applicantNric);
+            		OfficerService.generateReceiptOfApplication(officer, app);
+            	}
+                case 7 -> run = false;
                 default -> System.out.println("Invalid input. Try again.");
             }
 

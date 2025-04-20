@@ -8,7 +8,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import assignment2002.application.Application;
+import assignment2002.application.ApplicationService;
+import assignment2002.user.Applicant;
 import assignment2002.user.Officer;
+import assignment2002.user.User;
+import assignment2002.utils.Authenticator;
 import assignment2002.utils.Data;
 import assignment2002.utils.DateCheck;
 import assignment2002.utils.LoadInfo;
@@ -77,5 +82,58 @@ public class OfficerService implements Status {
 			}
 		}
 		return temp;
+	}
+	
+	public static Application getSuccessfulApplicationByApplicantNRIC(Officer o, String projectName, String applicantNric) {
+		if (!Authenticator.isValidNRIC(applicantNric)) {
+			return null;
+		}
+		ArrayList<User> a = LoadInfo.loadUsers();
+		User user = a.stream().filter(u -> u.getNRIC().equalsIgnoreCase(applicantNric)).collect(Collectors.toList()).getFirst();
+		
+		BTOProperty p = o.getRegisteredProject(projectName);
+		
+		if (p == null) return null;
+		Application app = ApplicationService.getApplicationByApplicantAndProperty(o, p);
+		return app.getStatus() == APPLICATION_STATUS.SUCCESSFUL ? app : null;
+	}
+	
+	public static void updateApplicantProfile(Application app, String flatType) {
+		if (flatType.equalsIgnoreCase("2-Room") && !app.getFlatType().equalsIgnoreCase("2-Room")) {
+			app.setFlatType(flatType);
+			// TODO: Update the applicant's app to correct room type
+		} else if (flatType.equalsIgnoreCase("3-Room") && !app.getFlatType().equalsIgnoreCase("3-Room")) {
+			app.setFlatType(flatType);
+		} else {} // This case means no change
+	}
+	
+	// This is NOT referring to ApplicationService
+	// Here we update the application via Officer's control - Successful -> Booked flow
+	public static void updateBTOApplication(Officer o, Application app, String flatType) {
+		BTOProperty p = o.getRegisteredProject(app.getProperty().getProjectName());
+		if (p == null) return;
+		if (!ApplicationService.getApplicationStatus(app.getApplicant()).equalsIgnoreCase(APPLICATION_STATUS.SUCCESSFUL.toString()))
+			return;
+			
+		app.getApplicant().setApplicationStatus(APPLICATION_STATUS.BOOKED.toString());
+		updateApplicantProfile(app, flatType);
+		
+		if (app.getFlatType().equalsIgnoreCase("2-Room")) {
+			p.setTwoRoomAmt(p.getTwoRoomAmt() - 1);
+		} else if (app.getFlatType().equalsIgnoreCase("3-Room")) {
+			p.setTwoRoomAmt(p.getThreeRoomAmt() - 1);
+		}
+		
+		generateReceiptOfApplication(o, app);
+	}
+	
+	// This will be called in 2 ways:
+	// 1. After applicant application from successful -> booked
+	// 2. From officer menu
+	public static void generateReceiptOfApplication(Officer o, Application app) {
+		BTOProperty p = o.getRegisteredProject(app.getProperty().getProjectName());
+		if (p == null) return;
+		
+		ApplicationService.generateReceipt(app);
 	}
 }

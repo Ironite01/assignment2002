@@ -7,6 +7,8 @@ import java.util.Map;
 import assignment2002.BTOProperty;
 import assignment2002.OfficerController;
 import assignment2002.OfficerService;
+import assignment2002.application.Application;
+import assignment2002.application.ApplicationService;
 import assignment2002.utils.Status;
 
 public class Officer extends Applicant {
@@ -23,8 +25,20 @@ public class Officer extends Applicant {
     	return allProjectStatus;
     }
     
-    public ArrayList<BTOProperty> getRegisteredProperties() {
+    public ArrayList<BTOProperty> getRegisteredProjects() {
     	return OfficerService.getRegisteredProjects(this);
+    }
+    
+    public BTOProperty getRegisteredProject(String projectName) {
+    	return this.getRegisteredProjects()
+				.stream()
+				.filter(prop -> prop.getProjectName().equalsIgnoreCase(projectName))
+				.findFirst()
+				.orElse(null);
+    }
+    
+    public List<Application> getAllSuccessfulApplications() {
+    	return ApplicationService.getSuccessfulApplicationsFromOfficer(this);
     }
     
     public List<Object> viewEnquiry() {
@@ -37,10 +51,6 @@ public class Officer extends Applicant {
     
     public void bookFlat(Applicant applicant, String flatType) {
     	
-    }
-    
-    public Object generateReceipt(Applicant applicant) {
-    	return null;
     }
     
     @Override

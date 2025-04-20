@@ -2,28 +2,20 @@ package assignment2002.application;
 
 import assignment2002.BTOProperty;
 import assignment2002.user.Applicant;
+import assignment2002.utils.Status;
 
-public class Application {
-
-    public enum ApplicationStatus {
-        PENDING,
-        SUCCESSFUL,
-        UNSUCCESSFUL,
-        BOOKED,
-        PENDINGWITHDRAWN,
-        WITHDRAWN
-    }
+public class Application implements Status {
 
     private Applicant applicant;
     private BTOProperty property;
     private String flatType;
-    private ApplicationStatus status;
+    private APPLICATION_STATUS status;
 
     public Application(Applicant applicant, BTOProperty property, String flatType) {
         this.applicant = applicant;
         this.property = property;
         this.flatType = flatType;
-        this.status = ApplicationStatus.PENDING;
+        this.status = APPLICATION_STATUS.PENDING;
     }
 
     public Applicant getApplicant() {
@@ -37,20 +29,24 @@ public class Application {
     public String getFlatType() {
         return flatType;
     }
+    
+    public void setFlatType(String flatType) {
+    	this.flatType = flatType;
+    }
 
-    public ApplicationStatus getStatus() {
+    public APPLICATION_STATUS getStatus() {
         return status;
     }
 
-    public void setStatus(ApplicationStatus status) {
+    public void setStatus(APPLICATION_STATUS status) {
         this.status = status;
     }
 
     public boolean isSuccessful() {
-        return status == ApplicationStatus.SUCCESSFUL;
+        return status == APPLICATION_STATUS.SUCCESSFUL;
     }
 
     public boolean isBooked() {
-        return status == ApplicationStatus.BOOKED;
+        return status == APPLICATION_STATUS.BOOKED;
     }
 }
