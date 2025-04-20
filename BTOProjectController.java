@@ -21,7 +21,7 @@ public class BTOProjectController {
     }
 
     public void showProjectMenu(){
-        System.out.println("1: Add BTO Project");
+        System.out.println("1: Create BTO Project");
         System.out.println("2: Edit BTO Project");
         System.out.println("3: Delete BTO Project");
         System.out.println("4: Back to Main Menu");
@@ -38,6 +38,13 @@ public class BTOProjectController {
     }
 
     private void createBTOMenu(){
+        if (manager.isCurrentlyManaging(Data.btoList)) {
+            System.out.println("!!! UNABLE TO CREATE BTO !!!");
+            System.out.println("!!! CURRENTLY MANAGING ANOTHER PROJECT !!!");
+            return;
+        }
+
+
         String twoRoom = "2-Room", threeRoom = "3-Room";
         int twoRoomAmt = 0, twoRoomPrice = 0;
         int threeRoomAmt = 0, threeRoomPrice = 0;
@@ -70,29 +77,21 @@ public class BTOProjectController {
         switch (roomVal) {
             case 1:
                 System.out.println("=== 2-Room Only ==="); 
-                System.out.print("Number of units available: ");
-                twoRoomAmt = sc.nextInt();
-                System.out.print("Cost Per Unit: $ ");
-                twoRoomPrice = sc.nextInt();
+                twoRoomAmt = promptPositiveInt("Number of units available: ");
+                twoRoomPrice = promptPositiveInt("Cost Per Unit: $ ");
                 break;
             case 2:
                 System.out.println("=== 3-Room Only ==="); 
-                System.out.print("Number of units available: ");
-                threeRoomAmt = sc.nextInt();
-                System.out.print("Cost Per Unit: $ ");
-                threeRoomPrice = sc.nextInt();
+                threeRoomAmt = promptPositiveInt("Number of units available: ");
+                threeRoomPrice = promptPositiveInt("Cost Per Unit: $ ");
                 break;
 
             case 3: 
                 System.out.println("=== 2 & 3 Rooms ==="); 
-                System.out.print("(2-Room) Number of units available: ");
-                twoRoomAmt = sc.nextInt();
-                System.out.print("(2-Room) Cost Per Unit: $ ");
-                twoRoomPrice = sc.nextInt();
-                System.out.print("(3-Room) Number of units available: ");
-                threeRoomAmt = sc.nextInt();
-                System.out.print("(3-Room) Cost Per Unit: $ ");
-                threeRoomPrice = sc.nextInt();
+                twoRoomAmt = promptPositiveInt("(2-Room) Number of units available: ");
+                twoRoomPrice = promptPositiveInt("(2-Room) Cost Per Unit: $ ");
+                threeRoomAmt = promptPositiveInt("(3-Room) Number of units available: ");
+                threeRoomPrice = promptPositiveInt("(3-Room) Cost Per Unit: $ ");
                 break;
         
             default: 
@@ -241,5 +240,19 @@ public class BTOProjectController {
 
 
 
+    private int promptPositiveInt(String message) {
+        int value;
+        while (true) {
+            System.out.print(message);
+            value = sc.nextInt();
+            if (value < 0) {
+                System.out.println("Value cannot be negative.");
+            } else {
+                break;
+            }
+        }
+        return value;
+    }
+    
     
 }

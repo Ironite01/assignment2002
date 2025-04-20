@@ -47,4 +47,10 @@ public class DateCheck {
         return today.format(formatter);
     }
     
+    public static boolean isTodayWithin(String openDate, String closeDate) {
+        LocalDate open = LocalDate.parse(openDate, formatter);
+        LocalDate close = LocalDate.parse(closeDate, formatter);
+        LocalDate today = LocalDate.now();
+        return ( !today.isBefore(open) && !today.isAfter(close) );
+    }
 }

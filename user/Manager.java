@@ -2,6 +2,7 @@ package assignment2002.user;
 
 import assignment2002.BTOProperty;
 import assignment2002.ManagerController;
+import assignment2002.utils.DateCheck;
 import assignment2002.utils.FileManifest;
 import assignment2002.utils.FileManifest.PROPERTY_COLUMNS;
 import assignment2002.utils.ProjectPrinter;
@@ -107,6 +108,15 @@ public class Manager extends User implements FileManifest {
         }
     }
     
+    public boolean isCurrentlyManaging(ArrayList <BTOProperty> btoList){
+        List <BTOProperty> myP = getMyProjects(btoList);
+        for (BTOProperty p : myP){
+            if(DateCheck.isTodayWithin(p.getOpenDate(), p.getCloseDate())){
+                return true;
+            }
+        }
+        return false;
+    }
 
     public void manageOfficerRegis(){
 

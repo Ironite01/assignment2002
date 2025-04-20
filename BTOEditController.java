@@ -4,7 +4,6 @@ import assignment2002.utils.BTOFileService;
 import assignment2002.utils.Data;
 import assignment2002.utils.DateCheck;
 import assignment2002.utils.FileManifest;
-import assignment2002.utils.FileManifest.PROPERTY_COLUMNS;
 import java.util.List;
 import java.util.Scanner;
 
@@ -362,7 +361,8 @@ public class BTOEditController implements FileManifest {
             System.out.print("New " + displayName + ": ");
             String newValue = sc.nextLine().trim();
 
-            if (List.of("twoRoomAmt", "twoRoomPrice", "threeRoomAmt", "threeRoomPrice").contains(colName)) {
+            if (List.of(PROPERTY_COLUMNS.TWO_ROOM_AMT, PROPERTY_COLUMNS.TWO_ROOM_PRICE,
+                PROPERTY_COLUMNS.THREE_ROOM_AMT, PROPERTY_COLUMNS.THREE_ROOM_PRICE).contains(colName)) {
                 try {
                     int parsed = Integer.parseInt(newValue);
                     if (parsed < 0) {
