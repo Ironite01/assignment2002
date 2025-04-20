@@ -1,6 +1,6 @@
 package assignment2002;
 import assignment2002.application.Application;
-import assignment2002.utils.Status;
+import assignment2002.utils.Status.APPLICATION_STATUS;
 import assignment2002.application.ApplicationService;
 import assignment2002.user.Manager;
 import java.util.Arrays;
@@ -38,9 +38,9 @@ public class ApplicationMgmtController {
 
                 switch(choice){
                     case 1 -> viewApplicationsByStatus(null, "All");
-                    case 2 -> viewApplicationsByStatus(Status.APPLICATION_STATUS.PENDING, "Pending");
-                    case 3 -> viewApplicationsByStatus(Status.APPLICATION_STATUS.SUCCESSFUL, "Successful");
-                    case 4 -> viewApplicationsByStatus(Status.APPLICATION_STATUS.UNSUCCESSFUL, "Unsuccessful");
+                    case 2 -> viewApplicationsByStatus(APPLICATION_STATUS.PENDING, "Pending");
+                    case 3 -> viewApplicationsByStatus(APPLICATION_STATUS.SUCCESSFUL, "Successful");
+                    case 4 -> viewApplicationsByStatus(APPLICATION_STATUS.UNSUCCESSFUL, "Unsuccessful");
                     case 5 -> approveApplication();
                     case 6 -> rejectApplication();
                     case 7 -> viewPendingWithdrawals();
@@ -53,7 +53,7 @@ public class ApplicationMgmtController {
         }
     
 
-    private void viewApplicationsByStatus(Status.APPLICATION_STATUS status, String label) {
+    private void viewApplicationsByStatus(APPLICATION_STATUS status, String label) {
         List<Application> apps = null;
 
         if(status == null){
@@ -72,14 +72,14 @@ public class ApplicationMgmtController {
     }
     
     private void approveApplication() {
-        List<Application> pendingApps = ApplicationService.getMyManagedApplicationsByStatus(manager, Status.APPLICATION_STATUS.PENDING);
+        List<Application> pendingApps = ApplicationService.getMyManagedApplicationsByStatus(manager, APPLICATION_STATUS.PENDING);
     
         if (pendingApps.isEmpty()) {
             System.out.println("No Pending Applications to Approve.");
             return;
         }
     
-        viewApplicationsByStatus(Status.APPLICATION_STATUS.PENDING, "Pending");
+        viewApplicationsByStatus(APPLICATION_STATUS.PENDING, "Pending");
     
         System.out.print("Enter NRIC of Applicant to Approve: ");
         String nric = sc.nextLine().trim();
@@ -105,14 +105,14 @@ public class ApplicationMgmtController {
     }
 
     private void rejectApplication() {
-        List<Application> pendingApps = ApplicationService.getMyManagedApplicationsByStatus(manager, Status.APPLICATION_STATUS.PENDING);
+        List<Application> pendingApps = ApplicationService.getMyManagedApplicationsByStatus(manager, APPLICATION_STATUS.PENDING);
     
         if (pendingApps.isEmpty()) {
             System.out.println("No Pending Applications to Reject.");
             return;
         }
     
-        viewApplicationsByStatus(Status.APPLICATION_STATUS.PENDING, "Pending");
+        viewApplicationsByStatus(APPLICATION_STATUS.PENDING, "Pending");
     
         System.out.print("Enter NRIC of Applicant to Reject: ");
         String nric = sc.nextLine().trim();
