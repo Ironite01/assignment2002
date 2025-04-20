@@ -102,6 +102,7 @@ public class Manager extends User implements FileManifest {
                     case PROPERTY_COLUMNS.OPEN_DATE -> p.setOpenDate(newValue);
                     case PROPERTY_COLUMNS.CLOSE_DATE -> p.setCloseDate(newValue);
                     case PROPERTY_COLUMNS.OFFICER_SLOT -> p.setOfficerSlot(Integer.parseInt(newValue));
+                    default -> System.out.println("Unsupported Column");
                 }
                 break;
             }
