@@ -2,6 +2,7 @@ package assignment2002;
 
 import java.util.Scanner;
 import assignment2002.user.Manager;
+import assignment2002.user.UserService;
 import assignment2002.utils.BTOFileService;
 import assignment2002.utils.Data;
 import assignment2002.utils.FileManifest;
@@ -34,7 +35,8 @@ public class ManagerController {
             System.out.println("3: Manage Applications");
             System.out.println("4: Manage Officer Registration");
             System.out.println("5: View Projects Menu");
-            System.out.println("100: Logout"); //Temp Numbering
+            System.out.println("6: Change Password");
+            System.out.println("7: Logout"); //Temp Numbering
 
             int choice = sc.nextInt();
 
@@ -44,7 +46,8 @@ public class ManagerController {
                 case 3 -> appMgmtController.viewApplicationsMenu();
                 case 4 -> officerController.viewOfficerRegisMenu();
                 case 5 -> filterController.viewProjsMenu();
-                case 100-> run = false;
+                case 6 -> UserService.resetPasswordPrompt(manager);
+                case 7 -> run = false;
                 default -> System.out.println("Retry");
         } 
 
@@ -79,7 +82,6 @@ public class ManagerController {
     }
 
 
-    
     
     
 }
