@@ -7,6 +7,7 @@ import assignment2002.user.Officer;
 import assignment2002.user.User;
 import assignment2002.utils.FileManifest;
 import assignment2002.utils.Status;
+import assignment2002.utils.FileManifest.PROPERTY_COLUMNS;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -14,11 +15,16 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class ApplicationService implements FileManifest {
 
@@ -432,6 +438,55 @@ public class ApplicationService implements FileManifest {
 
         application.setStatus(Status.APPLICATION_STATUS.BOOKED);
         return true;
+    }
+    
+    public static void editApplicationByColumn(Application app, String colName, String newValue) {
+    	List<String> headers = Arrays.asList("NRIC", "Name", "FlatType", "ProjectName", "Status");
+
+    	Map<String, Integer> headerIndexMap = IntStream.range(0, headers.size())
+    			.boxed()
+    			.collect(Collectors.toMap(
+    					headers::get,
+    					i -> i
+    					));
+    	
+        try {
+            List<String> allLines = Files.readAllLines(Paths.get(APPLICATION_TXT_PATH));
+            String header = allLines.get(0);
+            List<String> updatedLines = new ArrayList<>();
+    
+            for (int i = 1; i < allLines.size(); i++) {
+                String line = allLines.get(i).trim();
+                if (!line.isEmpty()) {
+                    String[] parts = line.split("\t");
+    
+                    if (parts[0].equalsIgnoreCase(app.getApplicant().getNRIC())) {
+                        parts[headerIndexMap.get(colName)] = newValue;
+                        updatedLines.add(String.join("\t", parts));
+    
+                        for (int j = i + 1; j < allLines.size(); j++) {
+                            updatedLines.add(allLines.get(j));
+                        }
+                        break;
+                    } else {
+                        updatedLines.add(line);
+                    }
+                }
+            }
+    
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter(APPLICATION_TXT_PATH))) {
+                writer.write(header);
+                if (!updatedLines.isEmpty()) writer.newLine();
+                for (int i = 0; i < updatedLines.size(); i++) {
+                    writer.write(updatedLines.get(i));
+                    if (i != updatedLines.size() - 1) writer.newLine();
+                }
+            }
+        } catch (IOException e) {
+            System.out.println("Error editing field: " + e.getMessage());
+        }
+        
+        updateApplicantFile(app.getApplicant(), app.getProperty(), app.getFlatType(), app.getStatus().toString());
     }
 
     public static void generateReceipt(Application application) {

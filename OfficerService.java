@@ -102,8 +102,10 @@ public class OfficerService implements Status {
 		if (flatType.equalsIgnoreCase("2-Room") && !app.getFlatType().equalsIgnoreCase("2-Room")) {
 			app.setFlatType(flatType);
 			// TODO: Update the applicant's app to correct room type
+			ApplicationService.editApplicationByColumn(app, "FlatType", "2-Room");
 		} else if (flatType.equalsIgnoreCase("3-Room") && !app.getFlatType().equalsIgnoreCase("3-Room")) {
 			app.setFlatType(flatType);
+			ApplicationService.editApplicationByColumn(app, "FlatType", "3-Room");
 		} else {} // This case means no change
 	}
 	
