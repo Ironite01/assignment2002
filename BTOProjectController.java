@@ -1,12 +1,11 @@
 package assignment2002;
 import assignment2002.user.Manager;
-import assignment2002.user.Officer;
 import assignment2002.utils.BTOFileService;
 import assignment2002.utils.Data;
 import assignment2002.utils.DateCheck;
+import assignment2002.utils.InputUtil;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Scanner;
 
 public class BTOProjectController {
@@ -53,53 +52,44 @@ public class BTOProjectController {
         String projName;
 
         while (true) {
-            System.out.print("Project Name: ");
-            projName = sc.nextLine().trim();
+            projName = InputUtil.getNonEmptyString(sc, "Project Name: ");
 
             if(manager.projNameExists(Data.btoList, projName)){
-                System.out.println("Duplicate Project Name");
+                System.out.println("\n !!Duplicate Project Name");
                 System.out.println("Please Try Again");
                 continue;
             } break;
 
         }
 
-        System.out.print("Neighbourhood: ");
-        String neighbourhood = sc.nextLine();
+        // System.out.print("Neighbourhood: ");
+        String neighbourhood = InputUtil.getNonEmptyString(sc, "Neighbourhood: ");
 
         System.out.println("=== Room Types ===");
         System.out.println("1: 2 Room Only");
         System.out.println("2: 3 Room Only");
         System.out.println("3: 2 & 3 Room");
-        int roomVal = sc.nextInt();
-        sc.nextLine();
+        int roomVal = InputUtil.getValidatedIntRange(sc, "Room Choice: ", 1, 3);
 
         switch (roomVal) {
-            case 1:
+            case 1 ->{
                 System.out.println("=== 2-Room Only ==="); 
-                twoRoomAmt = promptPositiveInt("Number of units available: ");
-                twoRoomPrice = promptPositiveInt("Cost Per Unit: $ ");
-                break;
-            case 2:
+                twoRoomAmt = InputUtil.getValidatedIntRange(sc, "Number of Units: ", 0, Integer.MAX_VALUE);
+                twoRoomPrice = InputUtil.getValidatedIntRange(sc, "Cost Per Unit: $", 0, Integer.MAX_VALUE);}
+            case 2 -> {
                 System.out.println("=== 3-Room Only ==="); 
-                threeRoomAmt = promptPositiveInt("Number of units available: ");
-                threeRoomPrice = promptPositiveInt("Cost Per Unit: $ ");
-                break;
+                threeRoomAmt = InputUtil.getValidatedIntRange(sc, "Number of Units: ", 0, Integer.MAX_VALUE);
+                threeRoomPrice = InputUtil.getValidatedIntRange(sc, "Cost Per Unit: $", 0, Integer.MAX_VALUE);}
 
-            case 3: 
+            case 3 -> {
                 System.out.println("=== 2 & 3 Rooms ==="); 
-                twoRoomAmt = promptPositiveInt("(2-Room) Number of units available: ");
-                twoRoomPrice = promptPositiveInt("(2-Room) Cost Per Unit: $ ");
-                threeRoomAmt = promptPositiveInt("(3-Room) Number of units available: ");
-                threeRoomPrice = promptPositiveInt("(3-Room) Cost Per Unit: $ ");
-                break;
-        
-            default: 
-                System.out.println("Try Again");
-                break;
+                twoRoomAmt = InputUtil.getValidatedIntRange(sc, "[2-Room] Number of units available: ", 0, Integer.MAX_VALUE);
+                twoRoomPrice = InputUtil.getValidatedIntRange(sc, "[2-Room] Cost Per Unit: $ ", 0, Integer.MAX_VALUE);
+                threeRoomAmt = InputUtil.getValidatedIntRange(sc, "[3-Room] Number of units available: ", 0, Integer.MAX_VALUE);
+                threeRoomPrice = InputUtil.getValidatedIntRange(sc, "[3-Room] Cost Per Unit: $ ", 0, Integer.MAX_VALUE);}
+            default -> System.out.println("Try Again");
         }
 
-        sc.nextLine();
         while(true){ //Ensures that closeDate must come after openDate
             do {
                 System.out.print("Opening Date for HDB (MM/DD/YYYY): "); //Idk could be better
@@ -124,47 +114,25 @@ public class BTOProjectController {
 
         }
 
-        
-        while(true){
-            System.out.println("Max Number of Officers (1 ~ 10): ");
-            officerSlot = sc.nextInt();
-            sc.nextLine();
+        officerSlot = InputUtil.getValidatedIntRange(sc, "Max Number of Officers (1 ~ 10): ", 1, 10);
 
-            if(officerSlot > 10 || officerSlot < 1){
-                System.out.println("Error! Range between 1 ~ 10");
-            } else{
-                break;
-            }
 
+        System.out.println("== Visibility of Property ==");
+        System.out.println("Visible = Y");
+        System.out.println("Not Visible = N");
+        String visibleString = InputUtil.getConfirmation(sc, "Choice");
+
+        switch (visibleString) {
+            case "TRUE" -> System.out.println("Visibility Selected: Visible");
+            case "FALSE" -> System.out.println("Visibility Selected: Not Visible");
+            default -> System.out.println("Invalid Input Try Again!");
         }
-
-
-        String visibleString;
-        while (true) {
-            System.out.println("== Visibility of Property ==");
-            System.out.println("Visible = Y");
-            System.out.println("Not Visible = N");
-            System.out.print("Choice: ");
-            visibleString = sc.nextLine().toLowerCase().trim();
-
-            switch (visibleString) {
-                case "y":
-                    System.out.println("Visibility Selected: Visible");
-                    visibleString = "TRUE";
-                    break;
-                case "n":
-                    System.out.println("Visibility Selected: Not Visible");
-                    visibleString = "FALSE";
-                    break;
-                default:
-                    System.out.println("Invalid Input Try Again!");
-                    break;
-            }
-            break;
             
-        }
 
         System.out.printf("Project: %s Has Been Successfully Added\n", projName);
+        
+
+        //APPEND LOGIC
         String managerIC = manager.getName();
         ArrayList<Manager> managerICRef = new ArrayList<>();
         managerICRef.add(manager);
@@ -195,35 +163,22 @@ public class BTOProjectController {
                 BTOProperty p = Data.btoList.get(i);
                 System.out.printf("%d. %s (%s)\n", i + 1, p.getProjectName(), p.getNeighbourhood());
             }
-    
-            System.out.print("Enter the number of the project to delete (0 to cancel): ");
-            choice = sc.nextInt();
-            sc.nextLine();
-    
-            if (choice == 0) {
-                System.out.println("Cancelled.");
+            choice = InputUtil.getValidatedIntRange(sc, "Enter the number of the project to delete (0 to cancel): ", 0, Data.btoList.size());
+
+            if(choice == 0){
                 return;
-            }
-        
-            if (choice < 1 || choice > Data.btoList.size()) {
-                System.out.println("Invalid choice.");
-                continue;
             }
 
             propertyToDel  = Data.btoList.get(choice - 1);
             System.out.println("=== Project DELETION Confirmation ===");
             System.out.printf("Project Chosen: %s\n", propertyToDel.getProjectName());
             System.out.printf("Project Neighbourhood: %s\n", propertyToDel.getNeighbourhood());
-            System.out.println("CONFIRM? (Y/N)");
+            String confirm = InputUtil.getConfirmation(sc, "Confirm ");
 
-            String confirm = sc.nextLine().trim().toLowerCase();
-
-            if (confirm.equals("y")) {
-                break;
-            }
-            else{
+            if (confirm.equalsIgnoreCase("false")){
                 continue;
             }
+            break;
 
         }
 
@@ -237,22 +192,6 @@ public class BTOProjectController {
             return;
         }
     }
-
-
-
-    private int promptPositiveInt(String message) {
-        int value;
-        while (true) {
-            System.out.print(message);
-            value = sc.nextInt();
-            if (value < 0) {
-                System.out.println("Value cannot be negative.");
-            } else {
-                break;
-            }
-        }
-        return value;
-    }
-    
+ 
     
 }

@@ -34,4 +34,18 @@ public class InputUtil {
         }
     }
 
+    public static String getConfirmation(Scanner sc, String prompt) {
+        while (true) {
+            System.out.printf(prompt + " (Y/N): ");
+            String input = sc.nextLine().trim().toLowerCase();
+    
+            switch (input) {
+                case "y" -> {return "TRUE";}
+                case "n" -> {return "FALSE";}
+                default -> System.out.println("Invalid input. Try Again!");
+            }
+        }
+    }
+    
+
 }
