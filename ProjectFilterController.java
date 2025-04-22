@@ -31,8 +31,7 @@ public class ProjectFilterController {
             System.out.println("3: View Personally Created Projects");
             System.out.println("4: Filter Personally Created Projects");
             System.out.println("5: Exit");
-            int choice = sc.nextInt();
-            sc.nextLine();
+            int choice = InputUtil.getValidatedIntRange(sc,"Choice: ", 1, 5);
 
             switch(choice){
                 case 1 -> manager.viewAllProjects(Data.btoList);

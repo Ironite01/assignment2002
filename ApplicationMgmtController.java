@@ -1,5 +1,6 @@
 package assignment2002;
 import assignment2002.application.Application;
+import assignment2002.utils.InputUtil;
 import assignment2002.utils.Status.APPLICATION_STATUS;
 import assignment2002.application.ApplicationService;
 import assignment2002.user.Manager;
@@ -32,9 +33,8 @@ public class ApplicationMgmtController {
                 System.out.println("6. Reject Applications");
                 System.out.println("7. View Pending Withdrawals");
                 System.out.println("8. Finalize Withdrawals");
-                System.out.println("0. Back");    
-                choice = sc.nextInt();
-                sc.nextLine();
+                System.out.println("9. Back");    
+                choice = InputUtil.getValidatedIntRange(sc, "Choice: ",1 , 9);
 
                 switch(choice){
                     case 1 -> viewApplicationsByStatus(null, "All");
@@ -45,7 +45,7 @@ public class ApplicationMgmtController {
                     case 6 -> rejectApplication();
                     case 7 -> viewPendingWithdrawals();
                     case 8 -> finalizeWithdrawals();
-                    case 0 -> running = false; 
+                    case 9 -> running = false; 
                 }
             }
             System.out.println("Exiting\n");
@@ -81,8 +81,7 @@ public class ApplicationMgmtController {
     
         viewApplicationsByStatus(APPLICATION_STATUS.PENDING, "Pending");
     
-        System.out.print("Enter NRIC of Applicant to Approve: ");
-        String nric = sc.nextLine().trim();
+        String nric = InputUtil.getNonEmptyString(sc, "Enter NRIC of Applicant to Approve: ");
     
         Application toApprove = pendingApps.stream()
             .filter(app -> app.getApplicant().getNRIC().equalsIgnoreCase(nric))
@@ -114,8 +113,7 @@ public class ApplicationMgmtController {
     
         viewApplicationsByStatus(APPLICATION_STATUS.PENDING, "Pending");
     
-        System.out.print("Enter NRIC of Applicant to Reject: ");
-        String nric = sc.nextLine().trim();
+        String nric = InputUtil.getNonEmptyString(sc, "Enter NRIC of Applicant to Reject: ");
     
         Application toReject = pendingApps.stream()
             .filter(app -> app.getApplicant().getNRIC().equalsIgnoreCase(nric))
@@ -159,8 +157,7 @@ public class ApplicationMgmtController {
 
         viewPendingWithdrawals(); // Reuse display
 
-        System.out.print("Enter NRICs to finalize (comma separated): ");
-        String input = sc.nextLine();
+        String input = InputUtil.getNonEmptyString(sc, "Enter NRICs to finalize (comma separated): ");
         Set<String> selectedNrics = Arrays.stream(input.split(","))
                 .map(String::trim)
                 .collect(Collectors.toSet());

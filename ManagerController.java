@@ -42,9 +42,9 @@ public class ManagerController {
             System.out.println("3: Manage Applications");
             System.out.println("4: Manage Officer Registration");
             System.out.println("5: View Projects Menu");
-            System.out.println("6: Change Password");
-            System.out.println("7: View All Enquiries");
-            System.out.println("8: View & Reply to Your Project Enquiries");
+            System.out.println("6: View All Enquiries");
+            System.out.println("7: View & Reply to Your Project Enquiries");
+            System.out.println("8: Change Password");
             System.out.println("9: Logout"); //Temp Numbering
 
             int choice = InputUtil.getValidatedIntRange(sc, "Choice: ", 1, 9);
@@ -55,9 +55,9 @@ public class ManagerController {
                 case 3 -> appMgmtController.viewApplicationsMenu();
                 case 4 -> officerController.viewOfficerRegisMenu();
                 case 5 -> filterController.viewProjsMenu();
-                case 6 -> UserService.resetPasswordPrompt(manager);
-                case 7 -> viewAllEnquiries();
-                case 8 -> viewAndReplyOwnEnquiries(Data.btoList);
+                case 6 -> viewAllEnquiries();
+                case 7 -> viewAndReplyOwnEnquiries(Data.btoList);
+                case 8 -> UserService.resetPasswordPrompt(manager);
                 case 9 -> run = false;
                 default -> System.out.println("Retry");
         } 
@@ -72,18 +72,13 @@ public class ManagerController {
     private void viewVisibilityMenu(){
         manager.viewProjectsVisibility(Data.btoList);
 
-        System.out.print("Enter project number to toggle visibility (0 to cancel): ");
-        int choice = sc.nextInt();
+        int choice = InputUtil.getValidatedIntRange(sc, "Enter project number to toggle visibility (0 to cancel): ", 0, Data.btoList.size());
 
         if (choice == 0) {
             System.out.println("Cancelled.");
             return;
         }
 
-        if (choice < 1 || choice > Data.btoList.size()) {
-            System.out.println("Invalid choice.");
-            return;
-        }
         BTOProperty selected = Data.btoList.get(choice - 1);
         manager.toggleProjectVisiblity(selected);
         BTOFileService.editBTOByColumn(selected.getProjectName(), FileManifest.PROPERTY_COLUMNS.VISIBLE, Boolean.toString(selected.isVisible()).toUpperCase(), false);
@@ -146,18 +141,15 @@ public class ManagerController {
 
                 if (!enquiry.isResolved()) {
                     Scanner sc = new Scanner(System.in);
-                    System.out.print("Reply to this enquiry? (y/n): ");
-                    if (sc.nextLine().equalsIgnoreCase("y")) {
-                        System.out.print("Enter your reply: ");
-                        String reply = sc.nextLine();
+                    if (InputUtil.getConfirmationBool(sc, "Reply to this enquiry?")) {
+                        String reply = InputUtil.getNonEmptyString(sc, "Enter your reply: ");
                         enquiry.addMessage(manager.getNRIC(), reply);
                         EnquiryService.saveEnquiriesToFile();
                         System.out.println("Reply sent.");
                     }
 
                     System.out.print("Do you want to resolve this enquiry? (y/n): ");
-                    String resolve = sc.nextLine();
-                    if (resolve.equalsIgnoreCase("y")) {
+                    if (InputUtil.getConfirmationBool(sc, "Do you want to resolve this enquiry?")) {
                         EnquiryService.markEnquiryAsResolved(enquiry.getApplicantNric(), enquiry.getProjectName());
                         System.out.println("Marked as resolved.");
                     }

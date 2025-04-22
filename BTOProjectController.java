@@ -92,14 +92,14 @@ public class BTOProjectController {
         while(true){ //Ensures that closeDate must come after openDate
             do {
                 System.out.print("Opening Date for HDB (MM/DD/YYYY): "); //Idk could be better
-                openDate = sc.nextLine(); 
+                openDate = sc.nextLine();  //Leave these they are validated via dateValidator
                 
             } while (!DateCheck.dateValidator(openDate));
                        
 
             do {
                 System.out.print("Closing Date for HDB (MM/DD/YYYY): "); //Idk could be better
-                closeDate = sc.nextLine();
+                closeDate = sc.nextLine(); //Leave these they are validated via dateValidator
                 
             } while (!DateCheck.dateValidator(closeDate));
 

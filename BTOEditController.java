@@ -270,6 +270,11 @@ public class BTOEditController implements FileManifest {
             System.out.println("Current Registered Officer Amount: " + currentOfficersRegistered);
             int newOfficerSlots = InputUtil.getValidatedIntRange(sc,"New Officer Slots (1 ~ 10): ", 1, 10);
 
+            if(newOfficerSlots < currentOfficersRegistered){
+                System.out.println("\n!! Invalid Input new amount LESS THAN currently registered !!\n");
+                continue;
+            }
+
 
             System.out.printf("Confirm change from %s -> %d?\n", oldOfficerSlots, newOfficerSlots);
             String confirm = InputUtil.getConfirmationString(sc, "Confirm");
