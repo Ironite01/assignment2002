@@ -6,6 +6,7 @@ import assignment2002.enquiry.EnquiryService;
 import assignment2002.user.Applicant;
 import assignment2002.user.UserService;
 import assignment2002.utils.Data;
+import assignment2002.utils.InputUtil;
 import assignment2002.utils.ProjectPrinter;
 import java.util.Date;
 import java.util.Map;
@@ -32,8 +33,7 @@ public class ApplicantController {
             System.out.println("7: Change Password");
             System.out.println("8: Logout");
 
-            int choice = sc.nextInt();
-            sc.nextLine(); 
+            int choice = InputUtil.getValidatedIntRange(sc, "Choice: ", 1, 8);
 
             switch (choice) {
                 case 1 -> viewProjects();
@@ -134,7 +134,7 @@ public class ApplicantController {
             System.out.println("3. Delete All Messages");
             System.out.println("4. Edit Your Most Recent Message");
             System.out.println("5. Back");
-            int choice = sc.nextInt(); sc.nextLine();
+            int choice = InputUtil.getValidatedIntRange(sc, "Choice: ", 1, 5);
 
             switch (choice) {
                 case 1 -> {
