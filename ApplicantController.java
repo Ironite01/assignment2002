@@ -4,6 +4,7 @@ import assignment2002.application.ApplicationService;
 import assignment2002.enquiry.Enquiry;
 import assignment2002.enquiry.EnquiryService;
 import assignment2002.user.Applicant;
+import assignment2002.user.UserService;
 import assignment2002.utils.Data;
 import assignment2002.utils.ProjectPrinter;
 import java.util.Date;
@@ -28,7 +29,8 @@ public class ApplicantController {
             System.out.println("4: Withdraw Application");
             System.out.println("5: Submit Enquiry");
             System.out.println("6: View/Edit/Delete Enquiries");
-            System.out.println("7: Logout");
+            System.out.println("7: Change Password");
+            System.out.println("8: Logout");
 
             int choice = sc.nextInt();
             sc.nextLine(); 
@@ -40,7 +42,8 @@ public class ApplicantController {
                 case 4 -> ApplicationService.withdraw(applicant);
                 case 5 -> submitEnquiry(sc);
                 case 6 -> manageEnquiries(sc);
-                case 7 -> run = false;
+                case 7 -> UserService.resetPasswordPrompt(applicant);
+                case 8 -> run = false;
                 default -> System.out.println("Invalid input. Try again.");
             }
 
