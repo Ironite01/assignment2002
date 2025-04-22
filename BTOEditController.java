@@ -54,7 +54,7 @@ public class BTOEditController implements FileManifest {
             int choice = InputUtil.getValidatedIntRange(sc, "Choice: ", 1, 11);
 
             switch (choice) {
-                case 0-> running = false;
+                case 11-> running = false;
                 case 1-> editProjNameMenu(PROPERTY_COLUMNS.PROJECT_NAME);
                 case 2-> genericEditMenu(PROPERTY_COLUMNS.NEIGHBOURHOOD,"Neighbourhood");
                 case 3 -> genericEditMenu(PROPERTY_COLUMNS.TWO_ROOM_AMT, "2-Room Amount");
@@ -306,15 +306,13 @@ public class BTOEditController implements FileManifest {
         String newValue;
         while (true) {
             System.out.println("Old " + displayName + ": " + oldValue);
-            System.out.print("New " + displayName + ": ");
-            newValue = sc.nextLine().trim();
 
             if (List.of(PROPERTY_COLUMNS.TWO_ROOM_AMT, PROPERTY_COLUMNS.TWO_ROOM_PRICE,
                 PROPERTY_COLUMNS.THREE_ROOM_AMT, PROPERTY_COLUMNS.THREE_ROOM_PRICE).contains(colName)) {
                    int intVal = InputUtil.getValidatedIntRange(sc, "New " + displayName + ": ", 0, Integer.MAX_VALUE);
                    newValue = String.valueOf(intVal);
             } else{
-                newValue = InputUtil.getNonEmptyString(sc, "Confirm");
+                newValue = InputUtil.getNonEmptyString(sc, "New " + displayName + ": ");
             }
     
             System.out.printf("Confirm change from %s -> %s?\n", oldValue, newValue);

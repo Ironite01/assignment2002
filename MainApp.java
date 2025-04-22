@@ -18,10 +18,17 @@ public class MainApp {
         LoadInfo.autoCloseExpiredProjects();
 
         while (true) {
-            user = UserService.loginPrompt();
-            if (user == null) {
-                System.out.println("Unable to authenticate user!");
+            try{
+                user = UserService.loginPrompt();
+                if (user == null) {
+                    System.out.println("Unable to authenticate user!");
+                    continue;
+                }
+            } catch(IllegalArgumentException e){
+                System.out.println("Error: " + e.getMessage());
                 continue;
+            } catch (Exception e){
+                System.out.println("Error: " + e.getMessage());
             }
             user.viewMenu();
             break;
