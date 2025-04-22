@@ -36,6 +36,10 @@ public class ProjectPrinter {
     // }
 
     public static void viewProjects(List<BTOProperty> btoList){
+        viewProjects(btoList,null);
+    }
+
+    public static void viewProjects(List<BTOProperty> btoList, String roomType){
         for(BTOProperty project : btoList){
                 String collatedOfficers = "";
                 String managerIC = "";
@@ -61,8 +65,14 @@ public class ProjectPrinter {
                 System.out.printf("Visiblility: %s\n", String.valueOf(project.isVisible()).toUpperCase());
                 System.out.printf("Open Date: %s ~ Close Date: %s\n", project.getOpenDate(), project.getCloseDate());
                 System.out.printf("Neighbourhood: %s \n", project.getNeighbourhood());
-                System.out.printf("[2-Room] Units: %d | Price: $%d\n", project.getTwoRoomAmt(), project.getTwoRoomPrice());
+                if (roomType == null || roomType.equalsIgnoreCase("Both") || roomType.equalsIgnoreCase("2-Room")){
+                    System.out.printf("[2-Room] Units: %d | Price: $%d\n", project.getTwoRoomAmt(), project.getTwoRoomPrice());
+                };
+
+                if (roomType == null || roomType.equalsIgnoreCase("Both") || roomType.equalsIgnoreCase("3-Room")){
                 System.out.printf("[3-Room] Units: %d | Price: $%d\n", project.getThreeRoomAmt(), project.getThreeRoomPrice());
+
+                }
                 System.out.printf("Total Officer Slots [%d] | Filled Slots [%d] \n", project.getOfficerSlot(), project.getOfficers().size());
                 System.out.printf("Registed Officers: %s\n", collatedOfficers);
 

@@ -47,10 +47,10 @@ public class ProjectFilterController {
 
     private void filterConfigMenu(boolean all){
         List<BTOProperty> filteredBTOs =  all ? Data.btoList: manager.getMyProjects(Data.btoList);
-
+        String type = all ? "ALL" : "PERSONAL";
         boolean running = true;
         while (running) {
-            System.out.println("\n=== FILTER CONFIGURATION ===");
+            System.out.printf("\n=== FILTER CONFIGURATION [%s] ===\n", type);
             System.out.printf("1. Set Room Type Filter      (Current: %s)\n", roomFilter);
             System.out.printf("2. Set Neighbourhood Filter  (Current: %s)\n", neighbourhoodFilter);
             System.out.printf("3. Set Marital Status Filter (Current: %s)\n", maritalStatusFilter);
@@ -69,7 +69,7 @@ public class ProjectFilterController {
                 case 4 -> setVisibilityFilter();
                 case 5 -> resetFilters();
                 case 6 -> viewChosenProperties(filteredBTOs);
-                case 7 -> running = false;
+                case 7 -> {running = false; resetFilters();}
                 default -> System.out.println("Try Again");
             }
         }
@@ -172,30 +172,46 @@ public class ProjectFilterController {
     
     private void viewChosenProperties(List<BTOProperty> btoList){
         List<BTOProperty> filtered = btoList.stream()
-    .filter(p -> {
-        if (visibleFilter != null) {
-            boolean shouldBeVisible = visibleFilter.equalsIgnoreCase("TRUE");
-            if (p.isVisible() != shouldBeVisible) return false;
-        }
-
-        if (roomFilter != null && !roomFilter.equals("Both")) {
-            if (!p.getTwoRoom().equalsIgnoreCase(roomFilter) &&
-                !p.getThreeRoom().equalsIgnoreCase(roomFilter)) {
-                return false;
+        .filter(p -> {
+            if (visibleFilter != null) {
+                boolean shouldBeVisible = visibleFilter.equalsIgnoreCase("TRUE");
+                if (p.isVisible() != shouldBeVisible) return false;
             }
-        }
 
-        if (neighbourhoodFilter != null &&!p.getNeighbourhood().equalsIgnoreCase(neighbourhoodFilter)) {
-            return false;
-        }
+            if (neighbourhoodFilter != null) {
+                if (!p.getNeighbourhood().equalsIgnoreCase(neighbourhoodFilter)) {
+                    return false;
+                }
+            }
 
-        if (maritalStatusFilter != null) {
-            //Idk how we should approach this lol
-        }
+            if (roomFilter != null && !roomFilter.equalsIgnoreCase("Both")) {
+                if (roomFilter.equalsIgnoreCase("2-Room")) {
+                    if (p.getTwoRoom().equalsIgnoreCase("NA") || p.getTwoRoomAmt() <= 0) {
+                        return false;
+                    }
+                } else if (roomFilter.equalsIgnoreCase("3-Room")) {
+                    if (p.getThreeRoom().equalsIgnoreCase("NA") || p.getThreeRoomAmt() <= 0) {
+                        return false;
+                    }
+                }
+            }
 
-        return true;
-    })
-    .toList();
+            if (maritalStatusFilter != null) {
+                if (maritalStatusFilter.equalsIgnoreCase("Single")) {
+                    if (p.getTwoRoom().equalsIgnoreCase("NA") || p.getTwoRoomAmt() <= 0) {
+                        return false;
+                    }
+                } else if (maritalStatusFilter.equalsIgnoreCase("Married")) {
+                    if ((p.getTwoRoom().equalsIgnoreCase("NA") || p.getTwoRoomAmt() <= 0) &&
+                        (p.getThreeRoom().equalsIgnoreCase("NA") || p.getThreeRoomAmt() <= 0)) {
+                        return false;
+                    }
+                }
+            }
+
+            return true;
+        })
+        .toList();
 
     if (filtered.isEmpty()) {
         System.out.println("!!! No projects match the selected filters !!!");
@@ -203,7 +219,7 @@ public class ProjectFilterController {
     }
 
     System.out.println("=== FILTERED PROJECT RESULTS ===");
-    ProjectPrinter.viewProjects(filtered);
+    ProjectPrinter.viewProjects(filtered, roomFilter);
 
     }
 
