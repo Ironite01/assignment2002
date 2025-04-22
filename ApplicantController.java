@@ -141,16 +141,19 @@ public class ApplicantController {
                     if (enquiry.getAllMessages().isEmpty()) {
                         System.out.println("No messages.");
                     } else {
+                        System.out.println("=== Enquiry Messages ===");
                         enquiry.getAllMessages().entrySet().stream()
                             .sorted(Map.Entry.comparingByKey())
                             .forEach(entry -> {
-                                String author = entry.getValue().getAuthor().getName();
-                                String text = entry.getValue().getMessage();
                                 String timestamp = entry.getKey().toString();
-                                System.out.printf("[%s] %s: %s\n", timestamp, author, text);
+                                String sender = entry.getValue().getAuthor().getName();
+                                String msg = entry.getValue().getMessage();
+                                System.out.printf("[%s] %s: %s\n", timestamp, sender, msg);
                             });
+                        System.out.println("------------------------");
                     }
                 }
+                
 
                 case 2 -> {
                     if (enquiry.isResolved()) {
@@ -170,7 +173,6 @@ public class ApplicantController {
                         break;
                     }
                     EnquiryService.deleteEnquiry(applicant.getNRIC(), project);
-                    EnquiryService.saveEnquiriesToFile();
                     System.out.println("Enquiry deleted.");
                     running = false;
                 }

@@ -1,11 +1,16 @@
 package assignment2002;
 
-import java.util.Scanner;
+import assignment2002.enquiry.Enquiry;
+import assignment2002.enquiry.EnquiryService;
 import assignment2002.user.Manager;
 import assignment2002.user.UserService;
 import assignment2002.utils.BTOFileService;
 import assignment2002.utils.Data;
 import assignment2002.utils.FileManifest;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Scanner;
 
 public class ManagerController {
     private Manager manager;
@@ -36,7 +41,9 @@ public class ManagerController {
             System.out.println("4: Manage Officer Registration");
             System.out.println("5: View Projects Menu");
             System.out.println("6: Change Password");
-            System.out.println("7: Logout"); //Temp Numbering
+            System.out.println("7: View All Enquiries");
+            System.out.println("8: View & Reply to Your Project Enquiries");
+            System.out.println("9: Logout"); //Temp Numbering
 
             int choice = sc.nextInt();
 
@@ -47,7 +54,9 @@ public class ManagerController {
                 case 4 -> officerController.viewOfficerRegisMenu();
                 case 5 -> filterController.viewProjsMenu();
                 case 6 -> UserService.resetPasswordPrompt(manager);
-                case 7 -> run = false;
+                case 7 -> viewAllEnquiries();
+                case 8 -> viewAndReplyOwnEnquiries(Data.btoList);
+                case 9 -> run = false;
                 default -> System.out.println("Retry");
         } 
 
@@ -80,6 +89,79 @@ public class ManagerController {
 
 
     }
+
+    private void viewAllEnquiries() {
+        EnquiryService.loadEnquiriesFromFile();
+        var all = EnquiryService.viewAll();
+
+        if (all.isEmpty()) {
+            System.out.println("No enquiries found.");
+            return;
+        }
+
+        System.out.println("=== All Enquiries ===");
+        for (Enquiry e : all) {
+            System.out.println("Project: " + e.getProjectName());
+            System.out.println("From: " + e.getApplicantNric());
+            System.out.println("Resolved: " + e.isResolved());
+
+            for (var entry : e.getAllMessages().entrySet()) {
+                System.out.printf("[%s] %s: %s\n",
+                        entry.getKey(),
+                        entry.getValue().getAuthor().getName(),
+                        entry.getValue().getMessage());
+            }
+            System.out.println("-----");
+        }
+    }
+
+    // View and reply only to projects the manager owns
+    private void viewAndReplyOwnEnquiries(ArrayList<BTOProperty> btoList) {
+        EnquiryService.loadEnquiriesFromFile();
+        List<Enquiry> all = EnquiryService.viewAll();
+
+        List<String> managedProjectNames = manager.getMyProjects(btoList).stream()
+            .map(BTOProperty::getProjectName)
+            .toList();
+
+        boolean found = false;
+        for (Enquiry enquiry : all) {
+            if (managedProjectNames.contains(enquiry.getProjectName())) {
+                found = true;
+
+                System.out.println("\nProject: " + enquiry.getProjectName());
+                System.out.println("From: " + enquiry.getApplicantNric());
+                System.out.println("Resolved: " + enquiry.isResolved());
+
+                enquiry.getAllMessages().entrySet().stream()
+                    .sorted(Map.Entry.comparingByKey())
+                    .forEach(entry -> {
+                        String timestamp = entry.getKey().toString();
+                        String author = entry.getValue().getAuthor().getName();
+                        String message = entry.getValue().getMessage();
+                        System.out.printf("[%s] %s: %s\n", timestamp, author, message);
+                    });
+
+                if (!enquiry.isResolved()) {
+                    Scanner sc = new Scanner(System.in);
+                    System.out.print("Reply to this enquiry? (y/n): ");
+                    if (sc.nextLine().equalsIgnoreCase("y")) {
+                        System.out.print("Enter your reply: ");
+                        String reply = sc.nextLine();
+                        enquiry.addMessage(manager.getNRIC(), reply);
+                        EnquiryService.saveEnquiriesToFile();
+                        System.out.println("Reply sent.");
+                    }
+                }
+                System.out.println("-----");
+            }
+        }
+
+        if (!found) {
+            System.out.println("No enquiries found for your managed projects.");
+        }
+    }
+
 
 
     

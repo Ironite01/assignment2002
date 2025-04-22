@@ -6,14 +6,15 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 import java.util.Date;
 
 public class EnquiryService {
 	private static List<Enquiry> enquiries = new ArrayList<Enquiry>();
-	private static final String FILE_PATH = "Information/Enquiries.txt";
+	private static final String FILE_PATH = "assignment2002/Information/Enquiries.txt";
 	
-	public List<Enquiry> viewAll() {
+	public static List<Enquiry> viewAll() {
 		return enquiries;
 	}
 	
@@ -44,28 +45,48 @@ public class EnquiryService {
 	
 
 	public static void saveEnquiriesToFile() {
-		if (enquiries == null || enquiries.isEmpty()) {
-			loadEnquiriesFromFile();
-		}
 		try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_PATH))) {
-			for (Enquiry e : enquiries) {
-				writer.write("NRIC:" + e.getApplicantNric());
-				writer.newLine();
-				writer.write("Project:" + e.getProjectName());
-				writer.newLine();
-				writer.write("Resolved:" + e.isResolved());
-				writer.newLine();
-				for (var entry : e.getAllMessages().entrySet()) {
-					writer.write(entry.getKey().getTime() + "|" + entry.getValue().getMessage() + "|" + entry.getValue().getAuthor().getNRIC());
-					writer.newLine();
-				}
-				writer.write("===");
-				writer.newLine();
-			}
+
+			enquiries.stream()
+				.sorted((e1, e2) -> {
+					Date d1 = e1.getAllMessages().keySet().stream().min(Date::compareTo).orElse(new Date(0));
+					Date d2 = e2.getAllMessages().keySet().stream().min(Date::compareTo).orElse(new Date(0));
+					return d1.compareTo(d2);
+				})
+				.forEach(e -> {
+					try {
+						writer.write("NRIC:" + e.getApplicantNric());
+						writer.newLine();
+						writer.write("Project:" + e.getProjectName());
+						writer.newLine();
+						writer.write("Resolved:" + e.isResolved());
+						writer.newLine();
+
+						e.getAllMessages().entrySet().stream()
+							.sorted(Map.Entry.comparingByKey())  // sort messages by time
+							.forEach(entry -> {
+								try {
+									writer.write(entry.getKey().getTime() + "|" +
+												entry.getValue().getMessage() + "|" +
+												entry.getValue().getAuthor().getNRIC());
+									writer.newLine();
+								} catch (IOException ex) {
+									System.out.println("Error writing message: " + ex.getMessage());
+								}
+							});
+
+						writer.write("===");
+						writer.newLine();
+					} catch (IOException ex) {
+						System.out.println("Error writing enquiry: " + ex.getMessage());
+					}
+				});
+
 		} catch (IOException e) {
 			System.out.println("Error saving enquiries: " + e.getMessage());
 		}
 	}
+
 
 	public static void loadEnquiriesFromFile() {
 		enquiries.clear();
@@ -102,11 +123,16 @@ public class EnquiryService {
 	}
 
 	public static void deleteEnquiry(String applicantNric, String projectName) {
+		loadEnquiriesFromFile();
+	
 		enquiries.removeIf(e ->
 			e.getApplicantNric().equalsIgnoreCase(applicantNric)
 			&& e.getProjectName().equalsIgnoreCase(projectName)
 		);
+	
+		saveEnquiriesToFile();
 	}
+	
 	
 
 }
