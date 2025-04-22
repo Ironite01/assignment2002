@@ -47,7 +47,7 @@ public class ManagerController {
             System.out.println("8: View & Reply to Your Project Enquiries");
             System.out.println("9: Logout"); //Temp Numbering
 
-            int choice = InputUtil.getValidatedIntRange(sc, "Choice: ", 1, 7);
+            int choice = InputUtil.getValidatedIntRange(sc, "Choice: ", 1, 9);
 
             switch (choice) {
                 case 1-> projectController.showProjectMenu();

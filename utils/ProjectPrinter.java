@@ -9,8 +9,33 @@ import java.util.List;
 
 public class ProjectPrinter {
     
+    // public static void viewProjects(List<BTOProperty> btoList){
+    //     System.out.printf("| %-15s | %-20s | %-15s | %-8s | %-11s | %-12s | %-10s | %-14s | %-14s | %-12s | %-12s | %-14s | %-30s |\n", "MANAGER","PROJECT NAME", "NEIGHBOURHOOD", "2-ROOM", "2-ROOM AMOUNT", "2-ROOM PRICE", "3-ROOM", "3-ROOM AMOUNT", "3-ROOM PRICE", "OPEN DATE", "CLOSE DATE", "OFFICER SLOTS", "OFFICERS REGISTERED");
+    //     for(BTOProperty project : btoList){
+    //             String collatedOfficers = "";
+    //             String managerIC = "";
+
+
+    //             for(Officer offList:project.getOfficers()){
+    //                 collatedOfficers += offList.getName() + ",";
+    //             }
+
+    //             if (!collatedOfficers.isEmpty()) {
+    //                 collatedOfficers = collatedOfficers.substring(0, collatedOfficers.length() - 1);
+    //             }
+
+    //             for(Manager m: project.getManagerIC()){
+    //                 managerIC = m.getName();
+    //             }
+    //             System.out.printf("| %-15s | %-20s | %-15s | %-8s | %-12d | %-13d | %-10s | %-14d | %-14d | %-12s | %-12s | %-14d | %-30s |\n", 
+    //             managerIC, project.getProjectName(), project.getNeighbourhood(), project.getTwoRoom(), 
+    //             project.getTwoRoomAmt(), project.getTwoRoomPrice(), project.getThreeRoom(), project.getThreeRoomAmt(),
+    //             project.getThreeRoomPrice(), project.getOpenDate(), project.getCloseDate(), project.getOfficerSlot(), collatedOfficers);
+                
+    //         }
+    // }
+
     public static void viewProjects(List<BTOProperty> btoList){
-        System.out.printf("| %-15s | %-20s | %-15s | %-8s | %-11s | %-12s | %-10s | %-14s | %-14s | %-12s | %-12s | %-14s | %-30s |\n", "MANAGER","PROJECT NAME", "NEIGHBOURHOOD", "2-ROOM", "2-ROOM AMOUNT", "2-ROOM PRICE", "3-ROOM", "3-ROOM AMOUNT", "3-ROOM PRICE", "OPEN DATE", "CLOSE DATE", "OFFICER SLOTS", "OFFICERS REGISTERED");
         for(BTOProperty project : btoList){
                 String collatedOfficers = "";
                 String managerIC = "";
@@ -20,17 +45,27 @@ public class ProjectPrinter {
                     collatedOfficers += offList.getName() + ",";
                 }
 
-                if (!collatedOfficers.isEmpty()) {
+                if(collatedOfficers.isEmpty()){
+                    collatedOfficers = "None";
+                }
+
+                if (!collatedOfficers.isEmpty() && !collatedOfficers.equals("None")) {
                     collatedOfficers = collatedOfficers.substring(0, collatedOfficers.length() - 1);
                 }
 
                 for(Manager m: project.getManagerIC()){
                     managerIC = m.getName();
                 }
-                System.out.printf("| %-15s | %-20s | %-15s | %-8s | %-12d | %-13d | %-10s | %-14d | %-14d | %-12s | %-12s | %-14d | %-30s |\n", 
-                managerIC, project.getProjectName(), project.getNeighbourhood(), project.getTwoRoom(), 
-                project.getTwoRoomAmt(), project.getTwoRoomPrice(), project.getThreeRoom(), project.getThreeRoomAmt(),
-                project.getThreeRoomPrice(), project.getOpenDate(), project.getCloseDate(), project.getOfficerSlot(), collatedOfficers);
+                System.out.printf("\n==== PROJECT [%s] ====\n", project.getProjectName());
+                System.out.printf("Manager: %s \n", managerIC);
+                System.out.printf("Visiblility: %s\n", String.valueOf(project.isVisible()).toUpperCase());
+                System.out.printf("Open Date: %s ~ Close Date: %s\n", project.getOpenDate(), project.getCloseDate());
+                System.out.printf("Neighbourhood: %s \n", project.getNeighbourhood());
+                System.out.printf("[2-Room] Units: %d | Price: $%d\n", project.getTwoRoomAmt(), project.getTwoRoomPrice());
+                System.out.printf("[3-Room] Units: %d | Price: $%d\n", project.getThreeRoomAmt(), project.getThreeRoomPrice());
+                System.out.printf("Total Officer Slots [%d] | Filled Slots [%d] \n", project.getOfficerSlot(), project.getOfficers().size());
+                System.out.printf("Registed Officers: %s\n", collatedOfficers);
+
                 
             }
     }
