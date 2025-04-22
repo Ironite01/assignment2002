@@ -7,14 +7,12 @@ import assignment2002.user.UserService;
 import assignment2002.utils.BTOFileService;
 import assignment2002.utils.Data;
 import assignment2002.utils.FileManifest;
-<<<<<<< Updated upstream
+import assignment2002.utils.InputUtil;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
-=======
-import assignment2002.utils.InputUtil;
->>>>>>> Stashed changes
+
 
 public class ManagerController {
     private Manager manager;
