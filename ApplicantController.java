@@ -133,8 +133,9 @@ public class ApplicantController {
             System.out.println("2. Add Message");
             System.out.println("3. Close the Enquiries");
             System.out.println("4. Edit Your Most Recent Message");
-            System.out.println("5. Back");
-            int choice = InputUtil.getValidatedIntRange(sc, "Choice: ", 1, 5);
+            System.out.println("5. Delete Enquiry");
+            System.out.println("6. Back");
+            int choice = InputUtil.getValidatedIntRange(sc, "Choice: ", 1, 6);
 
             switch (choice) {
                 case 1 -> {
@@ -210,9 +211,57 @@ public class ApplicantController {
                 
                     EnquiryService.saveEnquiriesToFile();
                     System.out.println("Message updated.");
-                }                
-
-                case 5 -> running = false;
+                } 
+                
+                case 5 -> {
+                    var userEnquiries = EnquiryService.viewAll().stream()
+                        .filter(e -> e.getApplicantNric().equalsIgnoreCase(applicant.getNRIC()))
+                        .toList();
+                
+                    if (userEnquiries.isEmpty()) {
+                        System.out.println("You have no enquiries.");
+                        break;
+                    }
+                
+                    System.out.println("== Your Enquiries ==");
+                    for (int i = 0; i < userEnquiries.size(); i++) {
+                        Enquiry e = userEnquiries.get(i);
+                        System.out.printf("%d. Project: %s\n", i + 1, e.getProjectName());
+                    }
+                
+                    int sel = InputUtil.getValidatedIntRange(sc, "Select an enquiry (0 to cancel): ", 0, userEnquiries.size());
+                    if (sel == 0) break;
+                
+                    Enquiry selected = userEnquiries.get(sel - 1);
+                
+                    // Show user's messages within that enquiry
+                    var ownMessages = selected.getAllMessages().entrySet().stream()
+                        .filter(entry -> entry.getValue().getAuthor().getNRIC().equalsIgnoreCase(applicant.getNRIC()))
+                        .toList();
+                
+                    if (ownMessages.isEmpty()) {
+                        System.out.println("You have no messages to delete in this enquiry.");
+                        break;
+                    }
+                
+                    System.out.println("== Your Messages in This Enquiry ==");
+                    for (int i = 0; i < ownMessages.size(); i++) {
+                        var entry = ownMessages.get(i);
+                        System.out.printf("%d. [%s] %s\n", i + 1, entry.getKey().toString(), entry.getValue().getMessage());
+                    }
+                
+                    int msgSel = InputUtil.getValidatedIntRange(sc, "Select message to delete (0 to cancel): ", 0, ownMessages.size());
+                    if (msgSel == 0) break;
+                
+                    Date targetTimestamp = ownMessages.get(msgSel - 1).getKey();
+                    selected.getAllMessages().remove(targetTimestamp);
+                
+                    EnquiryService.saveEnquiriesToFile();
+                    System.out.println("Message deleted successfully.");
+                }
+                
+            
+                case 6 -> running = false;
 
                 default -> System.out.println("Invalid option.");
             }
