@@ -168,14 +168,16 @@ public class ApplicantController {
                 }
 
                 case 3 -> {
-                    if (enquiry.isResolved()) {
-                        System.out.println("Cannot delete a resolved enquiry.");
+                    if (!enquiry.isResolved()) {
+                        System.out.println("Enquiry is not resolved yet. You can only delete messages after it is resolved by the manager.");
                         break;
                     }
-                    EnquiryService.deleteEnquiry(applicant.getNRIC(), project);
-                    System.out.println("Enquiry deleted.");
-                    running = false;
+                
+                    enquiry.getAllMessages().clear();
+                    EnquiryService.saveEnquiriesToFile();
+                    System.out.println("All messages deleted.");
                 }
+                
 
                 case 4 -> {
                     if (enquiry.isResolved()) {
