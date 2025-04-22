@@ -7,10 +7,12 @@ import assignment2002.user.UserService;
 import assignment2002.utils.BTOFileService;
 import assignment2002.utils.Data;
 import assignment2002.utils.FileManifest;
+import assignment2002.utils.InputUtil;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
+
 
 public class ManagerController {
     private Manager manager;
@@ -45,7 +47,7 @@ public class ManagerController {
             System.out.println("8: View & Reply to Your Project Enquiries");
             System.out.println("9: Logout"); //Temp Numbering
 
-            int choice = sc.nextInt();
+            int choice = InputUtil.getValidatedIntRange(sc, "Choice: ", 1, 7);
 
             switch (choice) {
                 case 1-> projectController.showProjectMenu();
