@@ -46,47 +46,46 @@ public class EnquiryService {
 
 	public static void saveEnquiriesToFile() {
 		try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_PATH))) {
-
-			enquiries.stream()
+	
+			List<Enquiry> sortedEnquiries = enquiries.stream()
 				.sorted((e1, e2) -> {
 					Date d1 = e1.getAllMessages().keySet().stream().min(Date::compareTo).orElse(new Date(0));
 					Date d2 = e2.getAllMessages().keySet().stream().min(Date::compareTo).orElse(new Date(0));
 					return d1.compareTo(d2);
 				})
-				.forEach(e -> {
-					try {
-						writer.write("NRIC:" + e.getApplicantNric());
-						writer.newLine();
-						writer.write("Project:" + e.getProjectName());
-						writer.newLine();
-						writer.write("Resolved:" + e.isResolved());
-						writer.newLine();
-
-						e.getAllMessages().entrySet().stream()
-							.sorted(Map.Entry.comparingByKey())  // sort messages by time
-							.forEach(entry -> {
-								try {
-									writer.write(entry.getKey().getTime() + "|" +
-												entry.getValue().getMessage() + "|" +
-												entry.getValue().getAuthor().getNRIC());
-									writer.newLine();
-								} catch (IOException ex) {
-									System.out.println("Error writing message: " + ex.getMessage());
-								}
-							});
-
-						writer.write("===");
-						writer.newLine();
-					} catch (IOException ex) {
-						System.out.println("Error writing enquiry: " + ex.getMessage());
-					}
-				});
-
+				.toList();
+	
+			for (Enquiry e : sortedEnquiries) {
+				if (e.getAllMessages().isEmpty() && e.isResolved()) continue;
+	
+				writer.write("NRIC:" + e.getApplicantNric());
+				writer.newLine();
+				writer.write("Project:" + e.getProjectName());
+				writer.newLine();
+				writer.write("Resolved:" + e.isResolved());
+				writer.newLine();
+	
+				e.getAllMessages().entrySet().stream()
+					.sorted(Map.Entry.comparingByKey())
+					.forEach(entry -> {
+						try {
+							writer.write(entry.getKey().getTime() + "|" +
+										 entry.getValue().getMessage() + "|" +
+										 entry.getValue().getAuthor().getNRIC());
+							writer.newLine();
+						} catch (IOException ex) {
+							System.out.println("Error writing message: " + ex.getMessage());
+						}
+					});
+	
+				writer.write("===");
+				writer.newLine();
+			}
+	
 		} catch (IOException e) {
 			System.out.println("Error saving enquiries: " + e.getMessage());
 		}
 	}
-
 
 	public static void loadEnquiriesFromFile() {
 		enquiries.clear();
@@ -103,7 +102,11 @@ public class EnquiryService {
 					String resolvedLine = scanner.nextLine();
 					current = new Enquiry(nric, project, "");
 					current.getAllMessages().clear();
-					if (resolvedLine.contains("true")) current.getAllMessages().clear();
+				
+					if (resolvedLine.contains("true")) {
+						current.setResolved();
+					}
+				
 				} else if (line.equals("===")) {
 					enquiries.add(current);
 					current = null;
@@ -133,6 +136,20 @@ public class EnquiryService {
 		saveEnquiriesToFile();
 	}
 	
+	public static void markEnquiryAsResolved(String applicantNric, String projectName) {
+		loadEnquiriesFromFile();
+	
+		for (Enquiry e : enquiries) {
+			if (e.getApplicantNric().equalsIgnoreCase(applicantNric) &&
+				e.getProjectName().equalsIgnoreCase(projectName)) {
+				e.setResolved();
+				System.out.println("Marked enquiry as resolved.");
+				break;
+			}
+		}
+	
+		saveEnquiriesToFile();
+	}
 	
 
 }

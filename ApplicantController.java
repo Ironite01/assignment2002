@@ -6,6 +6,7 @@ import assignment2002.enquiry.EnquiryService;
 import assignment2002.user.Applicant;
 import assignment2002.user.UserService;
 import assignment2002.utils.Data;
+import assignment2002.utils.InputUtil;
 import assignment2002.utils.ProjectPrinter;
 import java.util.Date;
 import java.util.Map;
@@ -28,12 +29,11 @@ public class ApplicantController {
             System.out.println("3: View Application Status");
             System.out.println("4: Withdraw Application");
             System.out.println("5: Submit Enquiry");
-            System.out.println("6: View/Edit/Delete Enquiries");
+            System.out.println("6: View/Edit/Close Enquiries");
             System.out.println("7: Change Password");
             System.out.println("8: Logout");
 
-            int choice = sc.nextInt();
-            sc.nextLine(); 
+            int choice = InputUtil.getValidatedIntRange(sc, "Choice: ", 1, 8);
 
             switch (choice) {
                 case 1 -> viewProjects();
@@ -131,10 +131,10 @@ public class ApplicantController {
             System.out.println("== ENQUIRY MENU ==");
             System.out.println("1. View Messages");
             System.out.println("2. Add Message");
-            System.out.println("3. Delete All Messages");
+            System.out.println("3. Close the Enquiries");
             System.out.println("4. Edit Your Most Recent Message");
             System.out.println("5. Back");
-            int choice = sc.nextInt(); sc.nextLine();
+            int choice = InputUtil.getValidatedIntRange(sc, "Choice: ", 1, 5);
 
             switch (choice) {
                 case 1 -> {
@@ -168,14 +168,16 @@ public class ApplicantController {
                 }
 
                 case 3 -> {
-                    if (enquiry.isResolved()) {
-                        System.out.println("Cannot delete a resolved enquiry.");
+                    if (!enquiry.isResolved()) {
+                        System.out.println("Enquiry is not resolved yet. You can only delete messages after it is resolved by the manager.");
                         break;
                     }
-                    EnquiryService.deleteEnquiry(applicant.getNRIC(), project);
-                    System.out.println("Enquiry deleted.");
-                    running = false;
+                
+                    enquiry.getAllMessages().clear();
+                    EnquiryService.saveEnquiriesToFile();
+                    System.out.println("All messages deleted.");
                 }
+                
 
                 case 4 -> {
                     if (enquiry.isResolved()) {

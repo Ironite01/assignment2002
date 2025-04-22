@@ -49,4 +49,9 @@ public class Enquiry {
 	public boolean isResolved() {
 		return endDate != null;
 	}
+
+	public void setResolved() {
+		this.endDate = new Date();
+	}
+	
 }

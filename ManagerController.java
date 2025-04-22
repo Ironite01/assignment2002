@@ -154,6 +154,13 @@ public class ManagerController {
                         EnquiryService.saveEnquiriesToFile();
                         System.out.println("Reply sent.");
                     }
+
+                    System.out.print("Do you want to resolve this enquiry? (y/n): ");
+                    String resolve = sc.nextLine();
+                    if (resolve.equalsIgnoreCase("y")) {
+                        EnquiryService.markEnquiryAsResolved(enquiry.getApplicantNric(), enquiry.getProjectName());
+                        System.out.println("Marked as resolved.");
+                    }
                 }
                 System.out.println("-----");
             }
