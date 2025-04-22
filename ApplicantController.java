@@ -64,8 +64,7 @@ public class ApplicantController {
     private void applyToProject(Scanner sc) {
         viewProjects();
     
-        System.out.print("Enter Project Name to apply for: ");
-        String projName = sc.nextLine();
+        String projName = InputUtil.getNonEmptyString(sc, "Enter Project Name to apply for: ");
     
         BTOProperty selected = null;
         for (BTOProperty p : Data.btoList) {
@@ -80,8 +79,7 @@ public class ApplicantController {
             return;
         }
     
-        System.out.print("Enter flat type (2-Room / 3-Room): ");
-        String flatType = sc.nextLine();
+        String flatType = InputUtil.getNonEmptyString(sc, "Enter flat type (2-Room / 3-Room): ");
     
         boolean success = ApplicationService.apply(applicant, selected, flatType);
         if (success) {
@@ -105,8 +103,7 @@ public class ApplicantController {
             return;
         }
 
-        System.out.println("Enter your enquiry message:");
-        String msg = sc.nextLine();
+        String msg = InputUtil.getNonEmptyString(sc, "Enter your enquiry message: ");
 
         EnquiryService.addNewEnquiry(applicant.getNRIC(), project, msg);
         EnquiryService.saveEnquiriesToFile();
@@ -161,8 +158,7 @@ public class ApplicantController {
                         System.out.println("Enquiry is resolved. Cannot add messages.");
                         break;
                     }
-                    System.out.print("Enter your message: ");
-                    String msg = sc.nextLine();
+                    String msg = InputUtil.getNonEmptyString(sc, "Enter your message: ");
                     enquiry.addMessage(applicant.getNRIC(), msg);
                     EnquiryService.saveEnquiriesToFile();
                     System.out.println("Message added.");
@@ -205,8 +201,7 @@ public class ApplicantController {
                     System.out.println("Your latest message:");
                     System.out.println("- " + enquiry.getAllMessages().get(latest).getMessage());
                 
-                    System.out.print("Enter new content: ");
-                    String newMsg = sc.nextLine();
+                    String newMsg = InputUtil.getNonEmptyString(sc, "Enter new content: ");
                     enquiry.getAllMessages().get(latest).setMessage(newMsg);
                 
                     EnquiryService.saveEnquiriesToFile();

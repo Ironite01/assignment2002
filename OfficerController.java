@@ -9,6 +9,7 @@ import assignment2002.application.ApplicationService;
 import assignment2002.user.Officer;
 import assignment2002.user.UserService;
 import assignment2002.utils.Authenticator;
+import assignment2002.utils.InputUtil;
 import assignment2002.utils.ProjectPrinter;
 import assignment2002.utils.Status.REGISTRATION;
 
@@ -30,8 +31,7 @@ public class OfficerController {
             		+ "\n3: Change password"
             		+ "\n4: Logout");
 
-            int choice = sc.nextInt();
-            sc.nextLine();
+            int choice = InputUtil.getValidatedIntRange(sc, "Choice: ", 1, 4);
 
             switch (choice) {
                 case 1 -> {
@@ -63,8 +63,7 @@ public class OfficerController {
             		+ "\n6. Generate receipts for booked flats"
             		+ "\n7. Back");
 
-            int choice = sc.nextInt();
-            sc.nextLine();
+            int choice = InputUtil.getValidatedIntRange(sc, "Choice: ", 1, 7);
 
             switch (choice) {
             	case 1 -> {
@@ -77,8 +76,7 @@ public class OfficerController {
             				System.out.println(p.getProjectName());
             			}
             			
-                		System.out.println("\nPlease type the project name you want to register in:");
-                		if (!OfficerService.registerProject(officer, sc.nextLine())) {
+                		if (!OfficerService.registerProject(officer, InputUtil.getNonEmptyString(sc, "\nPlease type the project name you want to register in: "))) {
                 			System.out.println("Unable to register for specified project");
                 		} else {
                 			System.out.println("Registeration has been successful. Please wait for the relevant manager for it's updated status!");
@@ -108,8 +106,7 @@ public class OfficerController {
             		}
             		String nric = "";
             		do {
-            			System.out.println("Please enter applicant's NRIC to update applicant's detail (invalid input to exit):");
-            			nric = sc.nextLine();
+            			nric = InputUtil.getNonEmptyString(sc, "Please enter applicant's NRIC to update applicant's detail (invalid input to exit):");
             			if (Authenticator.isValidNRIC(nric)) {
             				Application app = null;
             				for (Application app2 : apps) {
@@ -121,8 +118,7 @@ public class OfficerController {
             					System.out.println("Unable to find application with this NRIC");
             					return;
             				}
-            				System.out.println("Please confirm applicant's room type (2-Room / 3-Room):");
-            				String roomType = sc.nextLine();
+            				String roomType = InputUtil.getNonEmptyString(sc, "Please confirm applicant's room type (2-Room / 3-Room): ");
             				if (!roomType.equals("2-Room") && !roomType.equals("3-Room")) {
             					System.out.println("Invalid input! Please try again!");
             					return;
@@ -133,10 +129,8 @@ public class OfficerController {
             		} while (nric.equals("0"));
             	}
             	case 6 -> {
-            		System.out.println("Enter the project name:");
-            		String projectName = sc.nextLine();
-            		System.out.println("Enter the applicant's NRIC:");
-            		String applicantNric = sc.nextLine();
+            		String projectName = InputUtil.getNonEmptyString(sc, "Enter the project name: ");
+            		String applicantNric = InputUtil.getNonEmptyString(sc, "Enter the applicant's NRIC: ");
             		Application app = OfficerService.getSuccessfulApplicationByApplicantNRIC(officer, projectName, applicantNric);
             		OfficerService.generateReceiptOfApplication(officer, app);
             	}

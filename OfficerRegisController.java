@@ -9,6 +9,7 @@ import assignment2002.user.Officer;
 import assignment2002.utils.BTOFileService;
 import assignment2002.utils.Data;
 import assignment2002.utils.FileManifest;
+import assignment2002.utils.InputUtil;
 
 public class OfficerRegisController {
 
@@ -28,8 +29,7 @@ public class OfficerRegisController {
             System.out.println("2: Approve Registrations");
             System.out.println("3: Reject Registrations");
             System.out.println("4: Exit");
-            int choice = sc.nextInt();
-            sc.nextLine();
+            int choice = InputUtil.getValidatedIntRange(sc, "Choice: ", 1, 4);
 
             switch(choice){
                 case 1 -> viewAllRegistrations();
@@ -79,11 +79,7 @@ public class OfficerRegisController {
             return;
         }
 
-        System.out.print("Enter Project Name: ");
-        String projName = sc.nextLine().trim();
-
-        System.out.print("Enter NRIC of Officer to Approve: ");
-        String nric = sc.nextLine().trim();
+        String projName = InputUtil.getNonEmptyString(sc,"Enter Project Name: " );
 
         // Find matching project
         BTOProperty targetProject = manager.getMyProjects(Data.btoList).stream()
@@ -96,6 +92,9 @@ public class OfficerRegisController {
             return;
         }
 
+        String nric = InputUtil.getNonEmptyString(sc,"Enter NRIC of Officer to Approve: " );
+
+        
         Officer officer = targetProject.getAppliedOfficers().stream()
             .filter(o -> o.getNRIC().equalsIgnoreCase(nric))
             .findFirst()
@@ -123,11 +122,7 @@ public class OfficerRegisController {
             return;
         }
     
-        System.out.print("Enter Project Name: ");
-        String projName = sc.nextLine().trim();
-    
-        System.out.print("Enter NRIC of Officer to Reject: ");
-        String nric = sc.nextLine().trim();
+        String projName = InputUtil.getNonEmptyString(sc,"Enter Project Name: " );
     
         BTOProperty targetProject = manager.getMyProjects(Data.btoList).stream()
             .filter(p -> p.getProjectName().equalsIgnoreCase(projName))
@@ -137,7 +132,9 @@ public class OfficerRegisController {
         if (targetProject == null) {
             System.out.println("Project not found.");
             return;
+
         }
+        String nric = InputUtil.getNonEmptyString(sc,"Enter NRIC of Officer to Reject: " );
     
         Officer officer = targetProject.getAppliedOfficers().stream()
             .filter(o -> o.getNRIC().equalsIgnoreCase(nric))
