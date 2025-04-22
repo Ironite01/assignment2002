@@ -11,7 +11,7 @@ import java.util.Date;
 
 public class EnquiryService {
 	private static List<Enquiry> enquiries = new ArrayList<Enquiry>();
-	private static final String FILE_PATH = "Information/Enquiries.txt";
+	private static final String FILE_PATH = "assignment2002/Information/Enquiries.txt";
 	
 	public List<Enquiry> viewAll() {
 		return enquiries;
@@ -22,19 +22,31 @@ public class EnquiryService {
 	}
 	
 	public static Enquiry getEnquiry(String applicantNric, String projectName) {
+		loadEnquiriesFromFile();
 		for (Enquiry e : enquiries) {
-			if (e.getApplicantNric().equalsIgnoreCase(applicantNric) && e.getProjectName() == projectName) {
+			if (e.getApplicantNric().equalsIgnoreCase(applicantNric)
+				&& e.getProjectName().equalsIgnoreCase(projectName)) {
 				return e;
 			}
 		}
 		return null;
 	}
 	
+	
 	public static void addNewEnquiry(String applicantNric, String projectName, String message) {
+		loadEnquiriesFromFile();
+		enquiries.removeIf(e ->
+			e.getApplicantNric().equalsIgnoreCase(applicantNric)
+			&& e.getProjectName().equalsIgnoreCase(projectName)
+		);
 		enquiries.add(new Enquiry(applicantNric, projectName, message));
 	}
+	
 
 	public static void saveEnquiriesToFile() {
+		if (enquiries == null || enquiries.isEmpty()) {
+			loadEnquiriesFromFile();
+		}
 		try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_PATH))) {
 			for (Enquiry e : enquiries) {
 				writer.write("NRIC:" + e.getApplicantNric());
@@ -88,5 +100,13 @@ public class EnquiryService {
 			System.out.println("Error loading enquiries: " + e.getMessage());
 		}
 	}
+
+	public static void deleteEnquiry(String applicantNric, String projectName) {
+		enquiries.removeIf(e ->
+			e.getApplicantNric().equalsIgnoreCase(applicantNric)
+			&& e.getProjectName().equalsIgnoreCase(projectName)
+		);
+	}
+	
 
 }

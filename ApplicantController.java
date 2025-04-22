@@ -6,6 +6,7 @@ import assignment2002.enquiry.EnquiryService;
 import assignment2002.user.Applicant;
 import assignment2002.utils.Data;
 import assignment2002.utils.ProjectPrinter;
+import java.util.Date;
 import java.util.Map;
 import java.util.Scanner;
 public class ApplicantController {
@@ -128,7 +129,8 @@ public class ApplicantController {
             System.out.println("1. View Messages");
             System.out.println("2. Add Message");
             System.out.println("3. Delete All Messages");
-            System.out.println("4. Back");
+            System.out.println("4. Edit Your Most Recent Message");
+            System.out.println("5. Back");
             int choice = sc.nextInt(); sc.nextLine();
 
             switch (choice) {
@@ -164,13 +166,46 @@ public class ApplicantController {
                         System.out.println("Cannot delete a resolved enquiry.");
                         break;
                     }
-                    enquiry.getAllMessages().clear();
+                    EnquiryService.deleteEnquiry(applicant.getNRIC(), project);
                     EnquiryService.saveEnquiriesToFile();
-                    System.out.println("All messages deleted.");
+                    System.out.println("Enquiry deleted.");
                     running = false;
                 }
 
-                case 4 -> running = false;
+                case 4 -> {
+                    if (enquiry.isResolved()) {
+                        System.out.println("Cannot edit a resolved enquiry.");
+                        break;
+                    }
+                
+                    // Find most recent message by this applicant
+                    Date latest = null;
+                    for (var entry : enquiry.getAllMessages().entrySet()) {
+                        String senderNric = entry.getValue().getAuthor().getNRIC();
+                        if (senderNric.equalsIgnoreCase(applicant.getNRIC())) {
+                            if (latest == null || entry.getKey().after(latest)) {
+                                latest = entry.getKey();
+                            }
+                        }
+                    }
+                
+                    if (latest == null) {
+                        System.out.println("You have no messages to edit.");
+                        break;
+                    }
+                
+                    System.out.println("Your latest message:");
+                    System.out.println("- " + enquiry.getAllMessages().get(latest).getMessage());
+                
+                    System.out.print("Enter new content: ");
+                    String newMsg = sc.nextLine();
+                    enquiry.getAllMessages().get(latest).setMessage(newMsg);
+                
+                    EnquiryService.saveEnquiriesToFile();
+                    System.out.println("Message updated.");
+                }                
+
+                case 5 -> running = false;
 
                 default -> System.out.println("Invalid option.");
             }

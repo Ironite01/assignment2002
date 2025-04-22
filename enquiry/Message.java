@@ -1,11 +1,10 @@
 package assignment2002.enquiry;
 
-import java.util.ArrayList;
-import java.util.Date;
-
 import assignment2002.user.User;
 import assignment2002.utils.Authenticator;
 import assignment2002.utils.LoadInfo;
+import java.util.ArrayList;
+import java.util.Date;
 
 public class Message {
 	private String msg;
@@ -39,4 +38,10 @@ public class Message {
 		}
 		return null;
 	}
+
+	public void setMessage(String newMsg) {
+		this.msg = newMsg;
+	}
+	
+	
 }
