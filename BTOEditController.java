@@ -4,6 +4,8 @@ import assignment2002.utils.BTOFileService;
 import assignment2002.utils.Data;
 import assignment2002.utils.DateCheck;
 import assignment2002.utils.FileManifest;
+import assignment2002.utils.InputUtil;
+
 import java.util.List;
 import java.util.Scanner;
 
@@ -47,12 +49,9 @@ public class BTOEditController implements FileManifest {
             System.out.println("8. Edit Close Date");
             System.out.println("9. Adjust Maximum Officer Slots");
             System.out.println("10. Edit Visibility"); //Idk if this should be here
-            System.out.println("0. Exit Menu"); 
+            System.out.println("11. Exit Menu"); 
 
-            int choice = sc.nextInt();
-            sc.nextLine();
-
-
+            int choice = InputUtil.getValidatedIntRange(sc, "Choice: ", 1, 11);
 
             switch (choice) {
                 case 0-> running = false;
@@ -71,24 +70,28 @@ public class BTOEditController implements FileManifest {
         System.out.println("Exiting Menu");
     }
 
+    private String inputProjName(){
+        String projName;
+        while (true){ //Pick a Project
+            projName = InputUtil.getNonEmptyString(sc, "Project Name: ");
+
+            if(manager.projNameExists(Data.btoList, projName)){
+                break;
+            }
+            System.out.println("Invalid Project Try Again!\n");
+        }
+        return projName;
+    }
+
     private void editProjNameMenu(PROPERTY_COLUMNS colName){
         manager.viewAllProjects(Data.btoList);
         String oldProjName, newProjName;
 
-        while (true){ //Pick a Project
-            System.out.println("==== PROJ NAME EDIT ====");
-            System.out.print("Project Name: ");
-            oldProjName = sc.nextLine();
-
-            if(manager.projNameExists(Data.btoList, oldProjName)){
-                break;
-            }
-            System.out.println("Try Again!\n");
-        }
+        System.out.println("==== PROJ NAME EDIT ====");
+        oldProjName = inputProjName();
 
         while (true) { //New Name
-            System.out.print("New Project Name: ");
-            newProjName = sc.nextLine();
+            newProjName = InputUtil.getNonEmptyString(sc, "New Project Name: ");
 
             if(manager.projNameExists(Data.btoList, newProjName)){
                 System.out.println("Name Already Taken");
@@ -103,18 +106,14 @@ public class BTOEditController implements FileManifest {
             System.out.println(oldProjName + " -> " + newProjName);
             System.out.println("Old Proj Name: " + oldProjName);
             System.out.println("New Proj Name: " + newProjName);
-            System.out.print("Confirm (Y/N): ");
+            String confirm = InputUtil.getConfirmationString(sc, "Confirm");
 
-            String confirm = sc.nextLine().toLowerCase().trim();
-
-            if(confirm.equals("y")){
-                //Make Manager Function + BTOFileService to Edit Name only
+            if(confirm.equalsIgnoreCase("true")){
                 manager.updateProjectName(Data.btoList, oldProjName, newProjName);
                 BTOFileService.editBTOByColumn(oldProjName, colName, newProjName, false);
-                // BTOFileService.editBTOProjectName(oldProjName,newProjName);
                 break;
             } 
-            else if(confirm.equals("n")){
+            else if(confirm.equalsIgnoreCase("false")){
                 System.out.println("Exiting out");
                 break;
             }
@@ -132,16 +131,7 @@ public class BTOEditController implements FileManifest {
         manager.viewAllProjects(Data.btoList);
         System.out.println("=== OPEN DATE EDIT ===");
 
-        while (true) {
-            System.out.print("Enter Project Name to Edit: ");
-            projName = sc.nextLine().trim();
-
-            if (manager.projNameExists(Data.btoList, projName)) {
-                break;
-            } else{
-                System.out.println("Project Name Not Found");
-            }
-        }
+        projName = inputProjName();
 
         String checkName = projName;
         // Extract old value
@@ -161,8 +151,7 @@ public class BTOEditController implements FileManifest {
         while (true) {
             System.out.println("Old Open Date: " + oldOpenDate);
             System.out.println("Current Close Date: " + closeDate);
-            System.out.print("New Open Date (MM/DD/YYYY): ");
-            String newOpenDate = sc.nextLine().trim();
+            String newOpenDate = InputUtil.getNonEmptyString(sc, "New Open Date (MM/DD/YYYY): ");
     
             if(!DateCheck.dateValidator(newOpenDate)){
                 System.out.println("Try Again");
@@ -175,14 +164,14 @@ public class BTOEditController implements FileManifest {
                 continue;
             }
 
-            System.out.printf("Confirm change from %s to %s? (Y/N): ", oldOpenDate, newOpenDate);
-            String confirm = sc.nextLine().trim().toLowerCase();
+            System.out.printf("Confirm change from %s -> %s\n", oldOpenDate, newOpenDate);
+            String confirm = InputUtil.getConfirmationString(sc, "Confirm");
     
-            if (confirm.equals("y")) {
+            if (confirm.equalsIgnoreCase("true")) {
                 manager.updateBTOByColumn(Data.btoList, projName, colName, newOpenDate); // optional
                 BTOFileService.editBTOByColumn(projName, colName, newOpenDate, false);
                 break;
-            } else if(confirm.equals("n")){
+            } else if(confirm.equalsIgnoreCase("false")){
                 System.out.println("Cancelled.");
                 System.out.println("Exiting....");
             }
@@ -202,16 +191,7 @@ public class BTOEditController implements FileManifest {
         manager.viewAllProjects(Data.btoList);
         System.out.println("=== CLOSE DATE EDIT ===");
 
-        while (true) {
-            System.out.print("Enter Project Name to Edit: ");
-            projName = sc.nextLine().trim();
-
-            if (manager.projNameExists(Data.btoList, projName)) {
-                break;
-            } else{
-                System.out.println("Project Name Not Found");
-            }
-        }
+        projName = inputProjName();
 
         String checkName = projName;
         // Extract old value
@@ -231,8 +211,7 @@ public class BTOEditController implements FileManifest {
         while (true) {
             System.out.println("Old Close Date: " + oldCloseDate);
             System.out.println("Current Open Date: " + openDate);
-            System.out.print("New Close Date (MM/DD/YYYY): ");
-            String newCloseDate = sc.nextLine().trim();
+            String newCloseDate = InputUtil.getNonEmptyString(sc, "New Close Date (MM/DD/YYYY): ");
     
             if(!DateCheck.dateValidator(newCloseDate)){
                 System.out.println("Try Again");
@@ -245,14 +224,14 @@ public class BTOEditController implements FileManifest {
                 continue;
             }
 
-            System.out.printf("Confirm change from %s to %s? (Y/N): ", oldCloseDate, newCloseDate);
-            String confirm = sc.nextLine().trim().toLowerCase();
+            System.out.printf("Confirm change from %s -> %s?\n", oldCloseDate, newCloseDate);
+            String confirm = InputUtil.getConfirmationString(sc, "Confirm");
     
-            if (confirm.equals("y")) {
+            if (confirm.equalsIgnoreCase("true")) {
                 manager.updateBTOByColumn(Data.btoList, projName, colName, newCloseDate); // optional
                 BTOFileService.editBTOByColumn(projName, colName, newCloseDate, false);
                 break;
-            } else if(confirm.equals("n")){
+            } else if(confirm.equalsIgnoreCase("false")){
                 System.out.println("Cancelled.");
                 System.out.println("Exiting....");
             }
@@ -268,16 +247,7 @@ public class BTOEditController implements FileManifest {
         manager.viewAllProjects(Data.btoList);
         System.out.println("=== OFFICER SLOT EDIT ===");
 
-        while (true) {
-            System.out.print("Enter Project Name to Edit: ");
-            projName = sc.nextLine().trim();
-
-            if (manager.projNameExists(Data.btoList, projName)) {
-                break;
-            } else{
-                System.out.println("Project Name Not Found");
-            }
-        }
+        projName = inputProjName();
 
         String checkName = projName;
         // Extract old value
@@ -298,30 +268,17 @@ public class BTOEditController implements FileManifest {
             System.out.println("=== EDIT SLOT AMOUNT ===");
             System.out.println("Current Total Officer Slots: " + oldOfficerSlots);
             System.out.println("Current Registered Officer Amount: " + currentOfficersRegistered);
-            System.out.print("New Officer Slots (1 ~ 10): ");
-            int newOfficerSlots = sc.nextInt();
-            sc.nextLine();
-
-            if(newOfficerSlots < 1 || newOfficerSlots > 10){
-                System.out.println("Invalid Slots Try Again!\n");
-                continue;
-            }
-
-            if(newOfficerSlots < currentOfficersRegistered){
-                System.out.println("Currently Registered Officers > New Slot Amount");
-                System.out.println("Try Again!");
-                continue;
-            }
+            int newOfficerSlots = InputUtil.getValidatedIntRange(sc,"New Officer Slots (1 ~ 10): ", 1, 10);
 
 
-            System.out.printf("Confirm change from %s to %d? (Y/N): ", oldOfficerSlots, newOfficerSlots);
-            String confirm = sc.nextLine().trim().toLowerCase();
+            System.out.printf("Confirm change from %s -> %d?\n", oldOfficerSlots, newOfficerSlots);
+            String confirm = InputUtil.getConfirmationString(sc, "Confirm");
     
-            if (confirm.equals("y")) {
-                manager.updateBTOByColumn(Data.btoList, projName, colName, String.valueOf(newOfficerSlots)); // optional
+            if (confirm.equalsIgnoreCase("true")) {
+                manager.updateBTOByColumn(Data.btoList, projName, colName, String.valueOf(newOfficerSlots));
                 BTOFileService.editBTOByColumn(projName, colName, String.valueOf(newOfficerSlots),false);
                 break;
-            } else if(confirm.equals("n")){
+            } else if(confirm.equalsIgnoreCase("false")){
                 System.out.println("Cancelled.");
                 System.out.println("Exiting....");
             }
@@ -332,21 +289,11 @@ public class BTOEditController implements FileManifest {
     }
 
     private void genericEditMenu(PROPERTY_COLUMNS colName, String displayName) {
-        String projName;
         manager.viewAllProjects(Data.btoList);
     
         System.out.printf("==== %s EDIT ====\n", displayName.toUpperCase());
 
-        while (true) {
-            System.out.print("Enter Project Name to Edit: ");
-            projName = sc.nextLine().trim();
-
-            if (manager.projNameExists(Data.btoList, projName)) {
-                break;
-            } else{
-                System.out.println("Project Name Not Found");
-            }
-        }
+        String projName = inputProjName();
         
         String checkName = projName;
         // Extract old value
@@ -356,33 +303,28 @@ public class BTOEditController implements FileManifest {
             .findFirst()
             .orElse("Unknown");
     
+        String newValue;
         while (true) {
             System.out.println("Old " + displayName + ": " + oldValue);
             System.out.print("New " + displayName + ": ");
-            String newValue = sc.nextLine().trim();
+            newValue = sc.nextLine().trim();
 
             if (List.of(PROPERTY_COLUMNS.TWO_ROOM_AMT, PROPERTY_COLUMNS.TWO_ROOM_PRICE,
                 PROPERTY_COLUMNS.THREE_ROOM_AMT, PROPERTY_COLUMNS.THREE_ROOM_PRICE).contains(colName)) {
-                try {
-                    int parsed = Integer.parseInt(newValue);
-                    if (parsed < 0) {
-                        System.out.println("Value cannot be negative. Try again!");
-                        continue;
-                    }
-                } catch (NumberFormatException e) {
-                    System.out.println("Invalid number format. Please enter a valid integer.");
-                    continue;
-                }
+                   int intVal = InputUtil.getValidatedIntRange(sc, "New " + displayName + ": ", 0, Integer.MAX_VALUE);
+                   newValue = String.valueOf(intVal);
+            } else{
+                newValue = InputUtil.getNonEmptyString(sc, "Confirm");
             }
     
-            System.out.printf("Confirm change from %s to %s? (Y/N): ", oldValue, newValue);
-            String confirm = sc.nextLine().trim().toLowerCase();
+            System.out.printf("Confirm change from %s -> %s?\n", oldValue, newValue);
+            String confirm = InputUtil.getConfirmationString(sc, "Confirm");
     
-            if (confirm.equals("y")) {
+            if (confirm.equalsIgnoreCase("true")) {
                 manager.updateBTOByColumn(Data.btoList, projName, colName, newValue); // optional
                 BTOFileService.editBTOByColumn(projName, colName, newValue,false);
                 break;
-            } else if(confirm.equals("n")){
+            } else if(confirm.equalsIgnoreCase("false")){
                 System.out.println("Cancelled.");
                 System.out.println("Exiting....");
             }

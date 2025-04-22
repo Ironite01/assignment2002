@@ -24,8 +24,7 @@ public class BTOProjectController {
         System.out.println("2: Edit BTO Project");
         System.out.println("3: Delete BTO Project");
         System.out.println("4: Back to Main Menu");
-        int mode = sc.nextInt();
-        sc.nextLine();
+        int mode = InputUtil.getValidatedIntRange(sc, "Choice ", 1, 4);
         
 
         switch(mode){
@@ -120,7 +119,7 @@ public class BTOProjectController {
         System.out.println("== Visibility of Property ==");
         System.out.println("Visible = Y");
         System.out.println("Not Visible = N");
-        String visibleString = InputUtil.getConfirmation(sc, "Choice");
+        String visibleString = InputUtil.getConfirmationString(sc, "Choice");
 
         switch (visibleString) {
             case "TRUE" -> System.out.println("Visibility Selected: Visible");
@@ -173,7 +172,7 @@ public class BTOProjectController {
             System.out.println("=== Project DELETION Confirmation ===");
             System.out.printf("Project Chosen: %s\n", propertyToDel.getProjectName());
             System.out.printf("Project Neighbourhood: %s\n", propertyToDel.getNeighbourhood());
-            String confirm = InputUtil.getConfirmation(sc, "Confirm ");
+            String confirm = InputUtil.getConfirmationString(sc, "Confirm ");
 
             if (confirm.equalsIgnoreCase("false")){
                 continue;
