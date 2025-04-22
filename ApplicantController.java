@@ -29,7 +29,7 @@ public class ApplicantController {
             System.out.println("3: View Application Status");
             System.out.println("4: Withdraw Application");
             System.out.println("5: Submit Enquiry");
-            System.out.println("6: View/Edit/Delete Enquiries");
+            System.out.println("6: View/Edit/Close Enquiries");
             System.out.println("7: Change Password");
             System.out.println("8: Logout");
 
@@ -131,7 +131,7 @@ public class ApplicantController {
             System.out.println("== ENQUIRY MENU ==");
             System.out.println("1. View Messages");
             System.out.println("2. Add Message");
-            System.out.println("3. Delete All Messages");
+            System.out.println("3. Close the Enquiries");
             System.out.println("4. Edit Your Most Recent Message");
             System.out.println("5. Back");
             int choice = InputUtil.getValidatedIntRange(sc, "Choice: ", 1, 5);
