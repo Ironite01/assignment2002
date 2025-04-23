@@ -16,6 +16,7 @@ import assignment2002.user.User;
 import assignment2002.utils.Authenticator;
 import assignment2002.utils.Data;
 import assignment2002.utils.DateCheck;
+import assignment2002.utils.FileManifest.APPLICATION_COLUMNS;
 import assignment2002.utils.LoadInfo;
 import assignment2002.utils.Status;
 
@@ -88,9 +89,6 @@ public class OfficerService implements Status {
 		if (!Authenticator.isValidNRIC(applicantNric)) {
 			return null;
 		}
-		ArrayList<User> a = LoadInfo.loadUsers();
-		User user = a.stream().filter(u -> u.getNRIC().equalsIgnoreCase(applicantNric)).collect(Collectors.toList()).getFirst();
-		
 		BTOProperty p = o.getRegisteredProject(projectName);
 		
 		if (p == null) return null;
@@ -102,10 +100,10 @@ public class OfficerService implements Status {
 		if (flatType.equalsIgnoreCase("2-Room") && !app.getFlatType().equalsIgnoreCase("2-Room")) {
 			app.setFlatType(flatType);
 			// TODO: Update the applicant's app to correct room type
-			ApplicationService.editApplicationByColumn(app, "FlatType", "2-Room");
+			ApplicationService.editApplicationByColumn(app, APPLICATION_COLUMNS.FLATTYPE, "2-Room");
 		} else if (flatType.equalsIgnoreCase("3-Room") && !app.getFlatType().equalsIgnoreCase("3-Room")) {
 			app.setFlatType(flatType);
-			ApplicationService.editApplicationByColumn(app, "FlatType", "3-Room");
+			ApplicationService.editApplicationByColumn(app, APPLICATION_COLUMNS.FLATTYPE, "3-Room");
 		} else {} // This case means no change
 	}
 	
@@ -121,7 +119,7 @@ public class OfficerService implements Status {
 		}
 		
 		app.setStatus(APPLICATION_STATUS.BOOKED);
-		ApplicationService.editApplicationByColumn(app, "Status", APPLICATION_STATUS.BOOKED.toString());
+		ApplicationService.editApplicationByColumn(app, APPLICATION_COLUMNS.STATUS, APPLICATION_STATUS.BOOKED.toString());
 		
 		updateApplicantProfile(app, flatType);
 		

@@ -8,16 +8,16 @@ import assignment2002.application.Application;
 import assignment2002.application.ApplicationService;
 
 public class Applicant extends User implements Status {
-
-    private List<Application> applications;
-
     public Applicant(String name, String NRIC, int age, String maritalStatus, String password){
         super(name, NRIC, age, maritalStatus, password);
-        this.applications = ApplicationService.getApplicationsByApplicant(this);
+    }
+    
+    public List<Application> getAllApplications() {
+    	return ApplicationService.getApplicationsByApplicant(this);
     }
     
     public Application getCurrentApplication() {
-    	return applications.stream().filter((app) -> {
+    	return ApplicationService.getApplicationsByApplicant(this).stream().filter((app) -> {
     		APPLICATION_STATUS status = app.getStatus();
     		switch (status) {
     			case APPLICATION_STATUS.SUCCESSFUL:
@@ -40,7 +40,7 @@ public class Applicant extends User implements Status {
     }
 
     public String getApplicationStatus(String projectName) {
-    	Application a = applications.stream().filter(app -> app.getProperty().getProjectName().equalsIgnoreCase(projectName)).findFirst().orElse(null);
+    	Application a = getAllApplications().stream().filter(app -> app.getProperty().getProjectName().equalsIgnoreCase(projectName)).findFirst().orElse(null);
     	return a == null ? "" : a.getStatus().toString();
     }
 
