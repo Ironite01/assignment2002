@@ -8,6 +8,7 @@ import assignment2002.utils.FileManifest.PROJECT_COLUMNS;
 import assignment2002.utils.ProjectPrinter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 public class Manager extends User implements FileManifest {
@@ -117,6 +118,24 @@ public class Manager extends User implements FileManifest {
             }
         }
         return false;
+    }
+
+    public String removeRegisteredOfficer(ArrayList <BTOProperty> btoList, String projName, String officerNRICToDel){
+        for(BTOProperty p : btoList){
+            if(p.getProjectName().equalsIgnoreCase(projName)){
+                List<Officer> oList = p.getOfficers();
+
+                Officer delTarget = oList.stream().filter(o -> o.getNRIC().equalsIgnoreCase(officerNRICToDel)).findFirst().orElse(null);
+
+                if (delTarget != null){
+                    oList.remove(delTarget);
+                    return oList.isEmpty() ? "None" :
+                    oList.stream().map(Officer::getName).collect(Collectors.joining(","));
+                }
+                return null;
+            }
+        }
+        return null;
     }
 
     public void manageOfficerRegis(){

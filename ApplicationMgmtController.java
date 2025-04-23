@@ -24,7 +24,7 @@ public class ApplicationMgmtController {
             boolean running = true;
             int choice;
             while (running) {
-                System.out.println("==== APPLICATION MGMT MENU ====");
+                System.out.println("\n==== APPLICATION MGMT MENU ====");
                 System.out.println("1. View All Applications");
                 System.out.println("2. View Pending Applications");
                 System.out.println("3. View Successful Applications");

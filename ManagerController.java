@@ -33,7 +33,7 @@ public class ManagerController {
         boolean run = true;
 
         do {
-            System.out.println("==== MANAGER MENU ====");
+            System.out.println("\n==== MANAGER MENU ====");
             System.out.println("1: Manage BTO Properties");
             System.out.println("2: Manage Project Visibility");
             System.out.println("3: Manage Applications");
@@ -58,7 +58,6 @@ public class ManagerController {
         } 
 
     } while (run);
-    sc.close();
     System.out.println("User Has Logged out!");
         
     }

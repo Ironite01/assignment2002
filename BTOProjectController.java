@@ -20,6 +20,7 @@ public class BTOProjectController {
     }
 
     public void showProjectMenu(){
+        System.out.println("\n=== MANAGE BTO PROJECTS ===");
         System.out.println("1: Create BTO Project");
         System.out.println("2: Edit BTO Project");
         System.out.println("3: Delete BTO Project");

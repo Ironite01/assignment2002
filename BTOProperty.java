@@ -147,6 +147,23 @@ public class BTOProperty {
     	BTOFileService.editBTOByColumn(projectName, FileManifest.PROJECT_COLUMNS.REJECTED_OFFICERS, appliedOfficers.stream().map(Officer::getName).collect(Collectors.joining(",")),false);
     }
 
+    public String getOfficersToString(ArrayList<Officer> oList){
+        String collatedOfficers = "";
+
+        for(Officer offList: oList){
+            collatedOfficers += offList.getName() + ",";
+        }
+
+        if(collatedOfficers.isEmpty()){
+            collatedOfficers = "None";
+        }
+
+        if (!collatedOfficers.isEmpty() && !collatedOfficers.equals("None")) {
+            collatedOfficers = collatedOfficers.substring(0, collatedOfficers.length() - 1);
+        }
+        return collatedOfficers;
+    }
+
     public ArrayList<Officer> getOfficers() {
         return officers;
     }

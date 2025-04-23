@@ -41,7 +41,7 @@ public class ProjectPrinter {
 
     public static void viewProjects(List<BTOProperty> btoList, String roomType){
     	if (btoList.size() <= 0) {
-    		System.out.println("There are no projects to view.");
+    		System.out.printf("\n\n!!! NO VALID PROJECTS TO VIEW !!! \n\n");
     		return;
     	}
         for(BTOProperty project : btoList){
@@ -49,22 +49,12 @@ public class ProjectPrinter {
                 String managerIC = "";
 
 
-                for(Officer offList:project.getOfficers()){
-                    collatedOfficers += offList.getName() + ",";
-                }
-
-                if(collatedOfficers.isEmpty()){
-                    collatedOfficers = "None";
-                }
-
-                if (!collatedOfficers.isEmpty() && !collatedOfficers.equals("None")) {
-                    collatedOfficers = collatedOfficers.substring(0, collatedOfficers.length() - 1);
-                }
+                collatedOfficers = project.getOfficersToString(project.getOfficers());
 
                 for(Manager m: project.getManagerIC()){
                     managerIC = m.getName();
                 }
-                System.out.printf("\n==== PROJECT [%s] ====\n", project.getProjectName());
+                System.out.printf("\n====== PROJECT [%s] ======\n", project.getProjectName());
                 System.out.printf("Manager: %s \n", managerIC);
                 System.out.printf("Visiblility: %s\n", String.valueOf(project.isVisible()).toUpperCase());
                 System.out.printf("Open Date: %s ~ Close Date: %s\n", project.getOpenDate(), project.getCloseDate());

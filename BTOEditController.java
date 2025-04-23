@@ -1,5 +1,6 @@
 package assignment2002;
 import assignment2002.user.Manager;
+import assignment2002.user.Officer;
 import assignment2002.utils.BTOFileService;
 import assignment2002.utils.Data;
 import assignment2002.utils.DateCheck;
@@ -8,6 +9,8 @@ import assignment2002.utils.InputUtil;
 
 import java.util.List;
 import java.util.Scanner;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 public class BTOEditController implements FileManifest {
     private Manager manager;
@@ -29,6 +32,7 @@ public class BTOEditController implements FileManifest {
             case PROJECT_COLUMNS.CLOSE_DATE -> p.getCloseDate();
             case PROJECT_COLUMNS.OFFICER_SLOT -> String.valueOf(p.getOfficerSlot());
             case PROJECT_COLUMNS.VISIBLE -> Boolean.toString(p.isVisible());
+            case PROJECT_COLUMNS.APPROVED_OFFICERS -> p.getOfficersToString(p.getOfficers());
             default -> "Undefined";
         };
     }
@@ -38,17 +42,17 @@ public class BTOEditController implements FileManifest {
         boolean running = true;
 
         while (running) {
-            System.out.println("==== EDIT MENU ====");
+            System.out.println("\n==== EDIT MENU ====");
             System.out.println("1. Edit Project Name");
             System.out.println("2. Edit Neighbourhood");
-            System.out.println("3. Edit Two Room Amount");
-            System.out.println("4. Edit Two Room Price");
-            System.out.println("5. Edit Three Room Amount");
-            System.out.println("6. Edit Three Room Price");
+            System.out.println("3. Edit 2-Room Amount");
+            System.out.println("4. Edit 2-Room Price");
+            System.out.println("5. Edit 3-Room Amount");
+            System.out.println("6. Edit 3-Room Price");
             System.out.println("7. Edit Open Date");
             System.out.println("8. Edit Close Date");
             System.out.println("9. Adjust Maximum Officer Slots");
-            System.out.println("10. Edit Visibility"); //Idk if this should be here
+            System.out.println("10. Remove Registered Officers"); 
             System.out.println("11. Exit Menu"); 
 
             int choice = InputUtil.getValidatedIntRange(sc, "Choice: ", 1, 11);
@@ -64,6 +68,7 @@ public class BTOEditController implements FileManifest {
                 case 7 -> editOpenDateMenu(PROJECT_COLUMNS.OPEN_DATE);
                 case 8 -> editCloseDateMenu(PROJECT_COLUMNS.CLOSE_DATE);
                 case 9 -> editOfficerSlotsMenu(PROJECT_COLUMNS.OFFICER_SLOT);
+                case 10 -> removeRegisteredOfficersMenu(PROJECT_COLUMNS.APPROVED_OFFICERS);
                 default-> System.out.println("Invalid Choice Try Again");
             }
         }
@@ -337,4 +342,68 @@ public class BTOEditController implements FileManifest {
         }
         
     }
+
+    private void removeRegisteredOfficersMenu(PROJECT_COLUMNS colName){
+        String officerNRICToDel = "";
+        String officerNameToDel = "";
+        manager.viewAllProjects(Data.btoList);
+        System.out.println("=== OFFICER REMOVAL ===");
+        String projName = inputProjName();
+
+        System.out.println("=== REMOVE OFFICERS ===");
+
+        String checkName = projName;
+
+
+
+        List<Officer> officerList = Data.btoList.stream()
+        .filter(p -> p.getProjectName().equalsIgnoreCase(checkName))
+        .flatMap(p -> p.getOfficers().stream()) // flatten all officer lists
+        .collect(Collectors.toList());
+
+
+        if(officerList.isEmpty()){
+            System.out.println("\n No Officers to Remove");
+            return;
+        }
+
+        System.out.println("\n==== OFFICERS IN PROJECT ===");
+        for(Officer o : officerList){
+            System.out.printf("Name: %s | NRIC: %s \n", o.getName(), o.getNRIC());
+        }
+
+        while (true) {
+            officerNRICToDel = InputUtil.getNonEmptyString(sc,"NRIC of Officer to Remove: ");
+
+            boolean found = false;
+            for(Officer o : officerList){
+                if(o.getNRIC().equalsIgnoreCase(officerNRICToDel)){ //Officer found
+                    officerNameToDel = o.getName();
+                    found = true;
+                    break;
+                }
+            }
+
+            if(!found){
+                System.out.println("Invalid NRIC Try Again!");
+                continue;
+            }
+            break;
+        }
+
+        System.out.println("=== CONFIRM REMOVAL ===");
+        System.out.printf("Officer to Remove");
+        System.out.printf("Name: %s | NRIC: %s \n", officerNameToDel, officerNRICToDel);
+        if(InputUtil.getConfirmationBool(sc, "Confirm")){
+            String newCollatedString = manager.removeRegisteredOfficer(Data.btoList, projName, officerNRICToDel);
+            BTOFileService.editBTOByColumn(projName, colName, newCollatedString, false);
+            return;
+        } else{
+            System.out.println("No Changes were Made");
+            System.out.println("Exiting");
+            return;
+        }
+
+    }
+
 }
