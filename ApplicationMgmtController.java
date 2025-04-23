@@ -133,14 +133,7 @@ public class ApplicationMgmtController {
                     ApplicationService.saveToFile(app);
                 }
 
-                int rejSize;
-                if(toReject.size() == 0){
-                    rejSize = 1;
-                } else{
-                    rejSize = toReject.size();
-                }
-
-                System.out.printf("Rejected %d remaining pending applications for %s [%s].\n",rejSize, projectName, flatType);
+                System.out.printf("Rejected ALL remaining pending applications for %s [%s].\n", projectName, flatType);
             } else {
                 System.out.println("Pending applications were not modified.");
             }
