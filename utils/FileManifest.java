@@ -37,6 +37,14 @@ public interface FileManifest {
 		PASSWORD
 	}
 	
+	public static enum APPLICATION_COLUMNS {
+		NRIC,
+		NAME,
+		FLATTYPE,
+		PROJECTNAME,
+		STATUS
+	}
+	
 	public static final Map<String, Integer> PROJECT_COLUMNS_MAP = Map.ofEntries(
 		    Map.entry(PROJECT_COLUMNS.PROJECT_NAME.toString(), 0),
 		    Map.entry(PROJECT_COLUMNS.NEIGHBOURHOOD.toString(), 1),
@@ -64,5 +72,11 @@ public interface FileManifest {
 		    Map.entry(USER_COLUMNS.PASSWORD.toString(), 4)
 		    );
 
-	
+	public static final Map<String, Integer> APPLICATION_COLUMNS_MAP = Map.ofEntries(
+		    Map.entry(APPLICATION_COLUMNS.NRIC.toString(), 0),
+		    Map.entry(APPLICATION_COLUMNS.NAME.toString(), 1),
+		    Map.entry(APPLICATION_COLUMNS.FLATTYPE.toString(), 2),
+		    Map.entry(APPLICATION_COLUMNS.PROJECTNAME.toString(), 3),
+		    Map.entry(APPLICATION_COLUMNS.STATUS.toString(), 4)
+		    );
 }

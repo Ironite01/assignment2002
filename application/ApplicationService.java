@@ -5,6 +5,7 @@ import assignment2002.user.Applicant;
 import assignment2002.user.Manager;
 import assignment2002.user.Officer;
 import assignment2002.user.User;
+import assignment2002.utils.Data;
 import assignment2002.utils.FileManifest;
 import assignment2002.utils.Status;
 import java.io.BufferedReader;
@@ -44,7 +45,9 @@ public class ApplicationService implements FileManifest, Status {
 
     public static boolean apply(Applicant applicant, BTOProperty project, String flatType) {
         String status = getApplicationStatus(applicant);
-        if (status.equals("PENDING") || status.equals("PENDINGWITHDRAWN") || status.equals("BOOKED")) {
+        if (status.equals(APPLICATION_STATUS.PENDING.toString())
+        		|| status.equals(APPLICATION_STATUS.PENDINGWITHDRAWN.toString())
+        		|| status.equals(APPLICATION_STATUS.BOOKED.toString())) {
             System.out.println("You have already applied for a flat. Status: " + status);
             return false;
         }
@@ -63,14 +66,12 @@ public class ApplicationService implements FileManifest, Status {
 
     public static void withdraw(Applicant applicant) {
         String status = getApplicationStatus(applicant);
-        if (!status.equals("PENDING")) {
+        if (!status.equals(APPLICATION_STATUS.PENDING.toString())) {
             System.out.println("No active application to withdraw.");
             return;
         }
 
-        Application app = new Application(applicant, null, "");
-        app.setStatus(Status.APPLICATION_STATUS.valueOf(APPLICATION_STATUS.PENDINGWITHDRAWN.toString()));
-        saveToFile(app);
+        editApplicationByColumn(applicant.getCurrentApplication(), APPLICATION_COLUMNS.STATUS, APPLICATION_STATUS.WITHDRAWN.toString());
         System.out.println("Withdrawal Request Submmitted");
     }
 
@@ -82,14 +83,16 @@ public class ApplicationService implements FileManifest, Status {
             scanner.nextLine(); // skip header
             while (scanner.hasNextLine()) {
                 String[] parts = scanner.nextLine().split("\t");
-                if (parts.length >= 5 && parts[4].equalsIgnoreCase(APPLICATION_STATUS.PENDINGWITHDRAWN.toString())) {
-                    String nric = parts[0];
-                    String name = parts[1];
-                    String flatType = parts[2];
-                    String projectName = parts[3];
+                if (parts.length >= APPLICATION_COLUMNS_MAP.get(APPLICATION_COLUMNS.STATUS.toString())
+                		&& parts[APPLICATION_COLUMNS_MAP.get(APPLICATION_COLUMNS.STATUS.toString())].equalsIgnoreCase(APPLICATION_STATUS.PENDINGWITHDRAWN.toString())) {
+                    String nric = parts[APPLICATION_COLUMNS_MAP.get(APPLICATION_COLUMNS.NRIC.toString())];
+                    String name = parts[APPLICATION_COLUMNS_MAP.get(APPLICATION_COLUMNS.NAME.toString())];
+                    String flatType = parts[APPLICATION_COLUMNS_MAP.get(APPLICATION_COLUMNS.FLATTYPE.toString())];
+                    String projectName = parts[APPLICATION_COLUMNS_MAP.get(APPLICATION_COLUMNS.PROJECTNAME.toString())];
     
                     Applicant dummy = new Applicant(name, nric, 0, "", "");
-                    Application app = new Application(dummy, null, flatType);
+                    BTOProperty p = Data.btoList.stream().filter(prop -> prop.getProjectName().equalsIgnoreCase(projectName)).findFirst().orElse(null);
+                    Application app = new Application(dummy, p, flatType);
                     app.setStatus(Status.APPLICATION_STATUS.PENDINGWITHDRAWN);
                     pendingWithdrawals.add(app);
                 }
@@ -305,16 +308,7 @@ public class ApplicationService implements FileManifest, Status {
         return true;
     }
     
-    public static void editApplicationByColumn(Application app, String colName, String newValue) {
-    	List<String> headers = Arrays.asList("NRIC", "Name", "FlatType", "ProjectName", "Status");
-
-    	Map<String, Integer> headerIndexMap = IntStream.range(0, headers.size())
-    			.boxed()
-    			.collect(Collectors.toMap(
-    					headers::get,
-    					i -> i
-    					));
-    	
+    public static void editApplicationByColumn(Application app, APPLICATION_COLUMNS col, String newValue) {
         try {
             List<String> allLines = Files.readAllLines(Paths.get(APPLICATION_TXT_PATH));
             String header = allLines.get(0);
@@ -326,7 +320,7 @@ public class ApplicationService implements FileManifest, Status {
                     String[] parts = line.split("\t");
     
                     if (parts[0].equalsIgnoreCase(app.getApplicant().getNRIC())) {
-                        parts[headerIndexMap.get(colName)] = newValue;
+                        parts[APPLICATION_COLUMNS_MAP.get(col.toString())] = newValue;
                         updatedLines.add(String.join("\t", parts));
     
                         for (int j = i + 1; j < allLines.size(); j++) {

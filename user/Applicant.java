@@ -16,7 +16,7 @@ public class Applicant extends User implements Status {
         this.applications = ApplicationService.getApplicationsByApplicant(this);
     }
     
-    private Application getCurrentApplication() {
+    public Application getCurrentApplication() {
     	return applications.stream().filter((app) -> {
     		APPLICATION_STATUS status = app.getStatus();
     		switch (status) {
