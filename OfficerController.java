@@ -132,7 +132,7 @@ public class OfficerController {
             	case 6 -> {
             		String projectName = InputUtil.getNonEmptyString(sc, "Enter the project name: ");
             		String applicantNric = InputUtil.getNonEmptyString(sc, "Enter the applicant's NRIC: ");
-            		Application app = OfficerService.getSuccessfulApplicationByApplicantNRIC(officer, projectName, applicantNric);
+            		Application app = OfficerService.getBookedApplicationByApplicantNRIC(officer, projectName, applicantNric);
             		if (app == null) {
             			System.out.println("Unable to retrieve application by details you have entered!");
             			continue;

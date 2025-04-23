@@ -88,7 +88,7 @@ public class OfficerService implements Status {
 		return temp;
 	}
 	
-	public static Application getSuccessfulApplicationByApplicantNRIC(Officer o, String projectName, String applicantNric) {
+	public static Application getBookedApplicationByApplicantNRIC(Officer o, String projectName, String applicantNric) {
 		if (!Authenticator.isValidNRIC(applicantNric)) {
 			return null;
 		}
@@ -96,7 +96,10 @@ public class OfficerService implements Status {
 		
 		if (p == null) return null;
 		Application app = ApplicationService.getApplicationByApplicantAndProperty(o, p);
-		return app.getStatus() == APPLICATION_STATUS.SUCCESSFUL ? app : null;
+		if (app == null || app.getStatus() != APPLICATION_STATUS.BOOKED) {
+			return null;
+		}
+		return app;
 	}
 	
 	public static void updateApplicantProfile(Application app, String flatType) {
