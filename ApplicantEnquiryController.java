@@ -66,7 +66,7 @@ public class ApplicantEnquiryController {
             int choice = InputUtil.getValidatedIntRange(sc, "Choice: ", 1, 6);
 
             switch (choice) {
-                case 1 -> viewMessages(enquiry);
+                case 1 -> viewMessages(sc);
                 case 2 -> addMessage(sc);
                 case 3 -> closeEnquiry(sc);
                 case 4 -> editMessage(sc);
@@ -77,13 +77,34 @@ public class ApplicantEnquiryController {
         }
     }
 
-    private void viewMessages(Enquiry enquiry) {
-        if (enquiry.getAllMessages().isEmpty()) {
-            System.out.println("No messages.");
+    private void viewMessages(Scanner sc) {
+        var userEnquiries = EnquiryService.viewAll().stream()
+            .filter(e -> e.getApplicantNric().equalsIgnoreCase(applicant.getNRIC()))
+            .toList();
+    
+        if (userEnquiries.isEmpty()) {
+            System.out.println("You have no enquiries.");
             return;
         }
+    
+        System.out.println("== Your Enquiries ==");
+        for (int i = 0; i < userEnquiries.size(); i++) {
+            Enquiry e = userEnquiries.get(i);
+            System.out.printf("%d. Project: %s\n", i + 1, e.getProjectName());
+        }
+    
+        int sel = InputUtil.getValidatedIntRange(sc, "Select an enquiry (0 to cancel): ", 0, userEnquiries.size());
+        if (sel == 0) return;
+    
+        Enquiry selected = userEnquiries.get(sel - 1);
+    
+        if (selected.getAllMessages().isEmpty()) {
+            System.out.println("No messages in this enquiry.");
+            return;
+        }
+    
         System.out.println("=== Enquiry Messages ===");
-        enquiry.getAllMessages().entrySet().stream()
+        selected.getAllMessages().entrySet().stream()
             .sorted(Map.Entry.comparingByKey())
             .forEach(entry -> {
                 String timestamp = entry.getKey().toString();
@@ -92,6 +113,7 @@ public class ApplicantEnquiryController {
                 System.out.printf("[%s] %s: %s\n", timestamp, sender, msg);
             });
     }
+    
 
     private void addMessage(Scanner sc) {
         var userEnquiries = EnquiryService.viewAll().stream()
