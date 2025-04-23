@@ -50,8 +50,8 @@ public class ManagerController {
                 case 2 -> viewVisibilityMenu();
                 case 3 -> appMgmtController.viewApplicationsMenu();
                 case 4 -> officerController.viewOfficerRegisMenu();
-                case 5 -> filterController.viewProjsMenu();
-                case 6 -> enqController.viewMenu();
+                case 5 -> enqController.viewMenu();
+                case 6 -> filterController.viewProjsMenu();
                 case 7 -> UserService.resetPasswordPrompt(manager);
                 case 8 -> run = false;
                 default -> System.out.println("Retry");
