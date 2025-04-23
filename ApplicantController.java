@@ -91,24 +91,33 @@ public class ApplicantController {
     
 
     private void submitEnquiry(Scanner sc) {
-        String project = applicant.getAppliedProject();
-        if (project == null) {
-            System.out.println("You haven't applied for a project.");
+        String rawProject = applicant.getAppliedProject();
+        if (rawProject == null || rawProject.trim().isEmpty()) {
+            System.out.println("You haven't applied for any project. Please apply before submitting an enquiry.");
             return;
         }
+        String project = rawProject.trim();
 
+        boolean projectExists = Data.btoList.stream()
+            .anyMatch(p -> p.getProjectName().equalsIgnoreCase(project));
+
+        if (!projectExists) {
+            System.out.println("The project you applied to no longer exists.");
+            return;
+        }
+    
         Enquiry existing = EnquiryService.getEnquiry(applicant.getNRIC(), project);
         if (existing != null) {
             System.out.println("Enquiry already exists. Use option 6 to view/edit.");
             return;
         }
-
+    
         String msg = InputUtil.getNonEmptyString(sc, "Enter your enquiry message: ");
-
         EnquiryService.addNewEnquiry(applicant.getNRIC(), project, msg);
         EnquiryService.saveEnquiriesToFile();
         System.out.println("Enquiry submitted.");
     }
+    
 
     private void manageEnquiries(Scanner sc) {
         String project = applicant.getAppliedProject();
