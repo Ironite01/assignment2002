@@ -40,6 +40,10 @@ public class ProjectPrinter {
     }
 
     public static void viewProjects(List<BTOProperty> btoList, String roomType){
+    	if (btoList.size() <= 0) {
+    		System.out.println("There are no projects to view.");
+    		return;
+    	}
         for(BTOProperty project : btoList){
                 String collatedOfficers = "";
                 String managerIC = "";

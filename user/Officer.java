@@ -41,18 +41,6 @@ public class Officer extends Applicant {
     	return ApplicationService.getSuccessfulApplicationsFromOfficer(this);
     }
     
-    public List<Object> viewEnquiry() {
-    	return null;
-    }
-    
-    public void replyToEnquiry(int enquiryId, String reply) {
-    	
-    }
-    
-    public void bookFlat(Applicant applicant, String flatType) {
-    	
-    }
-    
     @Override
     public void viewMenu() {
         OfficerController aController = new OfficerController(this);

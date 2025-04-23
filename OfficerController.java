@@ -98,7 +98,7 @@ public class OfficerController {
             		List<Application> apps = officer.getAllSuccessfulApplications();
             		if (apps.size() <= 0) {
             			System.out.println("No applications at the moment!");
-            			return;
+            			continue;
             		}
             		System.out.println("Here are all successful applications:");
             		for (Application app1 : apps) {
@@ -116,15 +116,16 @@ public class OfficerController {
                     		}
             				if (app == null) {
             					System.out.println("Unable to find application with this NRIC");
-            					return;
+            					continue;
             				}
             				String roomType = InputUtil.getNonEmptyString(sc, "Please confirm applicant's room type (2-Room / 3-Room): ");
             				if (!roomType.equals("2-Room") && !roomType.equals("3-Room")) {
             					System.out.println("Invalid input! Please try again!");
-            					return;
+            					continue;
             				}
             				OfficerService.updateBTOApplication(officer, app, roomType);
-            				return;
+            			} else {
+            				System.out.println("Not valid NRIC! Please try again...");
             			}
             		} while (nric.equals("0"));
             	}
@@ -132,6 +133,10 @@ public class OfficerController {
             		String projectName = InputUtil.getNonEmptyString(sc, "Enter the project name: ");
             		String applicantNric = InputUtil.getNonEmptyString(sc, "Enter the applicant's NRIC: ");
             		Application app = OfficerService.getSuccessfulApplicationByApplicantNRIC(officer, projectName, applicantNric);
+            		if (app == null) {
+            			System.out.println("Unable to retrieve application by details you have entered!");
+            			continue;
+            		}
             		OfficerService.generateReceiptOfApplication(officer, app);
             	}
                 case 7 -> run = false;

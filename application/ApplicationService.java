@@ -30,6 +30,13 @@ public class ApplicationService implements FileManifest, Status {
     private static final List<Application> applications = new ArrayList<>();
 
     public static boolean isEligible(Applicant applicant, BTOProperty project, String flatType) {
+    	if (applicant instanceof Officer) {
+    		Set<String> projs = ((Officer) applicant).getAllProjectStatus().keySet();
+    		// Officer cannot 
+    		if (projs.contains(project.getProjectName())) {
+    			return false;
+    		}
+    	}
         if (!project.isVisible()) return false;
 
         if (applicant.getMaritalStatus().equalsIgnoreCase("Single")) {
@@ -250,7 +257,8 @@ public class ApplicationService implements FileManifest, Status {
     
     public static Application getApplicationByApplicantAndProperty(Applicant applicant, BTOProperty property) {
         return applications.stream()
-                .filter(app -> app.getApplicant().equals(applicant) && app.getProperty().equals(property))
+                .filter(app -> app.getApplicant().getNRIC().equalsIgnoreCase(applicant.getNRIC())
+                		&& app.getProperty().getProjectName().equalsIgnoreCase(property.getProjectName()))
                 .findFirst()
                 .orElse(null);
     }
@@ -258,7 +266,7 @@ public class ApplicationService implements FileManifest, Status {
 
     public static List<Application> getApplicationsByApplicant(Applicant applicant) {
         return applications.stream()
-                .filter(app -> app.getApplicant().equals(applicant))
+                .filter(app -> app.getApplicant().getNRIC().equalsIgnoreCase(applicant.getNRIC()))
                 .collect(Collectors.toList());
     }
 

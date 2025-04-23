@@ -29,8 +29,9 @@ public class OfficerService implements Status {
 					&& p.getRejectedOfficers().stream().noneMatch(o -> o.getNRIC().equalsIgnoreCase(officer.getNRIC()))
 					&& p.getOfficers().size() < p.getOfficerSlot()
 					&& DateCheck.dateComparator(LocalDate.now().format(DateTimeFormatter.ofPattern("MM/dd/yyyy")).toString(), p.getCloseDate())
+					&& officer.getAppliedProject() == null || (officer.getAppliedProject() != null
 					&& !(officer.getAppliedProject().equalsIgnoreCase(p.getProjectName())
-					&& !officer.getApplicationStatus().equalsIgnoreCase(APPLICATION_STATUS.NOTAPPLIED.toString()))
+					&& !officer.getApplicationStatus().equalsIgnoreCase(APPLICATION_STATUS.NOTAPPLIED.toString())))
 					)
 			.collect(Collectors.toList());
 	}
