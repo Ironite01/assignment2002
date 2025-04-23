@@ -67,7 +67,7 @@ public class ApplicantEnquiryController {
 
             switch (choice) {
                 case 1 -> viewMessages(enquiry);
-                case 2 -> addMessage(sc, enquiry);
+                case 2 -> addMessage(sc);
                 case 3 -> closeEnquiry(enquiry);
                 case 4 -> editMessage(sc);
                 case 5 -> deleteMessage(sc);
@@ -93,16 +93,39 @@ public class ApplicantEnquiryController {
             });
     }
 
-    private void addMessage(Scanner sc, Enquiry enquiry) {
-        if (enquiry.isResolved()) {
-            System.out.println("Enquiry is resolved. Cannot add messages.");
+    private void addMessage(Scanner sc) {
+        var userEnquiries = EnquiryService.viewAll().stream()
+            .filter(e -> e.getApplicantNric().equalsIgnoreCase(applicant.getNRIC()))
+            .toList();
+    
+        if (userEnquiries.isEmpty()) {
+            System.out.println("You have no enquiries to add a message to.");
             return;
         }
+    
+        System.out.println("== Your Enquiries ==");
+        for (int i = 0; i < userEnquiries.size(); i++) {
+            Enquiry e = userEnquiries.get(i);
+            System.out.printf("%d. Project: %s\n", i + 1, e.getProjectName());
+        }
+    
+        int sel = InputUtil.getValidatedIntRange(sc, "Select an enquiry (0 to cancel): ", 0, userEnquiries.size());
+        if (sel == 0) return;
+    
+        Enquiry selected = userEnquiries.get(sel - 1);
+    
+        if (selected.isResolved()) {
+            System.out.println("This enquiry is marked as resolved. You cannot add more messages.");
+            return;
+        }
+    
         String msg = InputUtil.getNonEmptyString(sc, "Enter your message: ");
-        enquiry.addMessage(applicant.getNRIC(), msg);
+        selected.addMessage(applicant.getNRIC(), msg);
         EnquiryService.saveEnquiriesToFile();
-        System.out.println("Message added.");
+    
+        System.out.println("Message added successfully.");
     }
+    
 
     private void closeEnquiry(Enquiry enquiry) {
         if (!enquiry.isResolved()) {
