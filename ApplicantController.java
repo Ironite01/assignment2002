@@ -92,7 +92,7 @@ public class ApplicantController {
 
     private void submitEnquiry(Scanner sc) {
         String project = applicant.getAppliedProject().trim();
-        if (project.isEmpty()) {
+        if (project == null) {
             System.out.println("You haven't applied for a project.");
             return;
         }
@@ -112,7 +112,7 @@ public class ApplicantController {
 
     private void manageEnquiries(Scanner sc) {
         String project = applicant.getAppliedProject().trim();
-        if (project.isEmpty()) {
+        if (project == null) {
             System.out.println("No project applied.");
             return;
         }
