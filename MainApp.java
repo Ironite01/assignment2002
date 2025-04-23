@@ -9,26 +9,26 @@ import assignment2002.utils.LoadInfo;
 
 public class MainApp {
     public static void main(String[] args) {
-    	User user = null;
+    	User user;
     	
         ApplicationService.loadApplications(Data.userList, Data.btoList);
-        LoadInfo.autoCloseExpiredProjects();
-
+        
         while (true) {
             try{
+            	LoadInfo.autoCloseExpiredProjects();
                 user = UserService.loginPrompt();
                 if (user == null) {
                     System.out.println("Unable to authenticate user!");
                     continue;
                 }
+                user.viewMenu();
             } catch(IllegalArgumentException e){
                 System.out.println("Error: " + e.getMessage());
                 continue;
             } catch (Exception e){
                 System.out.println("Error: " + e.getMessage());
+                continue;
             }
-            user.viewMenu();
-            break;
         }
     }
 }

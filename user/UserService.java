@@ -21,7 +21,7 @@ public class UserService implements FileManifest {
 	    String nric;
 	    String password;
 	    	
-        System.out.println("System login...\nEnter your NRIC: ");
+        System.out.println("\nSystem login...\nEnter your NRIC: ");
         nric = s.nextLine();
         System.out.println("Enter your password: ");
         password = s.nextLine();
