@@ -93,7 +93,7 @@ public class OfficerController {
             		}
             	}
             	case 3 -> ProjectPrinter.viewProjects(officer.getRegisteredProjects());
-            	case 4 -> {}// TODO
+            	case 4 -> OfficerService.viewAndReplyEnquiries(officer);
             	case 5 -> {
             		List<Application> apps = officer.getAllSuccessfulApplications();
             		if (apps.size() <= 0) {

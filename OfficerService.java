@@ -6,16 +6,18 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Scanner;
 import java.util.stream.Collectors;
 
 import assignment2002.application.Application;
 import assignment2002.application.ApplicationService;
-import assignment2002.user.Applicant;
+import assignment2002.enquiry.Enquiry;
+import assignment2002.enquiry.EnquiryService;
 import assignment2002.user.Officer;
-import assignment2002.user.User;
 import assignment2002.utils.Authenticator;
 import assignment2002.utils.Data;
 import assignment2002.utils.DateCheck;
+import assignment2002.utils.InputUtil;
 import assignment2002.utils.FileManifest.APPLICATION_COLUMNS;
 import assignment2002.utils.LoadInfo;
 import assignment2002.utils.Status;
@@ -143,5 +145,49 @@ public class OfficerService implements Status {
 		if (p == null) return;
 		
 		ApplicationService.generateReceipt(app);
+	}
+	
+	public static void viewAndReplyEnquiries(Officer o) {
+		EnquiryService.loadEnquiriesFromFile();
+        List<Enquiry> all = EnquiryService.viewAll();
+
+        List<String> registeredProjects = o.getRegisteredProjects().stream()
+            .map(BTOProperty::getProjectName)
+            .toList();
+
+        boolean found = false;
+        for (Enquiry enquiry : all) {
+            if (registeredProjects.contains(enquiry.getProjectName())) {
+                found = true;
+
+                System.out.println("\nProject: " + enquiry.getProjectName());
+                System.out.println("From: " + enquiry.getApplicantNric());
+                System.out.println("Resolved: " + enquiry.isResolved());
+
+                enquiry.getAllMessages().entrySet().stream()
+                    .sorted(Map.Entry.comparingByKey())
+                    .forEach(entry -> {
+                        String timestamp = entry.getKey().toString();
+                        String author = entry.getValue().getAuthor().getName();
+                        String message = entry.getValue().getMessage();
+                        System.out.printf("[%s] %s: %s\n", timestamp, author, message);
+                    });
+
+                if (!enquiry.isResolved()) {
+                    Scanner sc = new Scanner(System.in);
+                    if (InputUtil.getConfirmationBool(sc, "Reply to this enquiry?")) {
+                        String reply = InputUtil.getNonEmptyString(sc, "Enter your reply: ");
+                        enquiry.addMessage(o.getNRIC(), reply);
+                        EnquiryService.saveEnquiriesToFile();
+                        System.out.println("Reply sent.");
+                    }
+                }
+                System.out.println("-----");
+            }
+        }
+
+        if (!found) {
+            System.out.println("No enquiries found for your managed projects.");
+        }
 	}
 }

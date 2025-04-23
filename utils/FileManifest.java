@@ -9,6 +9,7 @@ public interface FileManifest {
 	public static final String MANAGER_TXT_PATH = WORKING_PATH + "ManagerList.txt";
 	public static final String PROJECT_TXT_PATH = WORKING_PATH + "ProjectList.txt";
 	public static final String APPLICATION_TXT_PATH = WORKING_PATH + "Application.txt";
+	public static final String ENQUIRIES_TXT_PATH = WORKING_PATH + "Enquiries.txt";
 	
 	public static enum PROJECT_COLUMNS {
 		PROJECT_NAME,

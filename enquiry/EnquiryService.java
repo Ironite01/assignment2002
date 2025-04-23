@@ -8,18 +8,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
+
+import assignment2002.utils.FileManifest;
+
 import java.util.Date;
 
-public class EnquiryService {
+public class EnquiryService implements FileManifest {
 	private static List<Enquiry> enquiries = new ArrayList<Enquiry>();
-	private static final String FILE_PATH = "assignment2002/Information/Enquiries.txt";
 	
 	public static List<Enquiry> viewAll() {
 		return enquiries;
-	}
-	
-	public void reply(int enquiryId, String reply) {
-		
 	}
 	
 	public static Enquiry getEnquiry(String applicantNric, String projectName) {
@@ -45,7 +43,7 @@ public class EnquiryService {
 	
 
 	public static void saveEnquiriesToFile() {
-		try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_PATH))) {
+		try (BufferedWriter writer = new BufferedWriter(new FileWriter(ENQUIRIES_TXT_PATH))) {
 	
 			List<Enquiry> sortedEnquiries = enquiries.stream()
 				.sorted((e1, e2) -> {
@@ -89,7 +87,7 @@ public class EnquiryService {
 
 	public static void loadEnquiriesFromFile() {
 		enquiries.clear();
-		File file = new File(FILE_PATH);
+		File file = new File(ENQUIRIES_TXT_PATH);
 		if (!file.exists()) return;
 
 		try (Scanner scanner = new Scanner(file)) {

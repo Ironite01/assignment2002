@@ -2,9 +2,6 @@ package assignment2002;
 
 
 import assignment2002.application.ApplicationService;
-import assignment2002.enquiry.Enquiry;
-import assignment2002.enquiry.EnquiryService;
-import assignment2002.enquiry.Message;
 import assignment2002.user.User;
 import assignment2002.user.UserService;
 import assignment2002.utils.Data;
