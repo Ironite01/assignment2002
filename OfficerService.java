@@ -13,7 +13,9 @@ import assignment2002.application.Application;
 import assignment2002.application.ApplicationService;
 import assignment2002.enquiry.Enquiry;
 import assignment2002.enquiry.EnquiryService;
+import assignment2002.user.Applicant;
 import assignment2002.user.Officer;
+import assignment2002.user.User;
 import assignment2002.utils.Authenticator;
 import assignment2002.utils.Data;
 import assignment2002.utils.DateCheck;
@@ -93,9 +95,10 @@ public class OfficerService implements Status {
 			return null;
 		}
 		BTOProperty p = o.getRegisteredProject(projectName);
+		User user = Data.userList.stream().filter(u -> u.getNRIC().equalsIgnoreCase(applicantNric)).collect(Collectors.toList()).getFirst();
 		
 		if (p == null) return null;
-		Application app = ApplicationService.getApplicationByApplicantAndProperty(o, p);
+		Application app = ApplicationService.getApplicationByApplicantAndProperty((Applicant) user, p);
 		if (app == null || app.getStatus() != APPLICATION_STATUS.BOOKED) {
 			return null;
 		}

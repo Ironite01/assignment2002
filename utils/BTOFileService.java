@@ -36,7 +36,7 @@ public class BTOFileService implements FileManifest {
                 if (!line.isEmpty()) {
                     String[] parts = line.split("\t");
     
-                    if (parts[0].equalsIgnoreCase(projName)) {
+                    if (parts[PROJECT_COLUMNS_MAP.get(PROJECT_COLUMNS.PROJECT_NAME.toString())].equalsIgnoreCase(projName)) {
                         parts[columnIndex] = newValue;
                         updatedLines.add(String.join("\t", parts));
     
