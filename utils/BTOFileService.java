@@ -23,8 +23,8 @@ public class BTOFileService implements FileManifest {
 
     }
 
-    public static void editBTOByColumn(String projName, PROPERTY_COLUMNS col, String newValue, boolean silent) {
-        Integer columnIndex = PROPERTY_COLUMNS_MAP.get(col.toString());
+    public static void editBTOByColumn(String projName, PROJECT_COLUMNS col, String newValue, boolean silent) {
+        Integer columnIndex = PROJECT_COLUMNS_MAP.get(col.toString());
     
         try {
             List<String> allLines = Files.readAllLines(Paths.get(PROJECT_TXT_PATH));

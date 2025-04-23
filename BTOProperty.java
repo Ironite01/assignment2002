@@ -139,12 +139,12 @@ public class BTOProperty {
     
     public void addAppliedOfficer(Officer o) {
     	appliedOfficers.add(o);
-    	BTOFileService.editBTOByColumn(projectName, FileManifest.PROPERTY_COLUMNS.PENDING_OFFICERS, appliedOfficers.stream().map(Officer::getName).collect(Collectors.joining(",")),false);
+    	BTOFileService.editBTOByColumn(projectName, FileManifest.PROJECT_COLUMNS.PENDING_OFFICERS, appliedOfficers.stream().map(Officer::getName).collect(Collectors.joining(",")),false);
     }
     
     public void addRejectedOfficer(Officer o) {
     	rejectedOfficers.add(o);
-    	BTOFileService.editBTOByColumn(projectName, FileManifest.PROPERTY_COLUMNS.REJECTED_OFFICERS, appliedOfficers.stream().map(Officer::getName).collect(Collectors.joining(",")),false);
+    	BTOFileService.editBTOByColumn(projectName, FileManifest.PROJECT_COLUMNS.REJECTED_OFFICERS, appliedOfficers.stream().map(Officer::getName).collect(Collectors.joining(",")),false);
     }
 
     public ArrayList<Officer> getOfficers() {

@@ -1,44 +1,55 @@
 package assignment2002.user;
 
+import java.util.List;
+
 import assignment2002.ApplicantController;
 import assignment2002.utils.Status;
+import assignment2002.application.Application;
+import assignment2002.application.ApplicationService;
 
 public class Applicant extends User implements Status {
 
-    private String appliedProjects;
-    private String flatType;
-
-    APPLICATION_STATUS applicationStatus;
+    private List<Application> applications;
 
     public Applicant(String name, String NRIC, int age, String maritalStatus, String password){
         super(name, NRIC, age, maritalStatus, password);
-        this.appliedProjects = " ";
-        this.flatType = " ";
-        this.applicationStatus = APPLICATION_STATUS.NOTAPPLIED;
+        this.applications = ApplicationService.getApplicationsByApplicant(this);
     }
-
-    public void setFlatType(String flatType) {
-        this.flatType = flatType;
+    
+    private Application getCurrentApplication() {
+    	return applications.stream().filter((app) -> {
+    		APPLICATION_STATUS status = app.getStatus();
+    		switch (status) {
+    			case APPLICATION_STATUS.SUCCESSFUL:
+    			case APPLICATION_STATUS.PENDING:
+    			case APPLICATION_STATUS.BOOKED:
+    			case APPLICATION_STATUS.PENDINGWITHDRAWN:
+    				return true;
+    			case APPLICATION_STATUS.UNSUCCESSFUL:
+    			case APPLICATION_STATUS.WITHDRAWN:
+    			case APPLICATION_STATUS.NOTAPPLIED:
+    			default:
+    				return false;
+    		}
+    	}).findFirst().orElse(null);
     }
-
-    public void setAppliedProject(String appliedProjects) {
-        this.appliedProjects = appliedProjects;
-    }
-
-    public void setApplicationStatus(String status) {
-        this.applicationStatus = APPLICATION_STATUS.valueOf(status.toUpperCase());
-    }
-
+    
+    // Current application status
     public String getApplicationStatus() {
-        return applicationStatus.toString();
+    	return getCurrentApplication().getStatus().toString();
+    }
+
+    public String getApplicationStatus(String projectName) {
+    	Application a = applications.stream().filter(app -> app.getProperty().getProjectName().equalsIgnoreCase(projectName)).findFirst().orElse(null);
+    	return a == null ? "" : a.getStatus().toString();
     }
 
     public String getAppliedProject() {
-        return appliedProjects;
+    	return getCurrentApplication().getProperty().getProjectName();
     }
 
     public String getFlatType() {
-        return flatType;
+        return getCurrentApplication().getFlatType();
     }
     
 

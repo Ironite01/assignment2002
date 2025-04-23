@@ -76,7 +76,7 @@ public class ManagerController {
 
         BTOProperty selected = Data.btoList.get(choice - 1);
         manager.toggleProjectVisiblity(selected);
-        BTOFileService.editBTOByColumn(selected.getProjectName(), FileManifest.PROPERTY_COLUMNS.VISIBLE, Boolean.toString(selected.isVisible()).toUpperCase(), false);
+        BTOFileService.editBTOByColumn(selected.getProjectName(), FileManifest.PROJECT_COLUMNS.VISIBLE, Boolean.toString(selected.isVisible()).toUpperCase(), false);
         System.out.printf("Project '%s' is now %s.\n", selected.getProjectName(), selected.isVisible() ? "VISIBLE" : "HIDDEN");
 
 

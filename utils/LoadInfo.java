@@ -16,6 +16,7 @@ public class LoadInfo implements FileManifest {
         ArrayList<User> users = new ArrayList<>();
         String[] fileLocations = {APPLICANT_TXT_PATH, OFFICER_TXT_PATH, MANAGER_TXT_PATH};
         
+        
 
         for(String file : fileLocations){
             // System.out.println(file); //Troubleshooting delete later
@@ -30,30 +31,27 @@ public class LoadInfo implements FileManifest {
                     String[] info = line.split("\t");
 
                     if (file.equals(APPLICANT_TXT_PATH)) {
-                        Applicant a = new Applicant(info[0], info[1], Integer.parseInt(info[2]), info[3], info[4]);
-                    
-                        // These are the 3 new columns i added, i put it as a seperate if statement cos not all user have info on these columns
-                        if (info.length >= 8) {
-                            a.setFlatType(info[5]);
-                            a.setAppliedProject(info[6]);
-                            a.setApplicationStatus(info[7]);
-                        }
+                        Applicant a = new Applicant(info[USER_COLUMNS_MAP.get(USER_COLUMNS.NAME.toString())],
+                        		info[USER_COLUMNS_MAP.get(USER_COLUMNS.NRIC.toString())],
+                        		Integer.parseInt(info[USER_COLUMNS_MAP.get(USER_COLUMNS.AGE.toString())]),
+                        		info[USER_COLUMNS_MAP.get(USER_COLUMNS.MARITAL_STATUS.toString())],
+                        		info[USER_COLUMNS_MAP.get(USER_COLUMNS.PASSWORD.toString())]);
                     
                         users.add(a);
                         
                     } else if (file.equals(OFFICER_TXT_PATH)){
-                        Officer o = new Officer(info[0],info[1],Integer.parseInt(info[2]),info[3],info[4]);
-
-                        if (info.length >= 8) {
-                            o.setFlatType(info[5]);
-                            o.setAppliedProject(info[6]);
-                            o.setApplicationStatus(info[7]);
-                        }
-
+                        Officer o = new Officer(info[USER_COLUMNS_MAP.get(USER_COLUMNS.NAME.toString())],
+                        		info[USER_COLUMNS_MAP.get(USER_COLUMNS.NRIC.toString())],
+                        		Integer.parseInt(info[USER_COLUMNS_MAP.get(USER_COLUMNS.AGE.toString())]),
+                        		info[USER_COLUMNS_MAP.get(USER_COLUMNS.MARITAL_STATUS.toString())],
+                        		info[USER_COLUMNS_MAP.get(USER_COLUMNS.PASSWORD.toString())]);
                         users.add(o);
-
                     } else if (file.equals(MANAGER_TXT_PATH)){
-                        users.add(new Manager(info[0],info[1],Integer.parseInt(info[2]),info[3],info[4]));
+                        users.add(new Manager(info[USER_COLUMNS_MAP.get(USER_COLUMNS.NAME.toString())],
+                        		info[USER_COLUMNS_MAP.get(USER_COLUMNS.NRIC.toString())],
+                        		Integer.parseInt(info[USER_COLUMNS_MAP.get(USER_COLUMNS.AGE.toString())]),
+                        		info[USER_COLUMNS_MAP.get(USER_COLUMNS.MARITAL_STATUS.toString())],
+                        		info[USER_COLUMNS_MAP.get(USER_COLUMNS.PASSWORD.toString())]));
                     }
                 }
     
@@ -83,16 +81,16 @@ public class LoadInfo implements FileManifest {
                 String line = propertyReader.nextLine();
                 String[] info = line.split("\t");
                 
-                String[] officerList = info[PROPERTY_COLUMNS_MAP.get(PROPERTY_COLUMNS.APPROVED_OFFICERS.toString())].split(",");
-                String[] pendingOfficerList = info[PROPERTY_COLUMNS_MAP.get(PROPERTY_COLUMNS.PENDING_OFFICERS.toString())].split(",");
-                String[] rejectedOfficerList = info[PROPERTY_COLUMNS_MAP.get(PROPERTY_COLUMNS.REJECTED_OFFICERS.toString())].split(",");
+                String[] officerList = info[PROJECT_COLUMNS_MAP.get(PROJECT_COLUMNS.APPROVED_OFFICERS.toString())].split(",");
+                String[] pendingOfficerList = info[PROJECT_COLUMNS_MAP.get(PROJECT_COLUMNS.PENDING_OFFICERS.toString())].split(",");
+                String[] rejectedOfficerList = info[PROJECT_COLUMNS_MAP.get(PROJECT_COLUMNS.REJECTED_OFFICERS.toString())].split(",");
                 ArrayList<Officer> officerRef = new ArrayList<>();
                 ArrayList<Officer> pendingOfficerRef = new ArrayList<>();
                 ArrayList<Officer> rejectedOfficerRef = new ArrayList<>();
                 ArrayList<Manager> managerRef = new ArrayList<>();
                 
                 for(User u: users){
-                    if(info[PROPERTY_COLUMNS_MAP.get(PROPERTY_COLUMNS.MANAGER.toString())].equals(u.getName()) && u instanceof Manager){
+                    if(info[PROJECT_COLUMNS_MAP.get(PROJECT_COLUMNS.MANAGER.toString())].equals(u.getName()) && u instanceof Manager){
                         managerRef.add((Manager)u);
                     }
                 }
@@ -124,20 +122,20 @@ public class LoadInfo implements FileManifest {
                 }
                 
 
-                btoList.add(new BTOProperty(info[PROPERTY_COLUMNS_MAP.get(PROPERTY_COLUMNS.PROJECT_NAME.toString())],
-                		info[PROPERTY_COLUMNS_MAP.get(PROPERTY_COLUMNS.NEIGHBOURHOOD.toString())],
-                		info[PROPERTY_COLUMNS_MAP.get(PROPERTY_COLUMNS.TWO_ROOM.toString())],
-                		Integer.parseInt(info[PROPERTY_COLUMNS_MAP.get(PROPERTY_COLUMNS.TWO_ROOM_AMT.toString())]),
-                		Integer.parseInt(info[PROPERTY_COLUMNS_MAP.get(PROPERTY_COLUMNS.TWO_ROOM_PRICE.toString())]),
-                		info[PROPERTY_COLUMNS_MAP.get(PROPERTY_COLUMNS.THREE_ROOM.toString())],
-                		Integer.parseInt(info[PROPERTY_COLUMNS_MAP.get(PROPERTY_COLUMNS.THREE_ROOM_AMT.toString())]),
-                		Integer.parseInt(info[PROPERTY_COLUMNS_MAP.get(PROPERTY_COLUMNS.THREE_ROOM_PRICE.toString())]),
-                		info[PROPERTY_COLUMNS_MAP.get(PROPERTY_COLUMNS.OPEN_DATE.toString())],
-                		info[PROPERTY_COLUMNS_MAP.get(PROPERTY_COLUMNS.CLOSE_DATE.toString())],
+                btoList.add(new BTOProperty(info[PROJECT_COLUMNS_MAP.get(PROJECT_COLUMNS.PROJECT_NAME.toString())],
+                		info[PROJECT_COLUMNS_MAP.get(PROJECT_COLUMNS.NEIGHBOURHOOD.toString())],
+                		info[PROJECT_COLUMNS_MAP.get(PROJECT_COLUMNS.TWO_ROOM.toString())],
+                		Integer.parseInt(info[PROJECT_COLUMNS_MAP.get(PROJECT_COLUMNS.TWO_ROOM_AMT.toString())]),
+                		Integer.parseInt(info[PROJECT_COLUMNS_MAP.get(PROJECT_COLUMNS.TWO_ROOM_PRICE.toString())]),
+                		info[PROJECT_COLUMNS_MAP.get(PROJECT_COLUMNS.THREE_ROOM.toString())],
+                		Integer.parseInt(info[PROJECT_COLUMNS_MAP.get(PROJECT_COLUMNS.THREE_ROOM_AMT.toString())]),
+                		Integer.parseInt(info[PROJECT_COLUMNS_MAP.get(PROJECT_COLUMNS.THREE_ROOM_PRICE.toString())]),
+                		info[PROJECT_COLUMNS_MAP.get(PROJECT_COLUMNS.OPEN_DATE.toString())],
+                		info[PROJECT_COLUMNS_MAP.get(PROJECT_COLUMNS.CLOSE_DATE.toString())],
                 		managerRef,
-                		Integer.parseInt(info[PROPERTY_COLUMNS_MAP.get(PROPERTY_COLUMNS.OFFICER_SLOT.toString())]),
+                		Integer.parseInt(info[PROJECT_COLUMNS_MAP.get(PROJECT_COLUMNS.OFFICER_SLOT.toString())]),
                 		officerRef, pendingOfficerRef, rejectedOfficerRef,
-                		info[PROPERTY_COLUMNS_MAP.get(PROPERTY_COLUMNS.VISIBLE.toString())]));
+                		info[PROJECT_COLUMNS_MAP.get(PROJECT_COLUMNS.VISIBLE.toString())]));
                 
                 
             }
@@ -156,7 +154,7 @@ public class LoadInfo implements FileManifest {
         for(BTOProperty p : Data.btoList){
             if(p.isVisible() && !DateCheck.dateComparatorVisiblity(p.getCloseDate())){ 
                 p.setVisible(false);
-                BTOFileService.editBTOByColumn(p.getProjectName(), PROPERTY_COLUMNS.VISIBLE, "FALSE", true);
+                BTOFileService.editBTOByColumn(p.getProjectName(), PROJECT_COLUMNS.VISIBLE, "FALSE", true);
             }
         }
 

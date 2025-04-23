@@ -120,7 +120,6 @@ public class OfficerService implements Status {
 			return;
 		}
 		
-		app.getApplicant().setApplicationStatus(APPLICATION_STATUS.BOOKED.toString());
 		app.setStatus(APPLICATION_STATUS.BOOKED);
 		ApplicationService.editApplicationByColumn(app, "Status", APPLICATION_STATUS.BOOKED.toString());
 		

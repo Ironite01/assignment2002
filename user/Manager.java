@@ -4,7 +4,7 @@ import assignment2002.BTOProperty;
 import assignment2002.ManagerController;
 import assignment2002.utils.DateCheck;
 import assignment2002.utils.FileManifest;
-import assignment2002.utils.FileManifest.PROPERTY_COLUMNS;
+import assignment2002.utils.FileManifest.PROJECT_COLUMNS;
 import assignment2002.utils.ProjectPrinter;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,18 +20,18 @@ public class Manager extends User implements FileManifest {
     private BTOProperty fromTabString(String data, ArrayList<Manager> managerList, ArrayList<Officer> officerList, ArrayList<Officer> pendingOfficersList, ArrayList<Officer> rejectedOfficersList){
         String[] fragments = data.split("\t");
 
-        String projName = fragments[PROPERTY_COLUMNS_MAP.get(PROPERTY_COLUMNS.PROJECT_NAME.toString())];
-        String neighbourhood = fragments[PROPERTY_COLUMNS_MAP.get(PROPERTY_COLUMNS.NEIGHBOURHOOD.toString())];
-        String twoRoom = fragments[PROPERTY_COLUMNS_MAP.get(PROPERTY_COLUMNS.TWO_ROOM.toString())];
-        int twoRoomAmt = Integer.parseInt(fragments[PROPERTY_COLUMNS_MAP.get(PROPERTY_COLUMNS.TWO_ROOM_AMT.toString())]);
-        int twoRoomPrice = Integer.parseInt(fragments[PROPERTY_COLUMNS_MAP.get(PROPERTY_COLUMNS.TWO_ROOM_PRICE.toString())]);
-        String threeRoom = fragments[PROPERTY_COLUMNS_MAP.get(PROPERTY_COLUMNS.THREE_ROOM.toString())];
-        int threeRoomAmt = Integer.parseInt(fragments[PROPERTY_COLUMNS_MAP.get(PROPERTY_COLUMNS.THREE_ROOM_AMT.toString())]);
-        int threeRoomPrice = Integer.parseInt(fragments[PROPERTY_COLUMNS_MAP.get(PROPERTY_COLUMNS.THREE_ROOM_PRICE.toString())]);
-        String openDate = fragments[PROPERTY_COLUMNS_MAP.get(PROPERTY_COLUMNS.OPEN_DATE.toString())];
-        String closeDate = fragments[PROPERTY_COLUMNS_MAP.get(PROPERTY_COLUMNS.CLOSE_DATE.toString())];
-        int officerSlot= Integer.parseInt(fragments[PROPERTY_COLUMNS_MAP.get(PROPERTY_COLUMNS.OFFICER_SLOT.toString())]);
-        String visible = fragments[PROPERTY_COLUMNS_MAP.get(PROPERTY_COLUMNS.VISIBLE.toString())];
+        String projName = fragments[PROJECT_COLUMNS_MAP.get(PROJECT_COLUMNS.PROJECT_NAME.toString())];
+        String neighbourhood = fragments[PROJECT_COLUMNS_MAP.get(PROJECT_COLUMNS.NEIGHBOURHOOD.toString())];
+        String twoRoom = fragments[PROJECT_COLUMNS_MAP.get(PROJECT_COLUMNS.TWO_ROOM.toString())];
+        int twoRoomAmt = Integer.parseInt(fragments[PROJECT_COLUMNS_MAP.get(PROJECT_COLUMNS.TWO_ROOM_AMT.toString())]);
+        int twoRoomPrice = Integer.parseInt(fragments[PROJECT_COLUMNS_MAP.get(PROJECT_COLUMNS.TWO_ROOM_PRICE.toString())]);
+        String threeRoom = fragments[PROJECT_COLUMNS_MAP.get(PROJECT_COLUMNS.THREE_ROOM.toString())];
+        int threeRoomAmt = Integer.parseInt(fragments[PROJECT_COLUMNS_MAP.get(PROJECT_COLUMNS.THREE_ROOM_AMT.toString())]);
+        int threeRoomPrice = Integer.parseInt(fragments[PROJECT_COLUMNS_MAP.get(PROJECT_COLUMNS.THREE_ROOM_PRICE.toString())]);
+        String openDate = fragments[PROJECT_COLUMNS_MAP.get(PROJECT_COLUMNS.OPEN_DATE.toString())];
+        String closeDate = fragments[PROJECT_COLUMNS_MAP.get(PROJECT_COLUMNS.CLOSE_DATE.toString())];
+        int officerSlot= Integer.parseInt(fragments[PROJECT_COLUMNS_MAP.get(PROJECT_COLUMNS.OFFICER_SLOT.toString())]);
+        String visible = fragments[PROJECT_COLUMNS_MAP.get(PROJECT_COLUMNS.VISIBLE.toString())];
 
 
         return new BTOProperty(projName, neighbourhood, twoRoom, twoRoomAmt, twoRoomPrice, threeRoom,
@@ -90,18 +90,18 @@ public class Manager extends User implements FileManifest {
         }
     }
 
-    public void updateBTOByColumn(ArrayList<BTOProperty> btoList, String projName, PROPERTY_COLUMNS fieldName, String newValue) {
+    public void updateBTOByColumn(ArrayList<BTOProperty> btoList, String projName, PROJECT_COLUMNS fieldName, String newValue) {
         for (BTOProperty p : btoList) {
             if (p.getProjectName().equalsIgnoreCase(projName)) {
                 switch (fieldName) {
-                    case PROPERTY_COLUMNS.NEIGHBOURHOOD -> p.setNeighbourhood(newValue);
-                    case PROPERTY_COLUMNS.TWO_ROOM_AMT -> p.setTwoRoomAmt(Integer.parseInt(newValue));
-                    case PROPERTY_COLUMNS.TWO_ROOM_PRICE -> p.setTwoRoomPrice(Integer.parseInt(newValue));
-                    case PROPERTY_COLUMNS.THREE_ROOM_AMT -> p.setThreeRoomAmt(Integer.parseInt(newValue));
-                    case PROPERTY_COLUMNS.THREE_ROOM_PRICE -> p.setThreeRoomPrice(Integer.parseInt(newValue));
-                    case PROPERTY_COLUMNS.OPEN_DATE -> p.setOpenDate(newValue);
-                    case PROPERTY_COLUMNS.CLOSE_DATE -> p.setCloseDate(newValue);
-                    case PROPERTY_COLUMNS.OFFICER_SLOT -> p.setOfficerSlot(Integer.parseInt(newValue));
+                    case PROJECT_COLUMNS.NEIGHBOURHOOD -> p.setNeighbourhood(newValue);
+                    case PROJECT_COLUMNS.TWO_ROOM_AMT -> p.setTwoRoomAmt(Integer.parseInt(newValue));
+                    case PROJECT_COLUMNS.TWO_ROOM_PRICE -> p.setTwoRoomPrice(Integer.parseInt(newValue));
+                    case PROJECT_COLUMNS.THREE_ROOM_AMT -> p.setThreeRoomAmt(Integer.parseInt(newValue));
+                    case PROJECT_COLUMNS.THREE_ROOM_PRICE -> p.setThreeRoomPrice(Integer.parseInt(newValue));
+                    case PROJECT_COLUMNS.OPEN_DATE -> p.setOpenDate(newValue);
+                    case PROJECT_COLUMNS.CLOSE_DATE -> p.setCloseDate(newValue);
+                    case PROJECT_COLUMNS.OFFICER_SLOT -> p.setOfficerSlot(Integer.parseInt(newValue));
                     default -> System.out.println("Unsupported Column");
                 }
                 break;

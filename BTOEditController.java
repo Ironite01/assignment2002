@@ -18,17 +18,17 @@ public class BTOEditController implements FileManifest {
         this.sc = sc;
     }
 
-    private String getColValue(BTOProperty p, PROPERTY_COLUMNS colName) {
+    private String getColValue(BTOProperty p, PROJECT_COLUMNS colName) {
         return switch (colName) {
-            case PROPERTY_COLUMNS.NEIGHBOURHOOD -> p.getNeighbourhood();
-            case PROPERTY_COLUMNS.TWO_ROOM_AMT -> String.valueOf(p.getTwoRoomAmt());
-            case PROPERTY_COLUMNS.TWO_ROOM_PRICE -> String.valueOf(p.getTwoRoomPrice());
-            case PROPERTY_COLUMNS.THREE_ROOM_AMT -> String.valueOf(p.getThreeRoomAmt());
-            case PROPERTY_COLUMNS.THREE_ROOM_PRICE -> String.valueOf(p.getThreeRoomPrice());
-            case PROPERTY_COLUMNS.OPEN_DATE -> p.getOpenDate();
-            case PROPERTY_COLUMNS.CLOSE_DATE -> p.getCloseDate();
-            case PROPERTY_COLUMNS.OFFICER_SLOT -> String.valueOf(p.getOfficerSlot());
-            case PROPERTY_COLUMNS.VISIBLE -> Boolean.toString(p.isVisible());
+            case PROJECT_COLUMNS.NEIGHBOURHOOD -> p.getNeighbourhood();
+            case PROJECT_COLUMNS.TWO_ROOM_AMT -> String.valueOf(p.getTwoRoomAmt());
+            case PROJECT_COLUMNS.TWO_ROOM_PRICE -> String.valueOf(p.getTwoRoomPrice());
+            case PROJECT_COLUMNS.THREE_ROOM_AMT -> String.valueOf(p.getThreeRoomAmt());
+            case PROJECT_COLUMNS.THREE_ROOM_PRICE -> String.valueOf(p.getThreeRoomPrice());
+            case PROJECT_COLUMNS.OPEN_DATE -> p.getOpenDate();
+            case PROJECT_COLUMNS.CLOSE_DATE -> p.getCloseDate();
+            case PROJECT_COLUMNS.OFFICER_SLOT -> String.valueOf(p.getOfficerSlot());
+            case PROJECT_COLUMNS.VISIBLE -> Boolean.toString(p.isVisible());
             default -> "Undefined";
         };
     }
@@ -55,15 +55,15 @@ public class BTOEditController implements FileManifest {
 
             switch (choice) {
                 case 11-> running = false;
-                case 1-> editProjNameMenu(PROPERTY_COLUMNS.PROJECT_NAME);
-                case 2-> genericEditMenu(PROPERTY_COLUMNS.NEIGHBOURHOOD,"Neighbourhood");
-                case 3 -> genericEditMenu(PROPERTY_COLUMNS.TWO_ROOM_AMT, "2-Room Amount");
-                case 4 -> genericEditMenu(PROPERTY_COLUMNS.TWO_ROOM_PRICE, "2-Room Price");
-                case 5 -> genericEditMenu(PROPERTY_COLUMNS.THREE_ROOM_AMT, "3-Room Amount");
-                case 6 -> genericEditMenu(PROPERTY_COLUMNS.THREE_ROOM_PRICE, "3-Room Price");
-                case 7 -> editOpenDateMenu(PROPERTY_COLUMNS.OPEN_DATE);
-                case 8 -> editCloseDateMenu(PROPERTY_COLUMNS.CLOSE_DATE);
-                case 9 -> editOfficerSlotsMenu(PROPERTY_COLUMNS.OFFICER_SLOT);
+                case 1-> editProjNameMenu(PROJECT_COLUMNS.PROJECT_NAME);
+                case 2-> genericEditMenu(PROJECT_COLUMNS.NEIGHBOURHOOD,"Neighbourhood");
+                case 3 -> genericEditMenu(PROJECT_COLUMNS.TWO_ROOM_AMT, "2-Room Amount");
+                case 4 -> genericEditMenu(PROJECT_COLUMNS.TWO_ROOM_PRICE, "2-Room Price");
+                case 5 -> genericEditMenu(PROJECT_COLUMNS.THREE_ROOM_AMT, "3-Room Amount");
+                case 6 -> genericEditMenu(PROJECT_COLUMNS.THREE_ROOM_PRICE, "3-Room Price");
+                case 7 -> editOpenDateMenu(PROJECT_COLUMNS.OPEN_DATE);
+                case 8 -> editCloseDateMenu(PROJECT_COLUMNS.CLOSE_DATE);
+                case 9 -> editOfficerSlotsMenu(PROJECT_COLUMNS.OFFICER_SLOT);
                 default-> System.out.println("Invalid Choice Try Again");
             }
         }
@@ -83,7 +83,7 @@ public class BTOEditController implements FileManifest {
         return projName;
     }
 
-    private void editProjNameMenu(PROPERTY_COLUMNS colName){
+    private void editProjNameMenu(PROJECT_COLUMNS colName){
         manager.viewAllProjects(Data.btoList);
         String oldProjName, newProjName;
 
@@ -125,7 +125,7 @@ public class BTOEditController implements FileManifest {
 
     }
 
-    private void editOpenDateMenu(PROPERTY_COLUMNS colName){
+    private void editOpenDateMenu(PROJECT_COLUMNS colName){
         String projName;
 
         manager.viewAllProjects(Data.btoList);
@@ -143,7 +143,7 @@ public class BTOEditController implements FileManifest {
 
         String closeDate = Data.btoList.stream()
             .filter(p -> p.getProjectName().equalsIgnoreCase(checkName))
-            .map(p -> getColValue(p, PROPERTY_COLUMNS.CLOSE_DATE))
+            .map(p -> getColValue(p, PROJECT_COLUMNS.CLOSE_DATE))
             .findFirst()
             .orElse("Unknown");
 
@@ -185,7 +185,7 @@ public class BTOEditController implements FileManifest {
 
 
 
-    private void editCloseDateMenu(PROPERTY_COLUMNS colName){
+    private void editCloseDateMenu(PROJECT_COLUMNS colName){
         String projName;
 
         manager.viewAllProjects(Data.btoList);
@@ -203,7 +203,7 @@ public class BTOEditController implements FileManifest {
 
         String openDate = Data.btoList.stream()
             .filter(p -> p.getProjectName().equalsIgnoreCase(checkName))
-            .map(p -> getColValue(p, PROPERTY_COLUMNS.OPEN_DATE))
+            .map(p -> getColValue(p, PROJECT_COLUMNS.OPEN_DATE))
             .findFirst()
             .orElse("Unknown");
 
@@ -241,7 +241,7 @@ public class BTOEditController implements FileManifest {
         }
     }
 
-    private void editOfficerSlotsMenu(PROPERTY_COLUMNS colName){
+    private void editOfficerSlotsMenu(PROJECT_COLUMNS colName){
         String projName;
 
         manager.viewAllProjects(Data.btoList);
@@ -293,7 +293,7 @@ public class BTOEditController implements FileManifest {
         }
     }
 
-    private void genericEditMenu(PROPERTY_COLUMNS colName, String displayName) {
+    private void genericEditMenu(PROJECT_COLUMNS colName, String displayName) {
         manager.viewAllProjects(Data.btoList);
     
         System.out.printf("==== %s EDIT ====\n", displayName.toUpperCase());
@@ -312,8 +312,8 @@ public class BTOEditController implements FileManifest {
         while (true) {
             System.out.println("Old " + displayName + ": " + oldValue);
 
-            if (List.of(PROPERTY_COLUMNS.TWO_ROOM_AMT, PROPERTY_COLUMNS.TWO_ROOM_PRICE,
-                PROPERTY_COLUMNS.THREE_ROOM_AMT, PROPERTY_COLUMNS.THREE_ROOM_PRICE).contains(colName)) {
+            if (List.of(PROJECT_COLUMNS.TWO_ROOM_AMT, PROJECT_COLUMNS.TWO_ROOM_PRICE,
+            		PROJECT_COLUMNS.THREE_ROOM_AMT, PROJECT_COLUMNS.THREE_ROOM_PRICE).contains(colName)) {
                    int intVal = InputUtil.getValidatedIntRange(sc, "New " + displayName + ": ", 0, Integer.MAX_VALUE);
                    newValue = String.valueOf(intVal);
             } else{

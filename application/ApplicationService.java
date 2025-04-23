@@ -7,8 +7,6 @@ import assignment2002.user.Officer;
 import assignment2002.user.User;
 import assignment2002.utils.FileManifest;
 import assignment2002.utils.Status;
-import assignment2002.utils.Status.APPLICATION_STATUS;
-import assignment2002.utils.FileManifest.PROPERTY_COLUMNS;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -27,7 +25,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-public class ApplicationService implements FileManifest {
+public class ApplicationService implements FileManifest, Status {
 
     private static final List<Application> applications = new ArrayList<>();
 
@@ -56,17 +54,12 @@ public class ApplicationService implements FileManifest {
             System.out.println("You are not eligible to apply for this flat type.");
             return false;
         }
-
-        applicant.setFlatType(flatType);
-        applicant.setAppliedProject(project.getProjectName());
-        applicant.setApplicationStatus("PENDING");
+        
         project.addApplicant(applicant, flatType);
 
         Application app = new Application(applicant, project, flatType);
         applications.add(app);
-        saveToFile(app);
-
-        return updateApplicantFile(applicant, project, flatType, "PENDING");
+        return saveToFile(app);
     }
 
     public static void withdraw(Applicant applicant) {
@@ -76,13 +69,8 @@ public class ApplicationService implements FileManifest {
             return;
         }
 
-        applicant.setFlatType("");
-        applicant.setAppliedProject("");
-        applicant.setApplicationStatus("PENDINGWITHDRAWN");
-
-        updateApplicantFile(applicant, null, "", "PENDINGWITHDRAWN");
         Application app = new Application(applicant, null, "");
-        app.setStatus(Status.APPLICATION_STATUS.valueOf("PENDINGWITHDRAWN"));
+        app.setStatus(Status.APPLICATION_STATUS.valueOf(APPLICATION_STATUS.PENDINGWITHDRAWN.toString()));
         saveToFile(app);
         System.out.println("Withdrawal Request Submmitted");
     }
@@ -95,7 +83,7 @@ public class ApplicationService implements FileManifest {
             scanner.nextLine(); // skip header
             while (scanner.hasNextLine()) {
                 String[] parts = scanner.nextLine().split("\t");
-                if (parts.length >= 5 && parts[4].equalsIgnoreCase("PENDINGWITHDRAWN")) {
+                if (parts.length >= 5 && parts[4].equalsIgnoreCase(APPLICATION_STATUS.PENDINGWITHDRAWN.toString())) {
                     String nric = parts[0];
                     String name = parts[1];
                     String flatType = parts[2];
@@ -115,9 +103,8 @@ public class ApplicationService implements FileManifest {
     }    
 
     public static void finalizeWithdrawals(Set<String> selectedNrics) {
-        removeApplicationsFromFile(APPLICATION_TXT_PATH, selectedNrics, "PENDINGWITHDRAWN");
-        updateStatusInFile(APPLICANT_TXT_PATH, selectedNrics, "PENDINGWITHDRAWN", "WITHDRAWN", 7);
-        updateStatusInFile(OFFICER_TXT_PATH, selectedNrics, "PENDINGWITHDRAWN", "WITHDRAWN", 7);
+        updateStatusInFile(APPLICANT_TXT_PATH, selectedNrics, APPLICATION_STATUS.PENDINGWITHDRAWN.toString(), APPLICATION_STATUS.WITHDRAWN.toString(), 7);
+        updateStatusInFile(OFFICER_TXT_PATH, selectedNrics, APPLICATION_STATUS.PENDINGWITHDRAWN.toString(), APPLICATION_STATUS.WITHDRAWN.toString(), 7);
     }
 
     private static void updateStatusInFile(String path, Set<String> targetNrics, String fromStatus, String toStatus, int statusColumnIndex) {
@@ -159,126 +146,9 @@ public class ApplicationService implements FileManifest {
             System.out.println("Failed to write to " + path + ": " + e.getMessage());
         }
     }
-
-    private static void removeApplicationsFromFile(String path, Set<String> targetNrics, String statusToMatch) {
-        File file = new File(path);
-        List<String> updatedLines = new ArrayList<>();
-    
-        try {
-            Scanner scanner = new Scanner(file);
-            while (scanner.hasNextLine()) {
-                String line = scanner.nextLine();
-                String[] parts = line.split("\t");
-    
-                if (line.startsWith("NRIC") || parts.length < 5) {
-                    updatedLines.add(line);
-                    continue;
-                }
-    
-                String nric = parts[0];
-                String status = parts[4];
-    
-                if (targetNrics.contains(nric) && status.equalsIgnoreCase(statusToMatch)) {
-                    continue;
-                }
-    
-                updatedLines.add(line);
-            }
-        } catch (IOException e) {
-            System.out.println("Failed to read " + path + ": " + e.getMessage());
-            return;
-        }
-    
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(file, false))) {
-            for (int i = 0; i < updatedLines.size(); i++) {
-                writer.write(updatedLines.get(i));
-                if (i != updatedLines.size() - 1) {
-                    writer.newLine();
-                }
-            }
-        } catch (IOException e) {
-            System.out.println("Failed to write to " + path + ": " + e.getMessage());
-        }
-    }
-    
-    
     
     public static String getApplicationStatus(Applicant applicant) {
         return applicant.getApplicationStatus();
-    }
-
-    private static boolean updateApplicantFile(Applicant applicant, BTOProperty project, String flatType, String status) {
-        String filePath = "";
-
-        if (applicant instanceof Officer) {
-            filePath = OFFICER_TXT_PATH;
-        } else if (applicant instanceof Applicant) {
-            filePath = APPLICANT_TXT_PATH;
-        }
-        
-        
-        String desiredHeader = "Name\tNRIC\tAge\tMaritalStatus\tPassword\tFlatType\tProjectName\tApplicationStatus";
-        ArrayList<String> updatedLines = new ArrayList<>();
-        boolean updated = false;
-
-        try {
-            File file = new File(filePath);
-            Scanner scanner = new Scanner(file);
-            while (scanner.hasNextLine()) {
-                String line = scanner.nextLine();
-                if (line.startsWith("Name\t")) {
-                    updatedLines.add(desiredHeader);
-                    continue;
-                }
-
-                String[] parts = line.split("\t");
-                if (parts.length >= 2 && parts[1].equals(applicant.getNRIC())) {
-                    String newLine = String.join("\t",
-                            applicant.getName(),
-                            applicant.getNRIC(),
-                            String.valueOf(applicant.getAge()),
-                            applicant.getMaritalStatus(),
-                            applicant.getPassword(),
-                            flatType,
-                            (project == null ? "" : project.getProjectName()),
-                            status
-                    );
-                    updatedLines.add(newLine);
-                    updated = true;
-                } else {
-                    updatedLines.add(line);
-                }
-            }
-        } catch (IOException e) {
-            System.out.println("Error reading file: " + e.getMessage());
-            return false;
-        }
-
-        if (!updated) {
-            updatedLines.add(desiredHeader);
-            String newLine = String.join("\t",
-                    applicant.getName(),
-                    applicant.getNRIC(),
-                    String.valueOf(applicant.getAge()),
-                    applicant.getMaritalStatus(),
-                    applicant.getPassword(),
-                    flatType,
-                    (project == null ? "" : project.getProjectName()),
-                    status
-            );
-            updatedLines.add(newLine);
-        }
-
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath, false))) {
-            for (String line : updatedLines) {
-                writer.write(line);
-                writer.newLine();
-            }
-            return true;
-        } catch (IOException e) {
-            System.out.println("Error writing file: " + e.getMessage());
-            return false;
-        }
     }
 
     public static boolean saveToFile(Application app) {
@@ -409,9 +279,6 @@ public class ApplicationService implements FileManifest {
             return false;
         }
         
-        updateApplicantFile(application.getApplicant(), 
-        property, flatType, "SUCCESSFUL");
-        
         application.setStatus(Status.APPLICATION_STATUS.SUCCESSFUL);
         return true;
     }
@@ -420,8 +287,6 @@ public class ApplicationService implements FileManifest {
         BTOProperty property = application.getProperty();
         String flatType = application.getFlatType();
 
-        updateApplicantFile(application.getApplicant(), 
-        property, flatType, "UNSUCCESSFUL");
 
         application.setStatus(Status.APPLICATION_STATUS.UNSUCCESSFUL);
     }
@@ -486,8 +351,6 @@ public class ApplicationService implements FileManifest {
         } catch (IOException e) {
             System.out.println("Error editing field: " + e.getMessage());
         }
-        
-        updateApplicantFile(app.getApplicant(), app.getProperty(), app.getFlatType(), app.getStatus().toString());
     }
 
     public static void generateReceipt(Application application) {
