@@ -92,14 +92,59 @@ public class ApplicationMgmtController {
             System.out.println("No pending application found for NRIC: " + nric);
             return;
         }
+
+        String projectName = toApprove.getProperty().getProjectName();
+        String flatType = toApprove.getFlatType();
     
-        boolean success = ApplicationService.approveApplication(toApprove);
+        long approvedCount = ApplicationService.getApplications().stream()
+        .filter(app ->
+            app.getProperty().getProjectName().equalsIgnoreCase(projectName) &&
+            app.getFlatType().equalsIgnoreCase(flatType) &&
+            (app.getStatus() == APPLICATION_STATUS.SUCCESSFUL ||
+             app.getStatus() == APPLICATION_STATUS.BOOKED)
+        )
+        .count();
+
+        int maxUnits = flatType.equalsIgnoreCase("2-Room")
+        ? toApprove.getProperty().getTwoRoomAmt()
+        : toApprove.getProperty().getThreeRoomAmt();
+
     
-        if (success) {
+        if (approvedCount < maxUnits) {
+            ApplicationService.approveApplication(toApprove);
             ApplicationService.saveToFile(toApprove);
             System.out.println("Application approved successfully.");
         } else {
-            System.out.println("Could not approve application (possibly no units left).");
+            ApplicationService.rejectApplication(toApprove);
+            ApplicationService.saveToFile(toApprove);
+            System.out.println("No units left. Application has been rejected.");
+
+            boolean confirm = InputUtil.getConfirmationBool(sc,"\n!! This flat type is now full. Would you like to reject remaining applicants? !!");
+
+            if (confirm) {
+                List<Application> toReject = ApplicationService.getMyManagedApplicationsByStatus(manager, APPLICATION_STATUS.PENDING).stream()
+                    .filter(app ->
+                        app.getProperty().getProjectName().equalsIgnoreCase(projectName) &&
+                        app.getFlatType().equalsIgnoreCase(flatType))
+                    .collect(Collectors.toList());
+
+                for (Application app : toReject) {
+                    ApplicationService.rejectApplication(app);
+                    ApplicationService.saveToFile(app);
+                }
+
+                int rejSize;
+                if(toReject.size() == 0){
+                    rejSize = 1;
+                } else{
+                    rejSize = toReject.size();
+                }
+
+                System.out.printf("Rejected %d remaining pending applications for %s [%s].\n",rejSize, projectName, flatType);
+            } else {
+                System.out.println("Pending applications were not modified.");
+            }
+
         }
     }
 
