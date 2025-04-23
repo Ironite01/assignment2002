@@ -106,16 +106,11 @@ public class ApplicantController {
             return;
         }
     
-        Enquiry existing = EnquiryService.getEnquiry(applicant.getNRIC(), project);
-        if (existing != null) {
-            System.out.println("Enquiry already exists. Use option 6 to view/edit.");
-            return;
-        }
-    
         String msg = InputUtil.getNonEmptyString(sc, "Enter your enquiry message: ");
         EnquiryService.addNewEnquiry(applicant.getNRIC(), project, msg);
         EnquiryService.saveEnquiriesToFile();
-        System.out.println("Enquiry submitted.");
+
+        System.out.println("Enquiry submitted successfully.");
     }
     
 

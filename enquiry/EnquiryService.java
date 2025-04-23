@@ -36,11 +36,11 @@ public class EnquiryService {
 	
 	public static void addNewEnquiry(String applicantNric, String projectName, String message) {
 		loadEnquiriesFromFile();
-		enquiries.removeIf(e ->
-			e.getApplicantNric().equalsIgnoreCase(applicantNric)
-			&& e.getProjectName().equalsIgnoreCase(projectName)
-		);
-		enquiries.add(new Enquiry(applicantNric, projectName, message));
+	
+		Enquiry newEnquiry = new Enquiry(applicantNric, projectName, message);
+		enquiries.add(newEnquiry);
+	
+		saveEnquiriesToFile();
 	}
 	
 
