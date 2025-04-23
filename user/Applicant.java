@@ -36,20 +36,20 @@ public class Applicant extends User implements Status {
     
     // Current application status
     public String getApplicationStatus() {
-    	return getCurrentApplication().getStatus().toString();
+    	return getCurrentApplication() == null ? APPLICATION_STATUS.NOTAPPLIED.toString() : getCurrentApplication().getStatus().toString();
     }
 
     public String getApplicationStatus(String projectName) {
     	Application a = getAllApplications().stream().filter(app -> app.getProperty().getProjectName().equalsIgnoreCase(projectName)).findFirst().orElse(null);
-    	return a == null ? "" : a.getStatus().toString();
+    	return a == null ? APPLICATION_STATUS.NOTAPPLIED.toString() : a.getStatus().toString();
     }
 
     public String getAppliedProject() {
-    	return getCurrentApplication().getProperty().getProjectName();
+    	return getCurrentApplication() == null ? null : getCurrentApplication().getProperty().getProjectName();
     }
 
     public String getFlatType() {
-        return getCurrentApplication().getFlatType();
+        return getCurrentApplication() == null ? null : getCurrentApplication().getFlatType();
     }
     
 
