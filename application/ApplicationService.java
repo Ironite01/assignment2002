@@ -17,13 +17,10 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 import java.util.Scanner;
 import java.util.Set;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 public class ApplicationService implements FileManifest, Status {
 
@@ -78,7 +75,7 @@ public class ApplicationService implements FileManifest, Status {
             return;
         }
 
-        editApplicationByColumn(applicant.getCurrentApplication(), APPLICATION_COLUMNS.STATUS, APPLICATION_STATUS.WITHDRAWN.toString());
+        editApplicationByColumn(applicant.getCurrentApplication(), APPLICATION_COLUMNS.STATUS, APPLICATION_STATUS.PENDINGWITHDRAWN.toString());
         System.out.println("Withdrawal Request Submmitted");
     }
 
@@ -112,9 +109,47 @@ public class ApplicationService implements FileManifest, Status {
     }    
 
     public static void finalizeWithdrawals(Set<String> selectedNrics) {
-        updateStatusInFile(APPLICANT_TXT_PATH, selectedNrics, APPLICATION_STATUS.PENDINGWITHDRAWN.toString(), APPLICATION_STATUS.WITHDRAWN.toString(), 7);
-        updateStatusInFile(OFFICER_TXT_PATH, selectedNrics, APPLICATION_STATUS.PENDINGWITHDRAWN.toString(), APPLICATION_STATUS.WITHDRAWN.toString(), 7);
+        removeFromApplicationFile(selectedNrics);
     }
+    
+    private static void removeFromApplicationFile(Set<String> targetNrics) {
+        File file = new File(APPLICATION_TXT_PATH);
+        List<String> updatedLines = new ArrayList<>();
+    
+        try (Scanner scanner = new Scanner(file)) {
+            while (scanner.hasNextLine()) {
+                String line = scanner.nextLine();
+                if (line.startsWith("NRIC\t")) {
+                    updatedLines.add(line); // keep the header
+                    continue;
+                }
+    
+                String[] parts = line.split("\t");
+                if (parts.length >= 5) {
+                    String nric = parts[0];
+                    String status = parts[4];
+    
+                    // Only keep entries that are not pending withdrawal OR not in the selected NRICs
+                    if (!(targetNrics.contains(nric) && status.equalsIgnoreCase(APPLICATION_STATUS.PENDINGWITHDRAWN.toString()))) {
+                        updatedLines.add(line);
+                    }
+                }
+            }
+        } catch (IOException e) {
+            System.out.println("Error reading application.txt: " + e.getMessage());
+            return;
+        }
+    
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(file, false))) {
+            for (String line : updatedLines) {
+                writer.write(line);
+                writer.newLine();
+            }
+        } catch (IOException e) {
+            System.out.println("Error writing to application.txt: " + e.getMessage());
+        }
+    }
+    
 
     private static void updateStatusInFile(String path, Set<String> targetNrics, String fromStatus, String toStatus, int statusColumnIndex) {
         File file = new File(path);
