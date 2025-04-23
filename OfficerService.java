@@ -151,46 +151,59 @@ public class OfficerService implements Status {
 	}
 	
 	public static void viewAndReplyEnquiries(Officer o) {
-		EnquiryService.loadEnquiriesFromFile();
+		Scanner sc = new Scanner(System.in);
+		
+        EnquiryService.loadEnquiriesFromFile();
         List<Enquiry> all = EnquiryService.viewAll();
-
+    
         List<String> registeredProjects = o.getRegisteredProjects().stream()
-            .map(BTOProperty::getProjectName)
+                .map(BTOProperty::getProjectName)
+                .toList();
+    
+        List<Enquiry> relatedEnquiries = all.stream()
+            .filter(e -> registeredProjects.contains(e.getProjectName()))
             .toList();
-
-        boolean found = false;
-        for (Enquiry enquiry : all) {
-            if (registeredProjects.contains(enquiry.getProjectName())) {
-                found = true;
-
-                System.out.println("\nProject: " + enquiry.getProjectName());
-                System.out.println("From: " + enquiry.getApplicantNric());
-                System.out.println("Resolved: " + enquiry.isResolved());
-
-                enquiry.getAllMessages().entrySet().stream()
-                    .sorted(Map.Entry.comparingByKey())
-                    .forEach(entry -> {
-                        String timestamp = entry.getKey().toString();
-                        String author = entry.getValue().getAuthor().getName();
-                        String message = entry.getValue().getMessage();
-                        System.out.printf("[%s] %s: %s\n", timestamp, author, message);
-                    });
-
-                if (!enquiry.isResolved()) {
-                    Scanner sc = new Scanner(System.in);
-                    if (InputUtil.getConfirmationBool(sc, "Reply to this enquiry?")) {
-                        String reply = InputUtil.getNonEmptyString(sc, "Enter your reply: ");
-                        enquiry.addMessage(o.getNRIC(), reply);
-                        EnquiryService.saveEnquiriesToFile();
-                        System.out.println("Reply sent.");
-                    }
-                }
-                System.out.println("-----");
-            }
-        }
-
-        if (!found) {
+    
+        if (relatedEnquiries.isEmpty()) {
             System.out.println("No enquiries found for your managed projects.");
+            return;
+        }
+    
+        System.out.println("== Enquiries for Your Projects ==");
+        for (int i = 0; i < relatedEnquiries.size(); i++) {
+            Enquiry e = relatedEnquiries.get(i);
+            System.out.printf("%d. Project: %s | From: %s | Resolved: %s\n",
+                i + 1, e.getProjectName(), e.getApplicantNric(), e.isResolved());
+        }
+    
+        int choice = InputUtil.getValidatedIntRange(sc, "Select an enquiry to view (0 to cancel): ", 0, relatedEnquiries.size());
+        if (choice == 0) return;
+    
+        Enquiry selected = relatedEnquiries.get(choice - 1);
+    
+        System.out.println("\n=== Enquiry Details ===");
+        System.out.println("Project: " + selected.getProjectName());
+        System.out.println("From: " + selected.getApplicantNric());
+        System.out.println("Resolved: " + selected.isResolved());
+    
+        selected.getAllMessages().entrySet().stream()
+            .sorted(Map.Entry.comparingByKey())
+            .forEach(entry -> {
+                String timestamp = entry.getKey().toString();
+                String author = entry.getValue().getAuthor().getName();
+                String message = entry.getValue().getMessage();
+                System.out.printf("[%s] %s: %s\n", timestamp, author, message);
+            });
+    
+        if (!selected.isResolved()) {
+            if (InputUtil.getConfirmationBool(sc, "Reply to this enquiry?")) {
+                String reply = InputUtil.getNonEmptyString(sc, "Enter your reply: ");
+                selected.addMessage(o.getNRIC(), reply);
+                EnquiryService.saveEnquiriesToFile();
+                System.out.println("Reply sent.");
+            }       
+        } else {
+            System.out.println("This enquiry is already resolved.");
         }
 	}
 }
