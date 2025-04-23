@@ -68,7 +68,7 @@ public class ApplicantEnquiryController {
             switch (choice) {
                 case 1 -> viewMessages(enquiry);
                 case 2 -> addMessage(sc);
-                case 3 -> closeEnquiry(enquiry);
+                case 3 -> closeEnquiry(sc);
                 case 4 -> editMessage(sc);
                 case 5 -> deleteMessage(sc);
                 case 6 -> running = false;
@@ -127,15 +127,50 @@ public class ApplicantEnquiryController {
     }
     
 
-    private void closeEnquiry(Enquiry enquiry) {
-        if (!enquiry.isResolved()) {
-            System.out.println("Enquiry is not resolved yet. You can only delete messages after it is resolved by the manager.");
+    private void closeEnquiry(Scanner sc) {
+        var userEnquiries = EnquiryService.viewAll().stream()
+            .filter(e -> e.getApplicantNric().equalsIgnoreCase(applicant.getNRIC()) && e.isResolved())
+            .toList();
+    
+        if (userEnquiries.isEmpty()) {
+            System.out.println("No resolved enquiries to close.");
             return;
         }
-        enquiry.getAllMessages().clear();
-        EnquiryService.saveEnquiriesToFile();
-        System.out.println("All messages deleted.");
+    
+        System.out.println("== Resolved Enquiries ==");
+        for (int i = 0; i < userEnquiries.size(); i++) {
+            Enquiry e = userEnquiries.get(i);
+            System.out.printf("%d. Project: %s\n", i + 1, e.getProjectName());
+        }
+    
+        System.out.print("Enter enquiry numbers to close (e.g., 1,3,4) or 0 to cancel: ");
+        String input = sc.nextLine().trim();
+        if (input.equals("0")) return;
+    
+        String[] tokens = input.split(",");
+        int closedCount = 0;
+    
+        for (String token : tokens) {
+            try {
+                int index = Integer.parseInt(token.trim());
+                if (index >= 1 && index <= userEnquiries.size()) {
+                    Enquiry toClose = userEnquiries.get(index - 1);
+                    toClose.getAllMessages().clear();
+                    closedCount++;
+                }
+            } catch (NumberFormatException ignored) {
+
+            }
+        }
+    
+        if (closedCount > 0) {
+            EnquiryService.saveEnquiriesToFile();
+            System.out.println(closedCount + " enquiry(s) closed successfully.");
+        } else {
+            System.out.println("No valid selections made.");
+        }
     }
+    
 
     private void editMessage(Scanner sc) {
         var userEnquiries = EnquiryService.viewAll().stream()
