@@ -12,7 +12,7 @@ import java.util.Date;
 
 public class EnquiryService {
 	private static List<Enquiry> enquiries = new ArrayList<Enquiry>();
-	private static final String FILE_PATH = "assignment2002/Information/Enquiries.txt";
+	private static final String FILE_PATH = "Information/Enquiries.txt";
 	
 	public static List<Enquiry> viewAll() {
 		return enquiries;
