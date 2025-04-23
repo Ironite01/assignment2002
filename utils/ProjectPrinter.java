@@ -4,7 +4,6 @@ import assignment2002.BTOProperty;
 import assignment2002.application.ApplicationService;
 import assignment2002.user.Applicant;
 import assignment2002.user.Manager;
-import assignment2002.user.Officer;
 import java.util.List;
 
 public class ProjectPrinter {

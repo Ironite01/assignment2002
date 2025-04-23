@@ -1,8 +1,6 @@
 package assignment2002.user;
 
-import java.util.ArrayList;
 
-import assignment2002.BTOProperty;
 
 public class User implements UserInterface {
     private String name;

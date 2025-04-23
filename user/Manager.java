@@ -4,7 +4,6 @@ import assignment2002.BTOProperty;
 import assignment2002.ManagerController;
 import assignment2002.utils.DateCheck;
 import assignment2002.utils.FileManifest;
-import assignment2002.utils.FileManifest.PROJECT_COLUMNS;
 import assignment2002.utils.ProjectPrinter;
 import java.util.ArrayList;
 import java.util.List;
@@ -138,31 +137,7 @@ public class Manager extends User implements FileManifest {
         return null;
     }
 
-    public void manageOfficerRegis(){
-
-    }
-
-    public void manageBTOApp(){
-
-    }
-
-    public void manageBTOWithdraw(){
-
-    }
-
-    public void generateReport(){ //Filterable
-
-    }
-
-    public void viewAllEnq(){
-
-    }
-
-    //TODO: 2 Methods Here
-    // View & Reply Enquires
-    // View Project Details
-
-    // ArrayList<User> userList, ArrayList<BTOProperty> btoList
+    
     public void viewMenu(){
         ManagerController mController = new ManagerController(this);
         mController.showMenu();

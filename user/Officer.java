@@ -9,7 +9,6 @@ import assignment2002.OfficerController;
 import assignment2002.OfficerService;
 import assignment2002.application.Application;
 import assignment2002.application.ApplicationService;
-import assignment2002.utils.Status;
 
 public class Officer extends Applicant {
 	private Map<String, REGISTRATION> allProjectStatus;
