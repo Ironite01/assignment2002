@@ -2,6 +2,7 @@ package assignment2002;
 
 import assignment2002.enquiry.Enquiry;
 import assignment2002.enquiry.EnquiryService;
+import assignment2002.enquiry.Message;
 import assignment2002.user.Applicant;
 import assignment2002.utils.Data;
 import assignment2002.utils.InputUtil;
@@ -58,7 +59,7 @@ public class ApplicantEnquiryController {
             System.out.println("1. View Messages");
             System.out.println("2. Add Message");
             System.out.println("3. Close the Enquiries");
-            System.out.println("4. Edit Your Most Recent Message");
+            System.out.println("4. Edit Your Message");
             System.out.println("5. Delete Message from Enquiry");
             System.out.println("6. Back");
 
@@ -68,7 +69,7 @@ public class ApplicantEnquiryController {
                 case 1 -> viewMessages(enquiry);
                 case 2 -> addMessage(sc, enquiry);
                 case 3 -> closeEnquiry(enquiry);
-                case 4 -> editRecentMessage(sc, enquiry);
+                case 4 -> editMessage(sc);
                 case 5 -> deleteMessage(sc);
                 case 6 -> running = false;
                 default -> System.out.println("Invalid option.");
@@ -113,36 +114,61 @@ public class ApplicantEnquiryController {
         System.out.println("All messages deleted.");
     }
 
-    private void editRecentMessage(Scanner sc, Enquiry enquiry) {
-        if (enquiry.isResolved()) {
-            System.out.println("Cannot edit a resolved enquiry.");
+    private void editMessage(Scanner sc) {
+        var userEnquiries = EnquiryService.viewAll().stream()
+            .filter(e -> e.getApplicantNric().equalsIgnoreCase(applicant.getNRIC()))
+            .toList();
+
+        if (userEnquiries.isEmpty()) {
+            System.out.println("You have no enquiries.");
             return;
         }
 
-        Date latest = null;
-        for (var entry : enquiry.getAllMessages().entrySet()) {
-            String senderNric = entry.getValue().getAuthor().getNRIC();
-            if (senderNric.equalsIgnoreCase(applicant.getNRIC())) {
-                if (latest == null || entry.getKey().after(latest)) {
-                    latest = entry.getKey();
-                }
-            }
+        System.out.println("== Your Enquiries ==");
+        for (int i = 0; i < userEnquiries.size(); i++) {
+            Enquiry e = userEnquiries.get(i);
+            System.out.printf("%d. Project: %s\n", i + 1, e.getProjectName());
         }
 
-        if (latest == null) {
-            System.out.println("You have no messages to edit.");
+        int sel = InputUtil.getValidatedIntRange(sc, "Select an enquiry (0 to cancel): ", 0, userEnquiries.size());
+        if (sel == 0) return;
+
+        Enquiry selected = userEnquiries.get(sel - 1);
+
+        if (selected.isResolved()) {
+            System.out.println("This enquiry is resolved. Editing is not allowed.");
             return;
         }
 
-        System.out.println("Your latest message:");
-        System.out.println("- " + enquiry.getAllMessages().get(latest).getMessage());
+        var ownMessages = selected.getAllMessages().entrySet().stream()
+            .filter(entry -> entry.getValue().getAuthor().getNRIC().equalsIgnoreCase(applicant.getNRIC()))
+            .toList();
 
-        String newMsg = InputUtil.getNonEmptyString(sc, "Enter new content: ");
-        enquiry.getAllMessages().get(latest).setMessage(newMsg);
+        if (ownMessages.isEmpty()) {
+            System.out.println("You have no messages to edit in this enquiry.");
+            return;
+        }
+
+        System.out.println("== Your Messages in This Enquiry ==");
+        for (int i = 0; i < ownMessages.size(); i++) {
+            var entry = ownMessages.get(i);
+            System.out.printf("%d. [%s] %s\n", i + 1, entry.getKey().toString(), entry.getValue().getMessage());
+        }
+
+        int msgSel = InputUtil.getValidatedIntRange(sc, "Select message to edit (0 to cancel): ", 0, ownMessages.size());
+        if (msgSel == 0) return;
+
+        Date timestamp = ownMessages.get(msgSel - 1).getKey();
+        Message msg = selected.getAllMessages().get(timestamp);
+
+        System.out.println("Old message: " + msg.getMessage());
+        String newContent = InputUtil.getNonEmptyString(sc, "Enter new content: ");
+        msg.setMessage(newContent);
 
         EnquiryService.saveEnquiriesToFile();
         System.out.println("Message updated.");
     }
+
 
     private void deleteMessage(Scanner sc) {
         var userEnquiries = EnquiryService.viewAll().stream()
