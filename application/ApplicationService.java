@@ -7,7 +7,6 @@ import assignment2002.user.Officer;
 import assignment2002.user.User;
 import assignment2002.utils.FileManifest;
 import assignment2002.utils.Status;
-
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -45,7 +44,7 @@ public class ApplicationService implements FileManifest, Status {
 
     public static boolean apply(Applicant applicant, BTOProperty project, String flatType) {
         String status = getApplicationStatus(applicant);
-        if (!status.equals("NOTAPPLIED") && !status.equals("NOT FOUND")) {
+        if (status.equals("PENDING") || status.equals("PENDINGWITHDRAWN") || status.equals("BOOKED")) {
             System.out.println("You have already applied for a flat. Status: " + status);
             return false;
         }
