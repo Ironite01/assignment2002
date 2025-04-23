@@ -120,7 +120,7 @@ public class ApplicationService implements FileManifest, Status {
             while (scanner.hasNextLine()) {
                 String line = scanner.nextLine();
                 if (line.startsWith("NRIC\t")) {
-                    updatedLines.add(line); // keep the header
+                    updatedLines.add(line);
                     continue;
                 }
     
@@ -129,7 +129,6 @@ public class ApplicationService implements FileManifest, Status {
                     String nric = parts[0];
                     String status = parts[4];
     
-                    // Only keep entries that are not pending withdrawal OR not in the selected NRICs
                     if (!(targetNrics.contains(nric) && status.equalsIgnoreCase(APPLICATION_STATUS.PENDINGWITHDRAWN.toString()))) {
                         updatedLines.add(line);
                     }
