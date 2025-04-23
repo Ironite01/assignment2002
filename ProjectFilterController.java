@@ -213,7 +213,7 @@ public class ProjectFilterController {
         .toList();
 
     if (filtered.isEmpty()) {
-        System.out.printf("\n\n!!! NO PORJECTS MATCH THE FILTER !!!\n\n");
+        System.out.printf("\n\n!!! NO PROJECTS MATCH THE FILTER !!!\n\n");
         return;
     }
 
